@@ -1,0 +1,155 @@
+;
+; Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
+;
+; To the extent possible under law, the implementer has waived all copyright
+; and related or neighboring rights to the source code in this file.
+; http://creativecommons.org/publicdomain/zero/1.0/
+;
+;
+;
+;
+; This program is for helping debugging all instructions 
+badd b0 b0 #10
+test_nop : nop
+nop
+nop
+nop
+fin
+badd b0 b0 #20
+;
+test_badd : badd b4 b0 b0
+badd b5 b0 b1
+badd b6 b1 #32
+fin
+;
+test_bsub : bsub b4 b0 b0
+bsub b5 b0 b1
+bsub b6 b1 #20
+fin
+;
+test_bsmul : bsmul b4 b0 b0
+bsmul b5 b0 b1
+bsmul b6 b1 #1000
+fin
+;
+test_bsmuls : bsmuls b4 b0 b0
+bsmuls b5 b0 b1
+bsmuls b6 b1 #1000
+fin
+;
+test_bshiftr : bshiftr b4 b0 #7
+fin
+;
+test_brotr : brotr b4 b0 #10
+fin
+;
+test_bshiftl : bshiftl b4 b0 #6
+fin
+;
+test_brotl : brotl b4 b0 #11
+fin
+;
+test_bland : bland b4 b0 b0
+bland b5 b0 b1
+fin
+;
+test_blor : blor b4 b0 b0
+blor b5 b0 b1
+fin
+;
+test_blxor : blxor b4 b0 b0
+blxor b5 b0 b1
+fin
+;
+test_blnot : blnot b4 b0
+blnot b5 #154
+fin
+;
+test_push_pop : push b0
+push b1
+push b2
+pop b6
+pop b5
+pop b4
+fin
+;
+test_pushf_popf : pushf m20.0
+pushf m21.1
+pushf m22.2
+pushf m23.3
+pushf m24.4
+pushf m25.5
+pushf m26.6
+pushf m27.7
+popf m36.7
+popf m35.6
+popf m34.5
+popf m33.4
+popf m32.3
+popf m31.2
+popf m30.1
+popf m29.0
+fin
+;
+test_pushm_popm : pushm m20
+pushm m21
+pushm m22
+pushm m23
+popm m28
+popm m27
+popm m26
+popm m25
+fin
+;
+test_copy : copy b4 b0
+copy b5 b1
+copy b6 b2
+fin
+;
+test_copyf : copyf m25.0 m20.0
+copyf m25.1 m21.1
+copyf m25.2 m22.2
+copyf m25.3 m23.3
+fin
+;
+test_copym : copym m25 m20
+copym m26 m21
+copym m27 m22
+copym m28 m23
+fin
+;
+test_copya : copy b20 #5
+copya inc r b10 b0 b20
+fin
+;
+test_lconstf : lconstf m25.0 #5743
+lconstf m25.1 #328
+lconstf m25.2 #9
+fin
+;
+test_lconstm : lconstm m25 #5743
+lconstm m26 #328
+lconstm m27 #9
+fin
+;
+test_call : call test_call2
+fin
+;
+test_call2 : badd b4 b0 b0
+badd b5 b0 b1
+badd b6 b1 #32
+ret
+;
+test_jump : jump test_jump2
+fin
+test_jump2 : jumpeq test_jump3 b0 b0
+fin
+test_jump3 : jumpl test_jump4 #0 b1
+fin
+test_jump4 : jumpeql test_jump5 b0 b0
+fin
+test_jump5 : jumpeql test_jump6 #0 b1
+fin
+test_jump6 : badd b4 b1 b1
+fin
+;

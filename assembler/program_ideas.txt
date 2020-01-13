@@ -1,0 +1,65 @@
+Variable positions
+prime           = 0
+prime_plus_one  = 1
+prime_line      = 2
+const_r         = 3   (modulo prime)
+const_r2        = 4   (modulo prime)
+const_1         = 5
+inv_4           = 6   (montgomery domain)
+sidh_xpa        = 7   (montgomery domain)
+sidh_xpai       = 8   (montgomery domain)
+sidh_xqa        = 9   (montgomery domain)
+sidh_xqai       = 10  (montgomery domain)
+sidh_xra        = 11  (montgomery domain)
+sidh_xrai       = 12  (montgomery domain)
+sidh_xpb        = 13  (montgomery domain)
+sidh_xpbi       = 14  (montgomery domain)
+sidh_xqb        = 15  (montgomery domain)
+sidh_xqbi       = 16  (montgomery domain)
+sidh_xrb        = 17  (montgomery domain)
+sidh_xrbi       = 18  (montgomery domain)
+
+Core constants
+m0    -> m19
+Temporary positions that are destroyed between functions calls
+tmpf0 -> tmpf39 (m20 -> m59)
+Positions for input/output functions tmpf0 -> tmpf39 (m20 -> m59)
+Temporary fp2 variables
+fp2t0 -> fp2t7  (m216 -> m223)
+Saved positions
+var0 -> var155 (m60 -> m215)
+Stack positions
+m224 -> m255
+
+Base RAM positions
+Temporary positions that are destroyed between calls.
+rd0  -> rd31 (b0 -> b31)
+b128 -> b167
+Positions for input/output functions b128 -> b167 (b128 -> b167)
+
+Shake positions
+
+shake_absorb
+shake_squeeze
+shake_dout
+
+Positions on Base RAM
+0 to 127    - reserved.
+128 to 167  - temporary positions.
+168 to 250  - free.
+251 to 282  - sike_s
+283 to 314  - sike_sk
+315 to 346  - sike_m
+347 to 378  - sike_ss
+379 to 410  - sike_c1
+411         - sike message length
+412         - sike shared secret length
+413         - oa_mask
+414         - ob_mask
+415         - oa bits
+416         - ob bits
+417         - prime size 
+418 to 719  - splits alice
+720         - max row alice
+721 to 1022 - splits bob
+1023        - max row bob
