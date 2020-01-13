@@ -1,4 +1,4 @@
-# hw-sike
+# HW-SIKE
 
 This repository has an FPGA implementation of the NIST Round 2 proposal SIKE :
 
