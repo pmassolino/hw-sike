@@ -24,4 +24,4 @@ And the SHA3/Keccak Python code was obtained from:
 #### GHDL remarks
 
 If you are going to use the GHDL to simulate this project, you have to change the file synth_double_ram.vhd
-In the file there are two architectures : behavioral and vivado_behavioral. When performing GHDL simulations you have comment "vivado_behavioral" and use the "behavioral", and when you use Vivado or ISE to synthesize, you use the "vivado_behavioral".
+In the file there are two architectures : behavioral and vivado_behavioral. When performing GHDL simulations you have to comment "vivado_behavioral" and use the "behavioral", and when you use Vivado or ISE to synthesize, you use the "vivado_behavioral".
