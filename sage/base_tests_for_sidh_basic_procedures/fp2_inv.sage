@@ -1,67 +1,8 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 proof.arithmetic(False)
 home_folder = "/home/pedro/"
 script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
-load(script_working_folder+"base_functions.sage")
-load(script_working_folder+"base_tests_for_sidh_basic_procedures/fp_inv.sage")
+load(script_working_folder+"base_tests_for_sidh_basic_procedures/all_sidh_basic_procedures.sage")
 
-def fp2_inv(arithmetic_parameters, a, ai, b, bi, debug=False):
-    # t0 = a^2 + ai^2
-    ma = [ai, a, bi, b, 0, 0, 0, 0]
-    mo = mac_8_montgomery_squaring(arithmetic_parameters, ma)
-    ma =     [mo[0], mo[2], 0, 0]
-    mb =     [mo[1], mo[3], 0, 0]
-    sign_a = [    1,     1, 1, 1]
-    mo = mac_4_addition_subtraction_no_reduction(arithmetic_parameters, ma, mb, sign_a)
-    # t0 = t0^(-1)
-    ma = mo[0]
-    mb = mo[1]
-    mo = fp_inv(arithmetic_parameters, ma, mb)
-    t0a = mo[0]
-    t0b = mo[1]
-    # o = (a - ai*x)
-    ma =     [ ai, a, bi, b]
-    mb =     [  0, 0,  0, 0]
-    sign_a = [  0, 1,  0, 1]
-    mo = mac_4_addition_subtraction_no_reduction(arithmetic_parameters, ma, mb, sign_a)
-    o1i = mo[0]
-    o1  = mo[1]
-    o2i = mo[2]
-    o2  = mo[3]
-    # o = o*t0 + oi*t0
-    ma = [o1i,  o1, o2i,  o2, 0, 0, 0, 0]
-    mb = [t0a, t0a, t0b, t0b, 0, 0, 0, 0]
-    mo = mac_8_montgomery_multiplication(arithmetic_parameters, ma, mb)
-    o1i = mo[0]
-    o1  = mo[1]
-    o2i = mo[2]
-    o2  = mo[3]
-    
-    return o1, o1i, o2, o2i
-    
-def sage_fp2_inv(fp2, a, ai, b, bi, debug=False):
-    if((fp2([a, ai])).divides(fp2(1))):
-        temp1 = fp2([a, ai])^(-1)
-    else:
-        temp1 = fp2(0)
-    if((fp2([b, bi])).divides(fp2(1))):
-        temp2 = fp2([b, bi])^(-1)
-    else:
-        temp2 = fp2(0)
-
-    o1  = temp1.polynomial()[0]
-    o1i = temp1.polynomial()[1]
-    o2  = temp2.polynomial()[0]
-    o2i = temp2.polynomial()[1]
-    
-    return o1, o1i, o2, o2i
-    
 def test_single_fp2_inv(arithmetic_parameters, fp2, test_value_a, test_value_ai, test_value_b, test_value_bi):
     prime = arithmetic_parameters[3]
     test_value_a_mont  = enter_montgomery_domain(arithmetic_parameters, test_value_a)

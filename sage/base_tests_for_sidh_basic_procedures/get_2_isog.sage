@@ -1,60 +1,8 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 proof.arithmetic(False)
 home_folder = "/home/pedro/"
 script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
-load(script_working_folder+"base_functions.sage")
-load(script_working_folder+"base_tests_for_sidh_basic_procedures/fp2_inv.sage")
+load(script_working_folder+"base_tests_for_sidh_basic_procedures/all_sidh_basic_procedures.sage")
 
-def get_2_isog(arithmetic_parameters, x2, x2i, z2, z2i):
-    #t0 = x2^2
-    #t1 = z2^2
-    ma = [x2i, x2, x2, x2i, z2i, z2, z2, z2i]
-    mb = [x2, x2i, x2, x2i, z2, z2i, z2, z2i]
-    mo = mac_8_montgomery_multiplication(arithmetic_parameters, ma, mb)
-    ma =     [mo[0], mo[3], mo[4], mo[7]]
-    mb =     [mo[1], mo[2], mo[5], mo[6]]
-    sign_a = [    1,     0,     1,     0]
-    mo = mac_4_addition_subtraction_no_reduction(arithmetic_parameters, ma, mb, sign_a)
-    t0i = mo[0]
-    t0  = mo[1]
-    t1i = mo[2]
-    t1  = mo[3]
-    
-    #t2 = t1-t0
-    ma =     [t0i, t0, 0, 0]
-    mb =     [t1i, t1, 0, 0]
-    sign_a = [  0,  0, 1, 1]
-    mo = mac_4_addition_subtraction_no_reduction(arithmetic_parameters, ma, mb, sign_a)
-    t2i = mo[0]
-    t2  = mo[1]
-    
-    return t2, t2i, t1, t1i
-
-def sage_get_2_isog(fp2, x2, x2i, z2, z2i):
-    x2 = fp2([x2, x2i])
-    z2 = fp2([z2, z2i])
-    
-    # (1) a24_plus = xp2^2
-    # (2) c24 = zp2^4
-    t0 = x2^2
-    t1 = z2^2
-    
-    # (3) a24_plus = c24 - a24_plus
-    t2 = t1-t0
-    
-    ft2  = t2.polynomial()[0]
-    ft2i = t2.polynomial()[1]
-    ft1  = t1.polynomial()[0]
-    ft1i = t1.polynomial()[1]
-    
-    return ft2, ft2i, ft1, ft1i
-    
 def test_single_get_2_isog(arithmetic_parameters, fp2, test_value_x2, test_value_x2i, test_value_z2, test_value_z2i):
     prime = arithmetic_parameters[3]
     

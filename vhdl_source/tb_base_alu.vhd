@@ -1,10 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    
+-- Design Name: 
+-- Module Name:    
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
 --
--- Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
+-- Dependencies: 
 --
--- To the extent possible under law, the implementer has waived all copyright
--- and related or neighboring rights to the source code in this file.
--- http://creativecommons.org/publicdomain/zero/1.0/
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
 --
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -20,8 +32,8 @@ Generic(
     maximum_number_of_tests : integer := 0;
     PERIOD : time := 100 ns;
     
-    test_memory_file_unsigned_values_test : string := "../hw_sidh_tests_v256/base_alu_unsigned_values_test.dat";
-    test_memory_file_signed_values_test : string := "../hw_sidh_tests_v256/base_alu_signed_values_test.dat"
+    test_memory_file_unsigned_values_test : string := "../hw_sidh_tests/base_ula_unsigned_values_test.dat";
+    test_memory_file_signed_values_test : string := "../hw_sidh_tests/base_ula_signed_values_test.dat"
 );
 end tb_base_alu;
 

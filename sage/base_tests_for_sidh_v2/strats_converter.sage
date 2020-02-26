@@ -75,9 +75,9 @@ for row in range(1,MAX_Bob):
     index = pts_index[npts-1];
     npts -= 1;
 
-print(direct_splits_Alice)
-print(max_npts_Alice+1)
-print('')
-print(direct_splits_Bob)
-print(max_npts_Bob+1)
+print direct_splits_Alice
+print max_npts_Alice+1
+print
+print direct_splits_Bob
+print max_npts_Bob+1
     

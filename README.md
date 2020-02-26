@@ -8,7 +8,7 @@ The design was made in hardware/software co-design. The main CPU was made exclus
 
 More information in the paper:
 
-+ Pedro Maat C. Massolino, Patrick Longa, Joost Renes, and Lejla Batina. [A Compact and Scalable Hardware/Software Co-design of SIKE](https://github.com/pmassolino/hw-sike). 2020.
++ Pedro Maat C. Massolino, Patrick Longa, Joost Renes, and Lejla Batina. [A Compact and Scalable Hardware/Software Co-design of SIKE](https://eprint.iacr.org/2020/040). 2020.
 
 All the code that was created for this design is in public domain.
 There are codes that have been used in this project, that have a different license, such as the ones in Xilinx project folders and the Keccak code.
@@ -23,5 +23,5 @@ And the SHA3/Keccak Python code was obtained from:
 
 #### GHDL remarks
 
-If you are going to use the GHDL to simulate this project, you have to change the file synth_double_ram.vhd
+If you are going to use the GHDL to simulate this project, you have to change the file synth_double_ram.vhd.
 In the file there are two architectures : behavioral and vivado_behavioral. When performing GHDL simulations you have to comment "vivado_behavioral" and use the "behavioral", and when you use Vivado or ISE to synthesize, you use the "vivado_behavioral".

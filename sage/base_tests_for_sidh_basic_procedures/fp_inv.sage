@@ -1,75 +1,7 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 proof.arithmetic(False)
 home_folder = "/home/pedro/"
 script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
-load(script_working_folder+"base_functions.sage")
-
-def fp_inv(arithmetic_parameters, a, b, debug=False):
-    prime = arithmetic_parameters[3]
-    r = arithmetic_parameters[12]
-    reg = [r, a, r, b]
-    
-    prime_list = unsigned_integer_to_list(1, 2000, prime-2)
-    
-    i = len(prime_list) - 1
-    
-    while(prime_list[i] != 1):
-        i = i - 1
-    
-    while i != 0:
-        if(prime_list[i] == 1):
-            ma = [reg[1], reg[0], reg[3], reg[2], 0, 0, 0, 0]
-            mb = [reg[1], reg[1], reg[3], reg[3], 0, 0, 0, 0]
-            mo = mac_8_montgomery_multiplication(arithmetic_parameters, ma, mb)
-            reg[1] = mo[0]
-            reg[0] = mo[1]
-            reg[3] = mo[2]
-            reg[2] = mo[3]
-        else:
-            ma = [reg[0], reg[0], reg[2], reg[2], 0, 0, 0, 0]
-            mb = [reg[0], reg[1], reg[2], reg[3], 0, 0, 0, 0]
-            mo = mac_8_montgomery_multiplication(arithmetic_parameters, ma, mb)
-            reg[0] = mo[0]
-            reg[1] = mo[1]
-            reg[2] = mo[2]
-            reg[3] = mo[3]
-        i = i - 1
-        
-    if(prime_list[i] == 1):
-        ma = [reg[1], reg[0], reg[3], reg[2], 0, 0, 0, 0]
-        mb = [reg[1], reg[1], reg[3], reg[3], 0, 0, 0, 0]
-        mo = mac_8_montgomery_multiplication(arithmetic_parameters, ma, mb)
-        reg[1] = mo[0]
-        reg[0] = mo[1]
-        reg[3] = mo[2]
-        reg[2] = mo[3]
-    else:
-        ma = [reg[0], reg[0], reg[2], reg[2], 0, 0, 0, 0]
-        mb = [reg[0], reg[1], reg[2], reg[3], 0, 0, 0, 0]
-        mo = mac_8_montgomery_multiplication(arithmetic_parameters, ma, mb)
-        reg[0] = mo[0]
-        reg[1] = mo[1]
-        reg[2] = mo[2]
-        reg[3] = mo[3]
-    
-    return [reg[0], reg[2]]
-    
-def sage_fp_inv(fp, a, b):
-    if(fp(a).divides(fp(1))):
-        o1 = fp(a)^(-1)
-    else:
-        o1 = fp(0)
-    if(fp(b).divides(fp(1))):
-        o2 = fp(b)^(-1)
-    else:
-        o2 = fp(0)
-    return o1, o2
+load(script_working_folder+"base_tests_for_sidh_basic_procedures/all_sidh_basic_procedures.sage")
 
 def test_single_fp_inv(arithmetic_parameters, fp, test_value_a, test_value_b):
     prime = arithmetic_parameters[3]

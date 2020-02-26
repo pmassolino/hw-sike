@@ -1,10 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 
+-- Design Name: 
+-- Module Name: 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
 --
--- Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
+-- Dependencies: 
 --
--- To the extent possible under law, the implementer has waived all copyright
--- and related or neighboring rights to the source code in this file.
--- http://creativecommons.org/publicdomain/zero/1.0/
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
 --
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -135,7 +147,7 @@ component synth_mac_ram_v4
         data_out_two_a_full_bus_mode : out std_logic_vector((multiplication_factor*small_bus_ram_word_size - 1) downto 0);
         data_out_two_b_full_bus_mode : out std_logic_vector((multiplication_factor*small_bus_ram_word_size - 1) downto 0);
         data_in_small_bus_mode : in std_logic_vector((small_bus_ram_word_size - 1) downto 0);
-        enable_write_small_bus_mode : std_logic;
+        enable_write_small_bus_mode : in std_logic;
         address_data_in_small_bus_mode : in std_logic_vector((small_bus_ram_address_size - 1) downto 0);
         address_data_out_small_bus_mode : in std_logic_vector((small_bus_ram_address_size - 1) downto 0);
         data_out_small_bus_mode : out std_logic_vector((small_bus_ram_word_size - 1) downto 0)
@@ -340,8 +352,11 @@ signal sidh_control_small_bus_address_data_out_burst_ctr_enable : std_logic;
 signal sidh_control_small_bus_address_burst_ctr_load : std_logic;
 
 signal small_bus_address_data_in_burst_ctr : unsigned((mac_base_word_size - 1) downto 0);
+signal next_small_bus_address_data_in_burst_ctr : unsigned((mac_base_word_size - 1) downto 0);
 signal small_bus_address_data_out_burst_ctr : unsigned((mac_base_word_size - 1) downto 0);
+signal next_small_bus_address_data_out_burst_ctr : unsigned((mac_base_word_size - 1) downto 0);
 signal small_bus_address_burst_size_ctr : unsigned((mac_base_word_size - 1) downto 0);
+signal next_small_bus_address_burst_size_ctr : unsigned((mac_base_word_size - 1) downto 0);
 signal small_bus_address_burst_last_block : std_logic;
 
 signal mac_ram_small_bus_enable : std_logic;

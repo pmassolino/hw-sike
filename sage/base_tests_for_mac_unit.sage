@@ -1,10 +1,3 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 def print_list_convert_format_VHDL_BASE_memory(file, base_word_size, list_a, final_size, signed_integer):
     positive_word = 2**(base_word_size)
     word_full_of_ones = positive_word - 1
