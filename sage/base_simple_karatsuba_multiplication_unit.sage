@@ -1,10 +1,3 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 def print_list_VHDL_memory(file, word_size, list_a, final_size):
     word_full_of_ones = 2**word_size-1
     for i in range (0, len(list_a) - 1):
@@ -164,14 +157,14 @@ def load_VHDL_montgomery_multiplication_test(VHDL_memory_file_name, number_of_bi
 
 home_folder = "/home/pedro/"
 working_folder = home_folder + "/hw-sidh/vhdl_project/"
-file_name = "hw_sidh_tests_v256/multiplication_test_257.dat"
+file_name = "hw_sidh_tests_v257/multiplication_test_257.dat"
 number_of_bits = 257
 number_of_tests = 100
 
 print_VHDL_montgomery_multiplication_test(working_folder+file_name, number_of_bits, number_of_tests)
 load_VHDL_montgomery_multiplication_test(working_folder+file_name, number_of_bits)
 
-file_name = "hw_sidh_tests_v128/multiplication_test_129.dat"
+file_name = "hw_sidh_tests_v129/multiplication_test_129.dat"
 number_of_bits = 129
 number_of_tests = 100
 

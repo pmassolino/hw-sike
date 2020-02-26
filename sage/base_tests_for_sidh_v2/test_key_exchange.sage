@@ -1,17 +1,7 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 proof.arithmetic(False)
 home_folder = "/home/pedro/"
 script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
-load(script_working_folder+"base_tests_for_sidh_v2/keygen_alice_fast.sage")
-load(script_working_folder+"base_tests_for_sidh_v2/keygen_bob_fast.sage")
-load(script_working_folder+"base_tests_for_sidh_v2/shared_secret_alice_fast.sage")
-load(script_working_folder+"base_tests_for_sidh_v2/shared_secret_bob_fast.sage")
+load(script_working_folder+"base_tests_for_sidh_v2/all_sidh_functions.sage")
 load(script_working_folder+"base_tests_for_sidh_v2/sidh_constants.sage")
 
 def test_single_key_exchange(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_alice, sk_bob, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, debug=False):

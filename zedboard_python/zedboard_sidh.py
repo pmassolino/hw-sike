@@ -1,64 +1,10 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 import serial
 import time
 import binascii
 
 DEBUG_MODE = False
-
-sidh_core_mac_ram_start_address =                           0x00000;
-sidh_core_mac_ram_last_address =                            0x07FFF;
-sidh_core_base_alu_ram_start_address =                      0x0C000;
-sidh_core_base_alu_ram_last_address =                       0x0C3FF;
-sidh_core_keccak_core_start_address =                       0x0D000;
-sidh_core_keccak_core_last_address =                        0x0D007;
-sidh_core_reg_program_counter_address =                     0x0E000;
-sidh_core_reg_status_address =                              0x0E001;
-sidh_core_reg_operands_size_address =                       0x0E002;
-sidh_core_reg_prime_line_equal_one_address =                0x0E003;
-sidh_core_reg_prime_address_address =                       0x0E004;
-sidh_core_reg_prime_plus_one_address_address =              0x0E005;
-sidh_core_reg_prime_line_address_address =                  0x0E006;
-sidh_core_reg_initial_stack_address_address =               0x0E007;
-sidh_core_reg_flag_address =                                0x0E008;
-sidh_core_reg_scalar_address_address =                      0x0E009;
-
-sidh_core_mac_ram_prime_address =                           0x00000;
-sidh_core_mac_ram_prime_plus_one_address =                  0x00001;
-sidh_core_mac_ram_prime_line_address =                      0x00002;
-sidh_core_mac_ram_const_r_address =                         0x00003;
-sidh_core_mac_ram_const_r2_address =                        0x00004;
-sidh_core_mac_ram_const_1_address =                         0x00005;
-sidh_core_mac_ram_inv_4_mont_address =                      0x00006;
-sidh_core_mac_ram_sidh_xpa_mont_address =                   0x00007;
-sidh_core_mac_ram_sidh_xpai_mont_address =                  0x00008;
-sidh_core_mac_ram_sidh_xqa_mont_address =                   0x00009;
-sidh_core_mac_ram_sidh_xqai_mont_address =                  0x0000A;
-sidh_core_mac_ram_sidh_xra_mont_address =                   0x0000B;
-sidh_core_mac_ram_sidh_xrai_mont_address =                  0x0000C;
-sidh_core_mac_ram_sidh_xpb_mont_address =                   0x0000D;
-sidh_core_mac_ram_sidh_xpbi_mont_address =                  0x0000E;
-sidh_core_mac_ram_sidh_xqb_mont_address =                   0x0000F;
-sidh_core_mac_ram_sidh_xqbi_mont_address =                  0x00010;
-sidh_core_mac_ram_sidh_xrb_mont_address =                   0x00011;
-sidh_core_mac_ram_sidh_xrbi_mont_address =                  0x00012;
-
-sidh_core_mac_ram_input_function_start_address =            0x00014;
-sidh_core_mac_ram_output_function_start_address =           0x00024;
-
-sidh_core_base_alu_ram_oa_bits_address =                    0x0019F;
-sidh_core_base_alu_ram_ob_bits_address =                    0x001A0;
-sidh_core_base_alu_ram_prime_size_bits_address =            0x001A1;
-sidh_core_base_alu_ram_splits_alice_start_address =         0x001A2;
-sidh_core_base_alu_ram_max_row_alice_address =              0x002D0;
-sidh_core_base_alu_ram_splits_bob_start_address =           0x002D1;
-sidh_core_base_alu_ram_max_row_bob_address =                0x003FF;
 
 def integerToBytearray(a, fixed_size=0):
     if(fixed_size == 0):
@@ -84,8 +30,14 @@ def bytearrayToInteger(a):
     return integer_a
 
 class Zedboard():
-    def __init__(self, portName):
+    def __init__(self, portName, version):
         self.serial = serial.Serial(portName, baudrate=115200, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=None, xonxoff=False, rtscts=False, write_timeout=None, dsrdtr=False, inter_byte_timeout=None)
+        if(version == "256"):
+            self.mac_ram_words_per_operand = 4
+            self.base_words_per_mac_ram = 16
+        elif(version == "128"):
+            self.mac_ram_words_per_operand = 8
+            self.base_words_per_mac_ram = 8
 
     def __del__(self):
         self.serial.close()
@@ -173,7 +125,7 @@ class Zedboard():
         value_mask = 2**16-1
         effective_address = address
         effective_value = 0
-        for i in range(16):
+        for i in range(self.base_words_per_mac_ram):
             effective_value = value & value_mask
             self.write_package(effective_address, effective_value)
             value = value >> 16
@@ -184,7 +136,7 @@ class Zedboard():
         effective_address = address
         effective_value = 0
         shift_amount = 0
-        for i in range(16):
+        for i in range(self.base_words_per_mac_ram):
             temp_value = self.read_package(effective_address)
             effective_value |= temp_value << shift_amount
             shift_amount += 16
@@ -214,13 +166,13 @@ class Zedboard():
         return effective_value
 
     def write_program_prom(self, address, program):
-        effective_address = address*4*16
+        effective_address = address*4
         for i in range(len(program)):
             self.write_prom_value(effective_address, program[i])
             effective_address += 4
             
     def read_program_prom(self, address, program_size):
-        effective_address = address*4*16
+        effective_address = address*4
         program = [0 for i in range(program_size)]
         for i in range(program_size):
             program[i] = self.read_prom_value(effective_address)
@@ -229,16 +181,16 @@ class Zedboard():
 
     def write_mac_ram_operand(self, address, operand, operand_size):
         value_mask = 2**16-1
-        effective_address = address*4*16 + sidh_core_mac_ram_start_address
+        effective_address = address*(self.mac_ram_words_per_operand)*(self.base_words_per_mac_ram)
         for i in range(operand_size):
             self.write_mac_ram_value(effective_address, operand[i])
-            effective_address += 16
+            effective_address += self.base_words_per_mac_ram
 
     def read_mac_ram_operand(self, address, operand_size):
         value_mask = 2**16-1
-        effective_address = address*4*16 + sidh_core_mac_ram_start_address
+        effective_address = address*(self.mac_ram_words_per_operand)*(self.base_words_per_mac_ram)
         operand = [0]*operand_size
         for i in range(operand_size):
             operand[i] = self.read_mac_ram_value(effective_address)
-            effective_address += 16
+            effective_address += self.base_words_per_mac_ram
         return operand

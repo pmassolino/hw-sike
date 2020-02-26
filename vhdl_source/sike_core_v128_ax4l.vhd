@@ -1,10 +1,22 @@
---
--- Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
---
--- To the extent possible under law, the implementer has waived all copyright
--- and related or neighboring rights to the source code in this file.
--- http://creativecommons.org/publicdomain/zero/1.0/
---
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 11/06/2018 03:34:27 PM
+-- Design Name: 
+-- Module Name: sidh_core_axi4_lite - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;

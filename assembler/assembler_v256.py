@@ -1,11 +1,567 @@
-# -*- coding: utf-8 -*-
 #
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
+# Register 
+# Dir 0  - Direct access
+# ---- ---- Value between 0 to 255
+# Dir 1  - Indirect access
+# 00000 0000 Disable operand
+# 00000 0001 Reserved
+# 00--- ---- Reserved
+# 10000 0000 RD0
+# 10000 0001 RD1
+# 10000 0010 RD2
+# 10000 0011 RD3
+# 10000 0100 RD4
+# 10000 0101 RD5
+# 10000 0110 RD6
+# 10000 0111 RD7
+# 10000 1000 RD8
+# 10000 1001 RD9
+# 10000 1010 RD10
+# 10000 1011 RD11
+# 10000 1100 RD12
+# 10000 1101 RD13
+# 10000 1110 RD14
+# 10000 1111 RD15
+# 10001 0000 RD16
+# ...
+# 10010 0000 RD32
+# ...
+# 100 11 1111 RD63
+# 10100 ---- Reserved
+# -- RDO 1 MSB bit
+# 11000 0010 (RD3  if RD0 = 1 else RD2)
+# 11000 0011 (RD2  if RD0 = 1 else RD3)
+# 11000 0100 (RD5  if RD0 = 1 else RD4)
+# 11000 0101 (RD4  if RD0 = 1 else RD5)
+# 11000 0110 (RD7  if RD0 = 1 else RD6)
+# 11000 0111 (RD6  if RD0 = 1 else RD7)
+# 11000 1010 (RD9  if RD0 = 1 else RD8)
+# 11000 1011 (RD8  if RD0 = 1 else RD9)
+# 11000 1100 (RD11 if RD0 = 1 else RD10)
+# 11000 1101 (RD10 if RD0 = 1 else RD11)
+# 11000 1110 (RD13 if RD0 = 1 else RD12)
+# 11000 1111 (RD12 if RD0 = 1 else RD13)
+# 11000 1110 (RD15 if RD0 = 1 else RD14)
+# 11000 1111 (RD14 if RD0 = 1 else RD15)
+# 11001 ---- Reserved
+# -- RDO 1 LSB bit
+# 11100 0010 (RD3  if RD0 = 1 else RD2)
+# 11100 0011 (RD2  if RD0 = 1 else RD3)
+# 11100 0100 (RD5  if RD0 = 1 else RD4)
+# 11100 0101 (RD4  if RD0 = 1 else RD5)
+# 11100 0110 (RD7  if RD0 = 1 else RD6)
+# 11100 0111 (RD6  if RD0 = 1 else RD7)
+# 11100 1010 (RD9  if RD0 = 1 else RD8)
+# 11100 1011 (RD8  if RD0 = 1 else RD9)
+# 11100 1100 (RD11 if RD0 = 1 else RD10)
+# 11100 1101 (RD10 if RD0 = 1 else RD11)
+# 11100 1110 (RD13 if RD0 = 1 else RD12)
+# 11100 1111 (RD12 if RD0 = 1 else RD13)
+# 11100 1110 (RD15 if RD0 = 1 else RD14)
+# 11100 1111 (RD14 if RD0 = 1 else RD15)
+# 11101 ---- Reserved
+# 
+# Instructions model
+# 
+# | 63  62 |     61 | 60   55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |      0 |   type  | Dir     memo    | Sign Dir  Cx     memb    | Sign Dir  Cx     mema   |
+# 
+# | 63  62 | 61  59 | 58   55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   01   |   000  |   type  | Dir      Mo     |  0   Dir  En      Mb     | Sign Dir  En      Ma    |
+# 
+# 
+# SIDH core instructions (00)
+# 
+# If Cx = 0
+# memx = 16 bits constant
+# Cx = 1
+# memx = 16 bits memory position
+# 
+# #constant
+# constant = direct number
+# #(n)constant
+# n*constant = multiplied factor, n is a number, only works if it can be solved by the compiler.
+# 
+# NOP - Do nothing and goes to the next instruction.
+# nop
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000000    |  0       0      |  0    0    0      0      |  0    0    0      0     |
+# 
+# Jump - Jump to the specified position, memo -> PC
+# Local bus memory
+# OOOO = #constant
+# jump OOOO
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000001    |  0      memo    |  0    0    0      0      |  0    0    0      0     |
+# 
+# Jump - Jump if equal to the specified position, memo -> PC if memb = mema
+# Local bus memory
+# OOOO = #constant
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# jumpeq OOOO YYYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000001    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Jump - Jump if less to the specified position, memo -> PC if mema > memb
+# Local bus memory
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# unsigned values
+# jumpl OOOO YYYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000010    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# signed values
+# jumpls OOOO YYYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000010    |  0      memo    |  1    0   Cx     memb    |  1    0   Cx     mema   |
+# 
+# Jump - Jump if equal or less to the specified position, memo -> PC if mema > memb
+# Local bus memory
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# unsigned values
+# jumpeql OOOO YYYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000011    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# signed values
+# jumpeqls OOOO YYYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000011    |  0      memo    |  1    0   Cx     memb    |  1    0   Cx     mema   |
+# 
+# Push Memory map position a in mac ram -> Stack
+# Full bus memory
+# OOOO = #constant
+# OOOO = bXXXX
+# OOOO = rdXX
+# OOOO = rpc
+# OOOO = rstatus
+# OOOO = roperands
+# OOOO = rprimeline
+# push OOOO
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000100    |  0       0      |  0    0    0      0      |  0   Dir  Cx     mema   |
+# 
+# Pop Stack -> Memory map position o in mac ram
+# Full bus memory
+# OOOO = bXXXX
+# OOOO = rdXX
+# OOOO = rpc
+# OOOO = rstatus
+# OOOO = roperands
+# OOOO = rprimeline
+# pop OOOO
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000101    | Dir     memo    |  0    0    0      0      |  0    0    0      0     |
+# 
+# Push Memory map position a in mac ram -> Stack
+# Full bus memory
+# pushf mXXX.X
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000110    |  0       0      |  0    0    0      0      |  0   Dir   1     mema   |
+# 
+# Pop Stack -> Memory map position o in mac ram
+# Full bus memory
+# popf mXXX.X
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   000111    | Dir     memo    |  0    0    0      0      |  0    0    0      0     |
+# 
+# Push Memory map position a in mac ram -> Stack
+# Full bus memory
+# pushm mXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001000    |  0       0      |  0    0    0      0      |  0   Dir   1     mema   |
+# 
+# Pop Stack -> Memory map position o in mac ram
+# Full bus memory
+# popm mXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001001    | Dir     memo    |  0    0    0      0      |  0    0    0      0     |
+# 
+# Copy value mema -> memb
+# Local bus memory
+# copy memo mema
+# OOOO = bXXXX
+# OOOO = mXXX.X.XX
+# OOOO = rdXX
+# YYYY = #constant
+# YYYY = bXXXX
+# YYYY = mXXX.X.XX
+# YYYY = rdXX
+# YYYY = rpc
+# YYYY = rstatus
+# YYYY = roperands
+# YYYY = rprimeline
+# copy OOOO YYYY
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001010    | Dir     memo    |  0    0    0      0      |  0   Dir  Cx     mema   |
+# 
+# Copy value mema -> memb
+# Full bus memory
+# copyf memo mema
+# OOOO = mXXX.X
+# YYYY = mXXX.X
+# copyf OOOO YYYY
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001011    | Dir     memo    |  0    0    0      0      |  0   Dir   1     mema   |
+# 
+# Copy value mema -> memb
+# Full bus memory
+# copym memo mema
+# OOOO = mXXX.0
+# YYYY = mXXX.0
+# copym OOOO YYYY
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001100    | Dir     memo    |  0    0    0      0      |  0   Dir   1     mema   |
+# 
+# Load value mac memory
+# Full bus memory
+# lconstf mXXX.X #constant
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001101    | Dir     memo    |  0    0    0      0      | Sign  0    0     value  |
+# 
+# Load value mac memory
+# Full bus memory
+# lconstm mXXX.0 #constant
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001110    | Dir     memo    |  0    0    0      0      | Sign  0    0     value  |
+# 
+# Call function
+# stack <- pc+1
+# pc <- #constant
+# OOOO = #constant
+# OOOO = rdOO
+# call OOOO
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   001111    |  0      memo    |  0    0    0      0      |  0    0    1      pc    |
+# 
+# Return function
+# pc <- stack
+# ret
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   010000    |  0       0      |  0    0    0      0      |  0    0    1    stack   |
+# 
+# Keccak Init - Initialize keccak core
+# keccak_init
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   010010    |  0       0      |  0    0    0      0      |  0    0    0      0     |
+# 
+# Keccak Go - Perform 24 rounds of Keccak
+# keccak_go
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   010011    |  0       0      |  0    0    0      0      |  0    0    0      0     |
+# 
+# Copy array mema -> memb
+# Local bus memory
+# copya inc|dec (r|d|s|ds) memo mema
+# OOOO = bXXXX
+# OOOO = mXXX.X.XX
+# OOOO = rdXX
+# YYYY = #constant
+# YYYY = bXXXX
+# YYYY = mXXX.X.XX
+# YYYY = rdXX
+# YYYY = rpc
+# YYYY = rstatus
+# YYYY = roperands
+# YYYY = rprimeline
+# copya inc|dec (r|d|s|ds) OOOO YYYY #size
+# inc = 0, dec = 1
+# Cd = Destiny constant (0 = constant)
+# Cs = Source constant (0 = constant)
+# | 63  62 | 61 | 60 ... 58 |   57    | 56  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |    011    | inc/dec | Cd  Cs | Dir     memo    |  0    0    0    size     |  0   Dir  Cx     mema   |
+# 
+# Addition value memo = memb + mema
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# badd OOOO YYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100000    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Subtraction value  memo = memb - mema
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# bsub OOOO YYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100001    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Multiplication value single  memo = memb * mema
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# bsmul OOOO YYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100010    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# bsmuls OOOO YYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100010    |  0      memo    |  1    0   Cx     memb    |  1    0   Cx     mema   |
+# 
+# Shift right 17 bits value (memo) = (memb) >> consta
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# bshiftr OOOO YYYY #constant
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100100    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Rotate right 17 bits value (memo) = (memb) >> consta
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# brotr OOOO YYYY #constant
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100101    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Shift left 17 bits value (memo) = (memb) << consta
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# bshiftl OOOO YYYY #constant
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100110    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Rotate left 17 bits value (memo) = (memb) << consta
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# brotl OOOO YYYY #constant
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   100111    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Logic and 17 bits value memo = memb AND mema
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# bland OOOO YYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   101000    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Logic or 17 bits value memo = memb OR mema
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# blor OOOO YYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   101001    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Logic xor 17 bits value memo = memb XOR mema
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# blxor OOOO YYYY XXXX
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   101010    |  0      memo    |  0    0   Cx     memb    |  0    0   Cx     mema   |
+# 
+# Logic NOT 17 bits value memo = NOT mema
+# Register direct 
+# OOOO = #constant
+# OOOO = rdOO
+# YYYY = #constant
+# YYYY = rdYY
+# XXXX = #constant
+# XXXX = rdXX
+# blnot OOOO YYYY
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   101010    |  0      memo    |  0    0   Cx     memb    |  0    0    0    1...1   |
+# 
+# fin
+# Finish execution
+# | 63  62 | 61 | 60  ...  55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   00   |  0 |   111111    |  0       0      |  0    0    0      0      |  0    0    0      0     |
+# 
+# 
+# MAC Instructions (01)
+# 
+# OOOO = MOOO
+# OOOO = ROO
+# OOOO = IOO
+# AAAA = MAAA
+# AAAA = RAA
+# AAAA = IAA
+# BBBB = MBBB
+# BBBB = RBB
+# BBBB = IBB
+# mmuld OOOO BBBB AAAA
+# Multiplication Comba no reduction instruction
+# If all memory positions are 0, then the slot is disabled
+# | 63  62 | 61   59 | 58    55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   01   |   000   |   0000   | Dir      Mo     |  0   Dir  En      Mb     |  0   Dir  En      Ma    |
+# 
+# OOOO = MOOO
+# OOOO = ROO
+# OOOO = IOO
+# AAAA = MAAA
+# AAAA = RAA
+# AAAA = IAA
+# msqud OOOO AAAA
+# Square Comba no reduction instruction
+# If all memory positions are 0, then the slot is disabled
+# | 63  62 | 61   59 | 58    55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   01   |   000   |   0001   | Dir      Mo     |  0   Dir  En      Ma     |  0   Dir  En      Ma    |
+# 
+# OOOO = MOOO
+# OOOO = ROO
+# OOOO = IOO
+# AAAA = MAAA
+# AAAA = RAA
+# AAAA = IAA
+# BBBB = MBBB
+# BBBB = RBB
+# BBBB = IBB
+# mmulm OOOO BBBB AAAA 
+# mmulm OOOO BBBB AAAA 
+# Multiplication FIPS instruction
+# If all memory positions are 0, then the slot is disabled
+# | 63  62 | 61   59 | 58    55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   01   |   000   |   0010   | Dir      Mo     |  0   Dir  En      Mb     |  0   Dir  En      Ma    |
+# 
+# OOOO = MOOO
+# OOOO = ROO
+# OOOO = IOO
+# AAAA = MAAA
+# AAAA = RAA
+# AAAA = IAA
+# msqum OOOO AAAA
+# msqum OOOO AAAA 
+# Square FIPS instruction
+# If all memory positions are 0, then the slot is disabled
+# | 63  62 | 61   59 | 58    55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   01   |   000   |   0011   | Dir      Mo     |  0   Dir  En      Ma     |  0   Dir  En      Ma    |
+# 
+# OOOO = MOOO
+# OOOO = ROO
+# OOOO = IOO
+# AAAA = MAAA
+# AAAA = RAA
+# AAAA = IAA
+# BBBB = MBBB
+# BBBB = RBB
+# BBBB = IBB
+# madd_subd OOOO BBBB + AAAA
+# madd_subd OOOO BBBB - AAAA
+# Addition/Subtraction instruction - no reduction
+# If all memory positions are 0, then the slot is disabled
+# | 63  62 | 61   59 | 58    55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   01   |   000   |   0100   | Dir      Mo     |  0   Dir  En      Mb     | Sign Dir  En      Ma    |
+# 
+# OOOO = MOOO
+# OOOO = ROO
+# OOOO = IOO
+# AAAA = MAAA
+# AAAA = RAA
+# AAAA = IAA
+# BBBB = MBBB
+# BBBB = RBB
+# BBBB = IBB
+# mitred OOOO AAAA
+# Iterative modular reduction
+# If all memory positions are 0, then the slot is disabled
+# | 63  62 | 61   59 | 58    55 | 54   53 ...  38 | 37   36   35  34 ...  19 | 18   17   16  15 ...  0 |
+# |   01   |   000   |   0101   | Dir      Mo     |  0    0    0      0      | Sign Dir  En      Ma    |
+# 
+# Memory model
+# 
+# R - Internal Read
+# W - Internal Write
+# E - External Read
+# S - External Write
+#  ____________________________________
+# |00000|        MAC  RAM              |
+# |07FFF|______________________________|
+#  ____________________________________
+# |08000|        Reserved              |
+# |0BFFF|______________________________|
+#  ____________________________________
+# |0C000|        ALU RAM               |
+# |0C3FF|______________________________|
+#  ____________________________________
+# |0C400|        Reserved              |
+# |0CFFF|______________________________|
+#  ____________________________________
+# |     |        Keccak                |
+# |0D000|        absorb                |
+# |0D07F|        absorb                |
+# |0D080|        squeeze               |
+# |0D0FF|        squeeze               |
+# |0D100|        dout                  |
+# |0D1FF|______________________________|
+#  ____________________________________
+# |0D200|        Reserved              |
+# |0DFFF|______________________________|
+#  ____________________________________
+# |     |        Status Regs           |
+# |0E000|        PC Init               |
+# |0E001|        Status                |
+# |0E002|        Operands size         |
+# |0E003|        Prime line = 1?       |
+# |0E004|        Prime address         |
+# |0E005|        Prime+1 address       |
+# |0E006|        Prime' address        |
+# |0E007|        Initial stack address |
+# |0E008|        Flag address          |
+# |0E009|        Scalar init address   |
+# |     |                              |
+# |0EFFF|        Reserved              |
+# |____________________________________|
+#  ____________________________________
+# |0F000|        Reserved              |
+# |0FFFF|______________________________|
+# 
+# 
+# Special area. Only external communication
+#  ____________________________________
+# |10000|        Program               |
+# |17FFF|______________________________|
+# ____________________________________
+# |18000|        Reserved              |
+# |1FFFF|______________________________|
+# 
 
 import sys
 import os

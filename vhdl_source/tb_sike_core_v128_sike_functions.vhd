@@ -1,10 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    
+-- Design Name: 
+-- Module Name:    
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
 --
--- Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
+-- Dependencies: 
 --
--- To the extent possible under law, the implementer has waived all copyright
--- and related or neighboring rights to the source code in this file.
--- http://creativecommons.org/publicdomain/zero/1.0/
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
 --
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -29,7 +41,7 @@ Generic(
     base_alu_rotation_level : integer := 4;
     maximum_number_of_tests : integer := 1;
     
-    test_only_smallest_size : boolean := true;
+    test_only_smallest_size : boolean := false;
     skip_keygen : boolean := false;
     skip_encryption : boolean := false;
     skip_decryption : boolean := false;
@@ -1923,17 +1935,17 @@ begin
     wait for PERIOD;
     if( not skip_keygen ) then
         report "Start keygen test." severity note;
-        test_keygen(test_memory_file_keygen_8_5, 1, 0);
-        wait for PERIOD;
+        --test_keygen(test_memory_file_keygen_8_5, 1, 0);
+        --wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_keygen(test_memory_file_keygen_216_137, 4, 1);
-            wait for PERIOD;
-            test_keygen(test_memory_file_keygen_250_159, 4, 1);
-            wait for PERIOD;
-            test_keygen(test_memory_file_keygen_305_192, 5, 1);
-            wait for PERIOD;
-            test_keygen(test_memory_file_keygen_372_239, 6, 1);
-            wait for PERIOD;
+            --test_keygen(test_memory_file_keygen_216_137, 4, 1);
+            --wait for PERIOD;
+            --test_keygen(test_memory_file_keygen_250_159, 4, 1);
+            --wait for PERIOD;
+            --test_keygen(test_memory_file_keygen_305_192, 5, 1);
+            --wait for PERIOD;
+            --test_keygen(test_memory_file_keygen_372_239, 6, 1);
+            --wait for PERIOD;
             test_keygen(test_memory_file_keygen_486_301, 8, 1);
             wait for PERIOD;
         end if;

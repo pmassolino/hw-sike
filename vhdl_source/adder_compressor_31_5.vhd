@@ -1,10 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    
+-- Design Name: 
+-- Module Name:    
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
 --
--- Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
+-- Dependencies: 
 --
--- To the extent possible under law, the implementer has waived all copyright
--- and related or neighboring rights to the source code in this file.
--- http://creativecommons.org/publicdomain/zero/1.0/
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
 --
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;

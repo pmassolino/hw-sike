@@ -1,91 +1,13 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 import binascii
 
 proof.arithmetic(False)
 home_folder = "/home/pedro/"
 script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+load(script_working_folder+"base_tests_for_sidh_v2/all_sidh_functions.sage")
 load(script_working_folder+"base_tests_for_sidh_v2/sidh_constants.sage")
-load(script_working_folder+"base_tests_for_sidh_v2/keygen_alice_fast.sage")
-load(script_working_folder+"base_tests_for_sidh_v2/shared_secret_alice_fast.sage")
 
-load(script_working_folder+"base_tests_for_sike_v2/keygen_sike.sage")
+load(script_working_folder+"base_tests_for_sike_v2/all_sike_functions.sage")
 load(script_working_folder+"base_tests_for_sike_v2/CompactFIPS202.py")
-
-def sage_enc_sike(fp2, sike_m, prime_str_length, message_length, shared_secret_length, sike_pk_phiPX, sike_pk_phiPXi, sike_pk_phiQX, sike_pk_phiQXi, sike_pk_phiRX, sike_pk_phiRXi, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, inv_4):
-    
-    temp_pk = bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiPX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiPXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiQX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiQXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiRX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiRXi)))
-    temp = sike_m + temp_pk
-    ephemeral_sk = SHAKE256(temp, (oa_bits+7)//8)
-    ephemeral_sk = bytearray_to_int(ephemeral_sk)
-    ephemeral_sk = ephemeral_sk % (2**(oa_bits+1))
-    sike_c0_phiPX, sike_c0_phiPXi, sike_c0_phiQX, sike_c0_phiQXi, sike_c0_phiRX, sike_c0_phiRXi = sage_keygen_alice_fast(fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, ephemeral_sk, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
-    sike_j_invar, sike_j_invar_i = sage_shared_secret_alice_fast(fp2, sike_pk_phiPX, sike_pk_phiPXi, sike_pk_phiQX, sike_pk_phiQXi, sike_pk_phiRX, sike_pk_phiRXi, ephemeral_sk, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
-    temp = bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_j_invar))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_j_invar_i)))
-    sike_h = SHAKE256(temp, message_length)
-    sike_c1 = bytearray([sike_m[i] ^^ sike_h[i] for i in range(message_length)])
-    temp_c0 = bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiPX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiPXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiQX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiQXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiRX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiRXi)))
-    temp = sike_m + temp_c0 + sike_c1
-    sike_ss = SHAKE256(temp, shared_secret_length)
-    
-    return sike_ss, sike_c0_phiPX, sike_c0_phiPXi, sike_c0_phiQX, sike_c0_phiQXi, sike_c0_phiRX, sike_c0_phiRXi, sike_c1
-    
-def enc_sike(arithmetic_parameters, sike_m, prime_str_length, message_length, shared_secret_length, sike_pk_phiPX, sike_pk_phiPXi, sike_pk_phiQX, sike_pk_phiQXi, sike_pk_phiRX, sike_pk_phiRXi, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, inv_4):
-    extended_word_size_signed = arithmetic_parameters[0]
-    number_of_words = arithmetic_parameters[9]
-    
-    const_r = arithmetic_parameters[12]
-    const_r2 = arithmetic_parameters[14]
-    
-    sike_pk_phiPX_mont  = enter_montgomery_domain(arithmetic_parameters, sike_pk_phiPX)
-    sike_pk_phiPXi_mont = enter_montgomery_domain(arithmetic_parameters, sike_pk_phiPXi)
-    sike_pk_phiRX_mont  = enter_montgomery_domain(arithmetic_parameters, sike_pk_phiRX)
-    sike_pk_phiRXi_mont = enter_montgomery_domain(arithmetic_parameters, sike_pk_phiRXi)
-    sike_pk_phiQX_mont  = enter_montgomery_domain(arithmetic_parameters, sike_pk_phiQX) 
-    sike_pk_phiQXi_mont = enter_montgomery_domain(arithmetic_parameters, sike_pk_phiQXi)
-    
-    temp_pk = bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiPX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiPXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiQX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiQXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiRX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_pk_phiRXi)))
-    temp = sike_m + temp_pk
-    ephemeral_sk = SHAKE256(temp, (oa_bits+7)//8)
-    ephemeral_sk = bytearray_to_int(ephemeral_sk)
-    ephemeral_sk = ephemeral_sk % (2**(oa_bits+1))
-    
-    sike_c0_phiPX_mont, sike_c0_phiPXi_mont, sike_c0_phiQX_mont, sike_c0_phiQXi_mont, sike_c0_phiRX_mont, sike_c0_phiRXi_mont = keygen_alice_fast(arithmetic_parameters, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, ephemeral_sk, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
-    
-    sike_j_invar_mont, sike_j_invar_i_mont = shared_secret_alice_fast(arithmetic_parameters, sike_pk_phiPX_mont, sike_pk_phiPXi_mont, sike_pk_phiQX_mont, sike_pk_phiQXi_mont, sike_pk_phiRX_mont, sike_pk_phiRXi_mont, ephemeral_sk, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
-    
-    sike_j_invar    = remove_montgomery_domain(arithmetic_parameters, sike_j_invar_mont)
-    sike_j_invar_i  = remove_montgomery_domain(arithmetic_parameters, sike_j_invar_i_mont)
-    sike_c0_phiPX   = remove_montgomery_domain(arithmetic_parameters, sike_c0_phiPX_mont)
-    sike_c0_phiPXi  = remove_montgomery_domain(arithmetic_parameters, sike_c0_phiPXi_mont)
-    sike_c0_phiQX   = remove_montgomery_domain(arithmetic_parameters, sike_c0_phiQX_mont)
-    sike_c0_phiQXi  = remove_montgomery_domain(arithmetic_parameters, sike_c0_phiQXi_mont)
-    sike_c0_phiRX   = remove_montgomery_domain(arithmetic_parameters, sike_c0_phiRX_mont)
-    sike_c0_phiRXi  = remove_montgomery_domain(arithmetic_parameters, sike_c0_phiRXi_mont)
-    
-    sike_j_invar    = iterative_reduction(arithmetic_parameters, sike_j_invar)
-    sike_j_invar_i  = iterative_reduction(arithmetic_parameters, sike_j_invar_i)
-    sike_c0_phiPX   = iterative_reduction(arithmetic_parameters, sike_c0_phiPX)
-    sike_c0_phiPXi  = iterative_reduction(arithmetic_parameters, sike_c0_phiPXi)
-    sike_c0_phiQX   = iterative_reduction(arithmetic_parameters, sike_c0_phiQX)
-    sike_c0_phiQXi  = iterative_reduction(arithmetic_parameters, sike_c0_phiQXi)
-    sike_c0_phiRX   = iterative_reduction(arithmetic_parameters, sike_c0_phiRX)
-    sike_c0_phiRXi  = iterative_reduction(arithmetic_parameters, sike_c0_phiRXi)
-    
-    temp = bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_j_invar))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_j_invar_i)))
-    sike_h = SHAKE256(temp, message_length)
-    sike_c1 = bytearray([sike_m[i] ^^ sike_h[i] for i in range(message_length)])
-    
-    temp_c0 = bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiPX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiPXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiQX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiQXi))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiRX))) + bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(sike_c0_phiRXi)))
-    temp = sike_m + temp_c0 + sike_c1
-    sike_ss = SHAKE256(temp, shared_secret_length)
-    
-    return sike_ss, sike_c0_phiPX, sike_c0_phiPXi, sike_c0_phiQX, sike_c0_phiQXi, sike_c0_phiRX, sike_c0_phiRXi, sike_c1
 
 def test_single_enc_sike(arithmetic_parameters, fp2, sike_s, sike_sk, sike_m, prime_str_length, message_length, shared_secret_length, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, debug=False):
     extended_word_size_signed = arithmetic_parameters[0]
@@ -589,6 +511,10 @@ def load_VHDL_enc_sike_test(VHDL_memory_file_name, base_word_size, extended_word
             print(binascii.hexlify(loaded_sike_s))
             print("Loaded sike sk")
             print(loaded_sike_sk)
+            print("Loaded value o1")
+            print(binascii.hexlify(loaded_test_value_o1))
+            print("Computed value o1")
+            print(binascii.hexlify(computed_test_value_o1))
             print("Loaded value o2")
             print(loaded_test_value_o2)
             print(loaded_test_value_o2i)
@@ -646,6 +572,10 @@ def load_VHDL_enc_sike_test(VHDL_memory_file_name, base_word_size, extended_word
         print(binascii.hexlify(loaded_sike_s))
         print("Loaded sike sk")
         print(loaded_sike_sk)
+        print("Loaded value o1")
+        print(binascii.hexlify(loaded_test_value_o1))
+        print("Computed value o1")
+        print(binascii.hexlify(computed_test_value_o1))
         print("Loaded value o2")
         print(binascii.hexlify(bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(loaded_test_value_o2)))))
         print(binascii.hexlify(bytearray.fromhex(('{:0' + str(prime_str_length) + 'x}').format(int(loaded_test_value_o2i)))))
@@ -713,7 +643,7 @@ def load_all_enc_sike(base_word_size, extended_word_size, number_of_bits_added, 
 number_of_bits_added = 8
 base_word_size = 16
 extended_word_size = 256
-accumulator_word_size = extended_word_size_signed*2+32
+accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v256/"
 
@@ -721,7 +651,7 @@ tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v256/"
 #number_of_bits_added = 8
 #base_word_size = 16
 #extended_word_size = 128
-#accumulator_word_size = extended_word_size_signed*2+32
+#accumulator_word_size = extended_word_size*2+32
 #number_of_tests = 10
 #tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v128/"
 
@@ -739,4 +669,3 @@ VHDL_file_names = [tests_working_folder + "enc_sike_" + str(param[4]) + "_" + st
 #prime_str_length = ((prime_size_bits+7)//8)*2
 #VHDL_memory_file_name = VHDL_file_names[i]
 #error_computation = load_VHDL_enc_sike_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, prime_str_length, 1, debug_mode=True)
-#

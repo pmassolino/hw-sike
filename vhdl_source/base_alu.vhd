@@ -1,14 +1,25 @@
--- Barrel shifter based the one in:
--- Authors : Matthew R. Pillmeier, Michael J. Schulte, and E. George Walters.
--- Title : Design alternatives for barrel shifters.
+----------------------------------------------------------------------------------
+-- Engineer: Pedro Maat C. Massolino
+-- 
+-- Create Date:    
+-- Design Name:    
+-- Module Name:    
+-- Project Name:   
+-- Target Devices: Any
+-- Tool versions:  
+--
+-- Description: 
 --
 --
--- Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
+-- Dependencies:
+-- VHDL-93
+-- IEEE.NUMERIC_STD.ALL;
+-- 
+-- Revision: 
+-- Revision 1.0
+-- Additional Comments: 
 --
--- To the extent possible under law, the implementer has waived all copyright
--- and related or neighboring rights to the source code in this file.
--- http://creativecommons.org/publicdomain/zero/1.0/
---
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;

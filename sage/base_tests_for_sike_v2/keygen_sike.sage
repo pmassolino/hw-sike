@@ -1,69 +1,13 @@
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 import binascii
 
 proof.arithmetic(False)
 home_folder = "/home/pedro/"
 script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+load(script_working_folder+"base_tests_for_sidh_v2/all_sidh_functions.sage")
 load(script_working_folder+"base_tests_for_sidh_v2/sidh_constants.sage")
-load(script_working_folder+"base_tests_for_sidh_v2/keygen_bob_fast.sage")
 
+load(script_working_folder+"base_tests_for_sike_v2/all_sike_functions.sage")
 load(script_working_folder+"base_tests_for_sike_v2/CompactFIPS202.py")
-
-def bytearray_to_int(value):
-    int_value = 0
-    multiplication_factor = 1
-    for each_byte in value:
-        int_value += each_byte*multiplication_factor
-        multiplication_factor *= 256
-    return int_value
-
-def int_to_bytearray(value, byte_length=0):
-    value_byte_length = (int(value).bit_length()+7)//8
-    if(value_byte_length == 0):
-        value_byte_length = 1
-    if(value_byte_length > byte_length):
-        final_bytearray = bytearray.fromhex((("{:0" + str(2*value_byte_length) + "x}").format(value)))[::-1]
-        if(byte_length != 0):
-            final_bytearray = final_bytearray[:(2*byte_length)]
-    else:
-        final_bytearray = bytearray.fromhex((("{:0" + str(2*byte_length) + "x}").format(value)))[::-1]
-    return final_bytearray
-
-def sage_keygen_sike(fp2, sike_s, sike_sk, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, inv_4):
-    
-    sike_pk_phiPX, sike_pk_phiPXi, sike_pk_phiQX, sike_pk_phiQXi, sike_pk_phiRX, sike_pk_phiRXi = sage_keygen_bob_fast(fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sike_sk, ob_bits, splits_bob, max_row_bob, max_int_points_bob, inv_4)
-    
-    return sike_s, sike_sk, sike_pk_phiPX, sike_pk_phiPXi, sike_pk_phiQX, sike_pk_phiQXi, sike_pk_phiRX, sike_pk_phiRXi
-    
-def keygen_sike(arithmetic_parameters, sike_s, sike_sk, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, inv_4):
-    extended_word_size_signed = arithmetic_parameters[0]
-    number_of_words = arithmetic_parameters[9]
-    
-    const_r = arithmetic_parameters[12]
-    
-    sike_pk_phiPX_mont, sike_pk_phiPXi_mont, sike_pk_phiQX_mont, sike_pk_phiQXi_mont, sike_pk_phiRX_mont, sike_pk_phiRXi_mont = keygen_bob_fast(arithmetic_parameters, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sike_sk, ob_bits, splits_bob, max_row_bob, max_int_points_bob, inv_4)
-    
-    sike_pk_phiPX   = remove_montgomery_domain(arithmetic_parameters, sike_pk_phiPX_mont)
-    sike_pk_phiPXi  = remove_montgomery_domain(arithmetic_parameters, sike_pk_phiPXi_mont)
-    sike_pk_phiQX   = remove_montgomery_domain(arithmetic_parameters, sike_pk_phiQX_mont)
-    sike_pk_phiQXi  = remove_montgomery_domain(arithmetic_parameters, sike_pk_phiQXi_mont)
-    sike_pk_phiRX   = remove_montgomery_domain(arithmetic_parameters, sike_pk_phiRX_mont)
-    sike_pk_phiRXi  = remove_montgomery_domain(arithmetic_parameters, sike_pk_phiRXi_mont)
-    
-    sike_pk_phiPX   = iterative_reduction(arithmetic_parameters, sike_pk_phiPX)
-    sike_pk_phiPXi  = iterative_reduction(arithmetic_parameters, sike_pk_phiPXi)
-    sike_pk_phiQX   = iterative_reduction(arithmetic_parameters, sike_pk_phiQX)
-    sike_pk_phiQXi  = iterative_reduction(arithmetic_parameters, sike_pk_phiQXi)
-    sike_pk_phiRX   = iterative_reduction(arithmetic_parameters, sike_pk_phiRX)
-    sike_pk_phiRXi  = iterative_reduction(arithmetic_parameters, sike_pk_phiRXi)
-    
-    return sike_s, sike_sk, sike_pk_phiPX, sike_pk_phiPXi, sike_pk_phiQX, sike_pk_phiQXi, sike_pk_phiRX, sike_pk_phiRXi
 
 def test_single_keygen_sike(arithmetic_parameters, fp2, sike_s, sike_sk, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, debug=False):
     extended_word_size_signed = arithmetic_parameters[0]
@@ -583,20 +527,27 @@ def load_all_keygen_sike(base_word_size, extended_word_size, number_of_bits_adde
 number_of_bits_added = 8
 base_word_size = 16
 extended_word_size = 256
-accumulator_word_size = extended_word_size_signed*2+32
+accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v257/"
+tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v256/"
 
 
 #number_of_bits_added = 8
 #base_word_size = 16
 #extended_word_size = 128
-#accumulator_word_size = extended_word_size_signed*2+32
+#accumulator_word_size = extended_word_size*2+32
 #number_of_tests = 10
-#tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v129/"
+#tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v128/"
 
 VHDL_file_names = [tests_working_folder + "keygen_sike_" + str(param[4]) + "_" + str(param[5]) + ".dat" for param in sidh_constants]
 
 #test_all_keygen_sike(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_constants)
 #print_all_keygen_sike(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_constants, VHDL_file_names)
 #load_all_keygen_sike(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, sidh_constants, VHDL_file_names)
+
+#i = 0
+#param = sidh_constants[i]
+#prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
+#prime_size_bits = int(prime).bit_length()
+#VHDL_memory_file_name = VHDL_file_names[i]
+#error_computation = load_VHDL_keygen_sike_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, 2, True)

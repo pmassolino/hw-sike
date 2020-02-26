@@ -1,10 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    
+-- Design Name: 
+-- Module Name:    
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
 --
--- Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
+-- Dependencies: 
 --
--- To the extent possible under law, the implementer has waived all copyright
--- and related or neighboring rights to the source code in this file.
--- http://creativecommons.org/publicdomain/zero/1.0/
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
 --
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -32,7 +44,7 @@ Generic(
     test_only_smallest_size : boolean := false;
     skip_keygen : boolean := true;
     skip_encryption : boolean := false;
-    skip_decryption : boolean := true;
+    skip_decryption : boolean := false;
     
     test_prom_file : string := "../assembler/test_sike_functions_v256.dat";
     
