@@ -30,13 +30,13 @@ sidh_max_row_bob:50175
 ; Program itself
 ;
 fin                                                                ; 0
-test_keygen_alice: call keygen_alice                               ;
+test_keygen_alice: call sidh_keygen_alice                          ;
 fin                                                                ;
-test_keygen_bob: call keygen_bob                                   ;
+test_keygen_bob: call sidh_keygen_bob                              ;
 fin                                                                ;
-test_shared_secret_alice: call shared_secret_alice                 ;
+test_shared_secret_alice: call sidh_shared_secret_alice            ;
 fin                                                                ;
-test_shared_secret_bob: call shared_secret_bob                     ;
+test_shared_secret_bob: call sidh_shared_secret_bob                ;
 fin                                                                ;
 ; Keygen fast alice                                                ;
 ; 
@@ -70,7 +70,7 @@ fin                                                                ;
 ; ptsZi + npts     = rd29
 ; pts_index + npts = rd30
 ;
-keygen_alice: copy flag #1                                         ;
+sidh_keygen_alice: copy flag #1                                         ;
 lconstm var9 #0                                                    ; Initializing with 0's
 lconstm var11 #0                                                   ;
 lconstm var13 #0                                                   ;
@@ -110,7 +110,7 @@ copy tmpf1.0.0 sidh_oa_bits
 call ladder_3_point                                                ;
 ; Check if special 2 isogeny case
 bland b128 sidh_oa_bits #1
-jumpeq keygen_alice_no_2_isog_case b128 #0
+jumpeq sidh_keygen_alice_no_2_isog_case b128 #0
 ; SX, SXi, SZ, SZi = xDBLe(fp2, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, oa_bits-1)
 copym var28 var18                                                  ; Copy RX, RXi, RZ and RZi
 copym var40 var19                                                  ; Copy RX, RXi, RZ and RZi
@@ -149,7 +149,7 @@ copym var19 var40                                                  ; Copy RX, RX
 copym var20 var52                                                  ; Copy RX, RXi, RZ and RZi
 copym var21 var64                                                  ; Copy RX, RXi, RZ and RZi
 ;
-keygen_alice_no_2_isog_case: copy b171 #1                          ;
+sidh_keygen_alice_no_2_isog_case: copy b171 #1                          ;
 copy rd26 #(8)var28                                                ;
 copy rd27 #(8)var40                                                ;
 copy rd28 #(8)var52                                                ;
@@ -169,9 +169,9 @@ copy rd30 #b173                                                    ;
 ;     index += m
 ;     RX, RXi, RZ, RZi = xDBLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, double_m)
 ;
-keygen_alice_loop_1:bsub rd1 sidh_max_row_alice b171               ;
-jumpeql keygen_alice_loop_2_end rd1 b168                           ;
-keygen_alice_loop_2: copym *rd26 var18                             ; ptsX[npts]  = RX
+sidh_keygen_alice_loop_1:bsub rd1 sidh_max_row_alice b171               ;
+jumpeql sidh_keygen_alice_loop_2_end rd1 b168                      ;
+sidh_keygen_alice_loop_2: copym *rd26 var18                        ; ptsX[npts]  = RX
 copym *rd27 var19                                                  ; ptsXi[npts] = RXi
 copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
 copym *rd29 var21                                                  ; ptsZi[npts] = RZi
@@ -189,11 +189,11 @@ badd b168 b168 rd20                                                ; index += m;
 badd rd20 rd20 rd20                                                ;
 call xDBLe                                                         ;
 bsub rd1 sidh_max_row_alice b171                                   ;
-jumpl keygen_alice_loop_2 b168 rd1                                 ;
+jumpl sidh_keygen_alice_loop_2 b168 rd1                            ;
 ;
 ; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
 ;
-keygen_alice_loop_2_end: call get_4_isog                           ;
+sidh_keygen_alice_loop_2_end: call get_4_isog                           ;
 ;
 ; for i in range(npts)
 ;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_4_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i, k3, k3i)
@@ -203,13 +203,13 @@ copy rd20 #var28                                                   ;
 copy rd21 #var40                                                   ;
 copy rd22 #var52                                                   ;
 copy rd23 #var64                                                   ;
-keygen_alice_loop_3:bsub b172 b172 #1                              ;
+sidh_keygen_alice_loop_3:bsub b172 b172 #1                         ;
 call eval_4_isog                                                   ;
 badd rd20 rd20 #1                                                  ;
 badd rd21 rd21 #1                                                  ;
 badd rd22 rd22 #1                                                  ;
 badd rd23 rd23 #1                                                  ;
-jumpl keygen_alice_loop_3 #0 b172                                  ;
+jumpl sidh_keygen_alice_loop_3 #0 b172                             ;
 ;
 ; phiPX, phiPXi, phiPZ, phiPZi = eval_4_isog(arithmetic_parameters, phiPX, phiPXi, phiPZ, phiPZi, k1, k1i, k2, k2i, k3, k3i)
 ;
@@ -256,7 +256,7 @@ copy b168 *rd30                                                    ;
 copy flag #0
 badd b171 b171 #1                                                  ;
 copy flag #1
-jumpl keygen_alice_loop_1 b171 sidh_max_row_alice                  ;
+jumpl sidh_keygen_alice_loop_1 b171 sidh_max_row_alice             ;
 copy flag #0
 ;
 ; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
@@ -340,7 +340,7 @@ ret                                                                ;
 ; ptsZi + npts     = rd29
 ; pts_index + npts = rd30
 ;
-keygen_bob: copy flag #1                                           ;
+sidh_keygen_bob: copy flag #1                                      ;
 lconstm var9 #0                                                    ; Initializing with 0's
 lconstm var11 #0                                                   ;
 lconstm var13 #0                                                   ;
@@ -397,9 +397,9 @@ copy rd30 #b173                                                    ;
 ;     index += m
 ;     RX, RXi, RZ, RZi = xTPLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24minus, A24minusi, A24plus, A24plusi, m);
 ;
-keygen_bob_loop_1: bsub rd1 sidh_max_row_bob b171                  ;
-jumpeql keygen_bob_loop_2_end rd1 b168                             ;
-keygen_bob_loop_2: copym *rd26 var18                               ; ptsX[npts]  = RX
+sidh_keygen_bob_loop_1: bsub rd1 sidh_max_row_bob b171             ;
+jumpeql sidh_keygen_bob_loop_2_end rd1 b168                        ;
+sidh_keygen_bob_loop_2: copym *rd26 var18                          ; ptsX[npts]  = RX
 copym *rd27 var19                                                  ; ptsXi[npts] = RXi
 copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
 copym *rd29 var21                                                  ; ptsZi[npts] = RZi
@@ -416,11 +416,11 @@ badd b170 b170 #1                                                  ; ii += 1
 badd b168 b168 rd20                                                ; index += m;
 call xTPLe                                                         ;
 bsub rd1 sidh_max_row_bob b171                                     ;
-jumpl keygen_bob_loop_2 b168 rd1                                   ;
+jumpl sidh_keygen_bob_loop_2 b168 rd1                                   ;
 ;
 ; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
 ;
-keygen_bob_loop_2_end:call get_3_isog                              ;
+sidh_keygen_bob_loop_2_end:call get_3_isog                              ;
 ;
 ; for i in range(npts)
 ;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_3_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i)
@@ -430,13 +430,13 @@ copy rd20 #var28                                                   ;
 copy rd21 #var40                                                   ;
 copy rd22 #var52                                                   ;
 copy rd23 #var64                                                   ;
-keygen_bob_loop_3: bsub b172 b172 #1                               ;
+sidh_keygen_bob_loop_3: bsub b172 b172 #1                          ;
 call eval_3_isog                                                   ;
 badd rd20 rd20 #1                                                  ;
 badd rd21 rd21 #1                                                  ;
 badd rd22 rd22 #1                                                  ;
 badd rd23 rd23 #1                                                  ;
-jumpl keygen_bob_loop_3 #0 b172                                    ;
+jumpl sidh_keygen_bob_loop_3 #0 b172                               ;
 ;
 ; phiPX, phiPXi, phiPZ, phiPZi = eval_3_isog(arithmetic_parameters, phiPX, phiPXi, phiPZ, phiPZi, k1, k1i, k2, k2i)
 ;
@@ -483,7 +483,7 @@ copy b168 *rd30                                                    ;
 copy flag #0
 badd b171 b171 #1                                                  ;
 copy flag #1
-jumpl keygen_bob_loop_1 b171 sidh_max_row_bob                      ;
+jumpl sidh_keygen_bob_loop_1 b171 sidh_max_row_bob                      ;
 copy flag #0
 ;
 ; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
@@ -564,20 +564,18 @@ ret                                                                ;
 ; ptsZi + npts     = rd29
 ; pts_index + npts = rd30
 ;
-shared_secret_alice: copy flag #1                                  ;
+sidh_shared_secret_alice: mmulm var0 tmpf0 const_r2 var1 tmpf1 const_r2 var2 tmpf2 const_r2 var3 tmpf3 const_r2 var4 tmpf4 const_r2 var5 tmpf5 const_r2
 ;
 ; a, ai = get_A(arithmetic_parameters, xpb, xpbi, xqb, xqbi, xrb, xrbi)
 ;
-copym var0 tmpf0                                                   ;
-copym var1 tmpf1                                                   ;
-copym var2 tmpf2                                                   ;
-copym var3 tmpf3                                                   ;
-copym var4 tmpf4                                                   ;
-copym var5 tmpf5                                                   ;
+copym tmpf0 var0                                                   ;
+copym tmpf1 var1                                                   ;
+copym tmpf2 var2                                                   ;
+copym tmpf3 var3                                                   ;
+copym tmpf4 var4                                                   ;
+copym tmpf5 var5                                                   ;
 copym var6 tmpf6                                                   ;
-copy flag #0
 call get_A                                                         ;
-copy flag #1
 lconstm var17 #0                                                   ; Initializing with 0's
 copym var15 tmpf17                                                 ;
 madd_subd var16 const_r + const_r                                  ; Adding 2r == 2 in Montgomery
@@ -604,7 +602,7 @@ call ladder_3_point                                                ;
 copy flag #1
 ; Check if special 2 isogeny case
 bland b128 sidh_oa_bits #1
-jumpeq shared_secret_alice_no_2_isog_case b128 #0
+jumpeq sidh_shared_secret_alice_no_2_isog_case b128 #0
 ; SX, SXi, SZ, SZi = xDBLe(fp2, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, oa_bits-1)
 copym var28 var18                                                  ; Copy RX, RXi, RZ and RZi
 copym var40 var19                                                  ; Copy RX, RXi, RZ and RZi
@@ -624,7 +622,7 @@ copym var18 var28                                                  ; Copy RX, RX
 copym var19 var40                                                  ; Copy RX, RXi, RZ and RZi
 copym var20 var52                                                  ; Copy RX, RXi, RZ and RZi
 copym var21 var64                                                  ; Copy RX, RXi, RZ and RZi
-shared_secret_alice_no_2_isog_case: copy b171 #1                   ;
+sidh_shared_secret_alice_no_2_isog_case: copy b171 #1              ;
 copy rd26 #(8)var28                                                ;
 copy rd27 #(8)var40                                                ;
 copy rd28 #(8)var52                                                ;
@@ -644,9 +642,9 @@ copy rd30 #b173                                                    ;
 ;     index += m
 ;     RX, RXi, RZ, RZi = xDBLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, double_m)
 ;
-shared_secret_alice_loop_1: bsub rd1 sidh_max_row_alice b171       ;
-jumpeql shared_secret_alice_loop_2_end rd1 b168                    ;
-shared_secret_alice_loop_2: copym *rd26 var18                      ; ptsX[npts]  = RX
+sidh_shared_secret_alice_loop_1: bsub rd1 sidh_max_row_alice b171  ;
+jumpeql sidh_shared_secret_alice_loop_2_end rd1 b168               ;
+sidh_shared_secret_alice_loop_2: copym *rd26 var18                 ; ptsX[npts]  = RX
 copym *rd27 var19                                                  ; ptsXi[npts] = RXi
 copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
 copym *rd29 var21                                                  ; ptsZi[npts] = RZi
@@ -666,11 +664,11 @@ copy flag #0
 call xDBLe                                                         ;
 copy flag #1
 bsub rd1 sidh_max_row_alice b171                                   ;
-jumpl shared_secret_alice_loop_2 b168 rd1                          ;
+jumpl sidh_shared_secret_alice_loop_2 b168 rd1                     ;
 ;
 ; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
 ;
-shared_secret_alice_loop_2_end: call get_4_isog                    ;
+sidh_shared_secret_alice_loop_2_end: call get_4_isog               ;
 ;
 ; for i in range(npts)
 ;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_4_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i, k3, k3i)
@@ -680,13 +678,13 @@ copy rd20 #var28                                                   ;
 copy rd21 #var40                                                   ;
 copy rd22 #var52                                                   ;
 copy rd23 #var64                                                   ;
-shared_secret_alice_loop_3: bsub b172 b172 #1                      ;
+sidh_shared_secret_alice_loop_3: bsub b172 b172 #1                 ;
 call eval_4_isog                                                   ;
 badd rd20 rd20 #1                                                  ;
 badd rd21 rd21 #1                                                  ;
 badd rd22 rd22 #1                                                  ;
 badd rd23 rd23 #1                                                  ;
-jumpl shared_secret_alice_loop_3 #0 b172                           ;
+jumpl sidh_shared_secret_alice_loop_3 #0 b172                      ;
 ;
 ; npts -= 1
 bsub b169 b169 #1                                                  ;
@@ -709,7 +707,7 @@ copy b168 *rd30                                                    ;
 copy flag #0
 badd b171 b171 #1                                                  ;
 copy flag #1
-jumpl shared_secret_alice_loop_1 b171 sidh_max_row_alice           ;
+jumpl sidh_shared_secret_alice_loop_1 b171 sidh_max_row_alice      ;
 copy flag #0
 ;
 ; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
@@ -762,20 +760,18 @@ ret                                                                ;
 ; ptsZi + npts     = rd29
 ; pts_index + npts = rd30
 ;
-shared_secret_bob: copy flag #1                                    ;
+sidh_shared_secret_bob: mmulm var0 tmpf0 const_r2 var1 tmpf1 const_r2 var2 tmpf2 const_r2 var3 tmpf3 const_r2 var4 tmpf4 const_r2 var5 tmpf5 const_r2
 ;
 ; a, ai = get_A(arithmetic_parameters, xpa, xpai, xqa, xqai, xra, xrai)
 ;
-copym var0 tmpf0                                                   ;
-copym var1 tmpf1                                                   ;
-copym var2 tmpf2                                                   ;
-copym var3 tmpf3                                                   ;
-copym var4 tmpf4                                                   ;
-copym var5 tmpf5                                                   ;
+copym tmpf0 var0                                                   ;
+copym tmpf1 var1                                                   ;
+copym tmpf2 var2                                                   ;
+copym tmpf3 var3                                                   ;
+copym tmpf4 var4                                                   ;
+copym tmpf5 var5                                                   ;
 copym var6 tmpf6                                                   ;
-copy flag #0
 call get_A                                                         ;
-copy flag #1
 copym var15 tmpf17                                                 ;
 copym var17 tmpf17                                                 ;
 madd_subd tmpf18 const_r + const_r                                 ; Adding 2r == 2 in Montgomery
@@ -820,9 +816,9 @@ copy rd30 #b173                                                    ;
 ;     index += m;
 ;     RX, RXi, RZ, RZi = xTPLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24minus, A24minusi, A24plus, A24plusi, m);
 ;
-shared_secret_bob_loop_1: bsub rd1 sidh_max_row_bob b171           ;
-jumpeql shared_secret_bob_loop_2_end rd1 b168                      ;
-shared_secret_bob_loop_2: copym *rd26 var18                        ; ptsX[npts]  = RX
+sidh_shared_secret_bob_loop_1: bsub rd1 sidh_max_row_bob b171      ;
+jumpeql sidh_shared_secret_bob_loop_2_end rd1 b168                 ;
+sidh_shared_secret_bob_loop_2: copym *rd26 var18                   ; ptsX[npts]  = RX
 copym *rd27 var19                                                  ; ptsXi[npts] = RXi
 copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
 copym *rd29 var21                                                  ; ptsZi[npts] = RZi
@@ -841,11 +837,11 @@ copy flag #0
 call xTPLe                                                         ;
 copy flag #1
 bsub rd1 sidh_max_row_bob b171                                     ;
-jumpl shared_secret_bob_loop_2 b168 rd1                            ;
+jumpl sidh_shared_secret_bob_loop_2 b168 rd1                            ;
 ;
 ; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
 ;
-shared_secret_bob_loop_2_end: call get_3_isog                      ;
+sidh_shared_secret_bob_loop_2_end: call get_3_isog                      ;
 ;
 ; for i in range(npts):
 ;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_3_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i)
@@ -855,13 +851,13 @@ copy rd20 #var28                                                   ;
 copy rd21 #var40                                                   ;
 copy rd22 #var52                                                   ;
 copy rd23 #var64                                                   ;
-shared_secret_bob_loop_3: bsub b172 b172 #1                        ;
+sidh_shared_secret_bob_loop_3: bsub b172 b172 #1                   ;
 call eval_3_isog                                                   ;
 badd rd20 rd20 #1                                                  ;
 badd rd21 rd21 #1                                                  ;
 badd rd22 rd22 #1                                                  ;
 badd rd23 rd23 #1                                                  ;
-jumpl shared_secret_bob_loop_3 #0 b172                             ;
+jumpl sidh_shared_secret_bob_loop_3 #0 b172                        ;
 ;
 ; npts -= 1
 bsub b169 b169 #1                                                  ;
@@ -884,7 +880,7 @@ copy b168 *rd30                                                    ;
 copy flag #0
 badd b171 b171 #1                                                  ;
 copy flag #1
-jumpl shared_secret_bob_loop_1 b171 sidh_max_row_bob               ;
+jumpl sidh_shared_secret_bob_loop_1 b171 sidh_max_row_bob               ;
 copy flag #0
 ;
 ; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)

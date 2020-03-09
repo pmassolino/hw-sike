@@ -132,7 +132,12 @@ copym var91 tmpf21                                                 ;
 ;
 ; sike_j_invar, sike_j_invar_i = sage_shared_secret_alice_fast(fp2, sike_pk_phiPX, sike_pk_phiPXi, sike_pk_phiQX, sike_pk_phiQXi, sike_pk_phiRX, sike_pk_phiRXi, ephemeral_sk, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
 ;
-mmulm tmpf0 var80 const_r2 tmpf1 var81 const_r2 tmpf2 var82 const_r2 tmpf3 var83 const_r2 tmpf4 var84 const_r2 tmpf5 var85 const_r2
+copym tmpf0 var80                                                  ;
+copym tmpf1 var81                                                  ;
+copym tmpf2 var82                                                  ;
+copym tmpf3 var83                                                  ;
+copym tmpf4 var84                                                  ;
+copym tmpf5 var85                                                  ;
 copy rd0 #b210                                                     ;
 lconstm tmpf6 #0                                                   ; Clear position just to be sure
 copya inc r tmpf6.0.0 *rd0 b204                                    ;
@@ -242,7 +247,12 @@ copym var91 tmpf11                                                 ;
 ;
 ; sike_j_invar, sike_j_invar_i = sage_shared_secret_bob_fast(fp2, sike_c0_phiPX, sike_c0_phiPXi, sike_c0_phiQX, sike_c0_phiQXi, sike_c0_phiRX, sike_c0_phiRXi, sike_sk, ob_bits, splits_bob, max_row_bob, max_int_points_bob, inv_4)
 ; 
-mmulm tmpf0 var86 const_r2 tmpf1 var87 const_r2 tmpf2 var88 const_r2 tmpf3 var89 const_r2 tmpf4 var90 const_r2 tmpf5 var91 const_r2
+copym tmpf0 var86                                                  ;
+copym tmpf1 var87                                                  ;
+copym tmpf2 var88                                                  ;
+copym tmpf3 var89                                                  ;
+copym tmpf4 var90                                                  ;
+copym tmpf5 var91                                                  ;
 copy rd0 #sike_sk                                                  ;
 lconstm tmpf6 #0                                                   ; Clear position just to be sure
 copya inc r tmpf6.0.0 *rd0 #32                                     ;
@@ -1061,15 +1071,16 @@ ret                                                                ;
 ; ptsZi + npts     = rd29
 ; pts_index + npts = rd30
 ;
-sidh_shared_secret_alice:copym var0 tmpf0                          ;
+sidh_shared_secret_alice: mmulm var0 tmpf0 const_r2 var1 tmpf1 const_r2 var2 tmpf2 const_r2 var3 tmpf3 const_r2 var4 tmpf4 const_r2 var5 tmpf5 const_r2
 ;
 ; a, ai = get_A(arithmetic_parameters, xpb, xpbi, xqb, xqbi, xrb, xrbi)
 ;
-copym var1 tmpf1                                                   ;
-copym var2 tmpf2                                                   ;
-copym var3 tmpf3                                                   ;
-copym var4 tmpf4                                                   ;
-copym var5 tmpf5                                                   ;
+copym tmpf0 var0                                                   ;
+copym tmpf1 var1                                                   ;
+copym tmpf2 var2                                                   ;
+copym tmpf3 var3                                                   ;
+copym tmpf4 var4                                                   ;
+copym tmpf5 var5                                                   ;
 copym var6 tmpf6                                                   ;
 call get_A                                                         ;
 lconstm var17 #0                                                   ; Initializing with 0's
@@ -1249,16 +1260,17 @@ ret                                                                ;
 ; ptsZi + npts     = rd29
 ; pts_index + npts = rd30
 ;
-sidh_shared_secret_bob: copym var0 tmpf0                           ;
+sidh_shared_secret_bob: mmulm var0 tmpf0 const_r2 var1 tmpf1 const_r2 var2 tmpf2 const_r2 var3 tmpf3 const_r2 var4 tmpf4 const_r2 var5 tmpf5 const_r2
 
 ;
 ; a, ai = get_A(arithmetic_parameters, xpa, xpai, xqa, xqai, xra, xrai)
 ;
-copym var1 tmpf1                                                   ;
-copym var2 tmpf2                                                   ;
-copym var3 tmpf3                                                   ;
-copym var4 tmpf4                                                   ;
-copym var5 tmpf5                                                   ;
+copym tmpf0 var0                                                   ;
+copym tmpf1 var1                                                   ;
+copym tmpf2 var2                                                   ;
+copym tmpf3 var3                                                   ;
+copym tmpf4 var4                                                   ;
+copym tmpf5 var5                                                   ;
 copym var6 tmpf6                                                   ;
 call get_A                                                         ;
 copym var15 tmpf17                                                 ;

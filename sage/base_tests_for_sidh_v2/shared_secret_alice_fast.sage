@@ -206,12 +206,12 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
         bob_phiRX_mont  = enter_montgomery_domain(arithmetic_parameters, int(bob_phiRX))
         bob_phiRXi_mont = enter_montgomery_domain(arithmetic_parameters, int(bob_phiRXi))
         
-        bob_phiPX_mont_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPX_mont)
-        bob_phiPXi_mont_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPXi_mont)
-        bob_phiQX_mont_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQX_mont)
-        bob_phiQXi_mont_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQXi_mont)
-        bob_phiRX_mont_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRX_mont)
-        bob_phiRXi_mont_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRXi_mont)
+        bob_phiPX_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPX)
+        bob_phiPXi_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPXi)
+        bob_phiQX_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQX)
+        bob_phiQXi_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQXi)
+        bob_phiRX_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRX)
+        bob_phiRXi_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRXi)
         
         test_value_sk_alice_list  = integer_to_list(extended_word_size_signed, number_of_words, sk_alice)
         
@@ -223,12 +223,12 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
         test_value_o1_list  = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1))
         test_value_o1i_list = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1i))
         
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPX_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPXi_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQX_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQXi_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRX_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRXi_mont_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPX_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPXi_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQX_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQXi_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRX_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRXi_list, maximum_number_of_words)
         print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_sk_alice_list, maximum_number_of_words)
         print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o1_list, maximum_number_of_words)
         print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o1i_list, maximum_number_of_words)
@@ -248,12 +248,12 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
         bob_phiRX_mont  = enter_montgomery_domain(arithmetic_parameters, int(bob_phiRX))
         bob_phiRXi_mont = enter_montgomery_domain(arithmetic_parameters, int(bob_phiRXi))
         
-        bob_phiPX_mont_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPX_mont)
-        bob_phiPXi_mont_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPXi_mont)
-        bob_phiQX_mont_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQX_mont)
-        bob_phiQXi_mont_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQXi_mont)
-        bob_phiRX_mont_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRX_mont)
-        bob_phiRXi_mont_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRXi_mont)
+        bob_phiPX_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPX)
+        bob_phiPXi_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiPXi)
+        bob_phiQX_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQX)
+        bob_phiQXi_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiQXi)
+        bob_phiRX_list  = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRX)
+        bob_phiRXi_list = integer_to_list(extended_word_size_signed, number_of_words, bob_phiRXi)
         
         test_value_sk_alice_list  = integer_to_list(extended_word_size_signed, number_of_words, sk_alice)
         
@@ -265,12 +265,12 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
         test_value_o1_list  = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1))
         test_value_o1i_list = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1i))
         
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPX_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPXi_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQX_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQXi_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRX_mont_list, maximum_number_of_words)
-        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRXi_mont_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPX_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiPXi_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQX_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiQXi_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRX_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, bob_phiRXi_list, maximum_number_of_words)
         print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_sk_alice_list, maximum_number_of_words)
         print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o1_list, maximum_number_of_words)
         print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o1i_list, maximum_number_of_words)
@@ -411,12 +411,19 @@ def load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_siz
         
     while(current_test != (number_of_tests-1)):
     
-        test_value_bob_phiPX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiPXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiQX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiQXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiRX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiRXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        test_value_bob_phiPX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        test_value_bob_phiPXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        test_value_bob_phiQX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        test_value_bob_phiQXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        test_value_bob_phiRX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        test_value_bob_phiRXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        
+        test_value_bob_phiPX_mont  = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiPX))
+        test_value_bob_phiPXi_mont = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiPXi))
+        test_value_bob_phiQX_mont  = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiQX))
+        test_value_bob_phiQXi_mont = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiQXi))
+        test_value_bob_phiRX_mont  = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiRX))
+        test_value_bob_phiRXi_mont = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiRXi))
         
         loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
         
@@ -449,12 +456,19 @@ def load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_siz
             print(computed_test_value_o1i)
         current_test += 1
     
-    test_value_bob_phiPX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiPXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiQX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiQXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiRX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiRXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    test_value_bob_phiPX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    test_value_bob_phiPXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    test_value_bob_phiQX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    test_value_bob_phiQXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    test_value_bob_phiRX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    test_value_bob_phiRXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    
+    test_value_bob_phiPX_mont  = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiPX))
+    test_value_bob_phiPXi_mont = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiPXi))
+    test_value_bob_phiQX_mont  = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiQX))
+    test_value_bob_phiQXi_mont = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiQXi))
+    test_value_bob_phiRX_mont  = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiRX))
+    test_value_bob_phiRXi_mont = enter_montgomery_domain(arithmetic_parameters, int(test_value_bob_phiRXi))
     
     loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     
@@ -523,9 +537,16 @@ def load_all_shared_secret_alice_fast(base_word_size, extended_word_size, number
 number_of_bits_added = 10
 base_word_size = 16
 extended_word_size = 256
-accumulator_word_size = (extended_word_size_signed - 1)*2+32
+accumulator_word_size = (extended_word_size - 1)*2+32
 number_of_tests = 10
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v257/"
+tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
+
+#number_of_bits_added = 8
+#base_word_size = 16
+#extended_word_size = 128
+#accumulator_word_size = extended_word_size*2+32
+#number_of_tests = 10
+#tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v128/"
 
 VHDL_file_names = [tests_working_folder + "shared_secret_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat" for param in sidh_constants]
 
@@ -533,9 +554,9 @@ VHDL_file_names = [tests_working_folder + "shared_secret_alice_fast_" + str(para
 #print_all_shared_secret_alice_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_constants, VHDL_file_names)
 #load_all_shared_secret_alice_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, sidh_constants, VHDL_file_names)
 
-#param = sidh_constants[0]
-#print "Loading shared secret slice " +  param[0]
-#prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-#prime_size_bits = int(prime).bit_length()
-#VHDL_memory_file_name = tests_working_folder + "shared_secret_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
-#error_computation = load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, 1, True)
+param = sidh_constants[0]
+print "Loading shared secret slice " +  param[0]
+prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
+prime_size_bits = int(prime).bit_length()
+VHDL_memory_file_name = tests_working_folder + "shared_secret_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
+error_computation = load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, 1, True)

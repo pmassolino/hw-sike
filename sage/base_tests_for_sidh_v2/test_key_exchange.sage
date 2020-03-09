@@ -30,6 +30,13 @@ def test_single_key_exchange(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, x
     true_alice_j_invar, true_alice_j_invar_i = sage_shared_secret_alice_fast(fp2, true_pk_bob_phiPX, true_pk_bob_phiPXi, true_pk_bob_phiQX, true_pk_bob_phiQXi, true_pk_bob_phiRX, true_pk_bob_phiRXi, sk_alice, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
     true_bob_j_invar, true_bob_j_invar_i = sage_shared_secret_bob_fast(fp2, true_pk_alice_phiPX, true_pk_alice_phiPXi, true_pk_alice_phiQX, true_pk_alice_phiQXi, true_pk_alice_phiRX, true_pk_alice_phiRXi, sk_bob, ob_bits, splits_bob, max_row_bob, max_int_points_bob, inv_4)
     
+    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiPX))
+    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiPXi))
+    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiQX))
+    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiQXi))
+    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiRX))
+    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiRXi))
+    
     if((debug) or (true_alice_j_invar != true_bob_j_invar) or (true_alice_j_invar_i != true_bob_j_invar_i)):
         print("Error in key exchange ")
         print('')
@@ -116,13 +123,52 @@ def test_all_key_exchange(base_word_size, extended_word_size, number_of_bits_add
 number_of_bits_added = 8
 base_word_size = 16
 extended_word_size = 256
-accumulator_word_size = extended_word_size_signed*2+32
+accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
 
 #number_of_bits_added = 8
 #base_word_size = 16
 #extended_word_size = 128
-#accumulator_word_size = extended_word_size_signed*2+32
+#accumulator_word_size = extended_word_size*2+32
 #number_of_tests = 10
 
-test_all_key_exchange(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_constants)
+#test_all_key_exchange(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_constants)
+
+param = sidh_constants[1]
+
+prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
+prime_size_bits = int(prime).bit_length()
+
+oa   = param[2]**param[4]
+ob   = param[3]**param[5]
+xpa  = param[6]
+xpai = param[7]
+xqa  = param[8]
+xqai = param[9]
+xra  = param[10]
+xrai = param[11]
+xpb  = param[12]
+xpbi = param[13]
+xqb  = param[14]
+xqbi = param[15]
+xrb  = param[16]
+xrbi = param[17]
+splits_alice = param[18]
+splits_bob = param[21]
+max_row_alice = param[19]
+max_row_bob = param[22]
+max_int_points_alice = param[20]
+max_int_points_bob = param[23]
+
+arithmetic_parameters = generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+error_computation = False
+fp = GF(prime)
+r.<x> = fp[]
+fp2.<i> = fp.extension(x^2+1)
+oa_bits = int(oa-1).bit_length()
+ob_bits = int(ob-1).bit_length()
+
+sk_alice = 0
+sk_bob   = 137
+
+error_computation = test_single_key_exchange(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_alice, sk_bob, oa_bits, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob, debug=True)

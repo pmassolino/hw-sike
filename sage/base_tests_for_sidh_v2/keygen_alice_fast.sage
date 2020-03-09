@@ -530,17 +530,17 @@ def load_all_keygen_alice_fast(base_word_size, extended_word_size, number_of_bit
 number_of_bits_added = 8
 base_word_size = 16
 extended_word_size = 256
-accumulator_word_size = extended_word_size_signed*2+32
+accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v257/"
+tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 
 
 #number_of_bits_added = 8
 #base_word_size = 16
 #extended_word_size = 128
-#accumulator_word_size = extended_word_size_signed*2+32
+#accumulator_word_size = extended_word_size*2+32
 #number_of_tests = 10
-#tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v129/"
+#tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v128/"
 
 VHDL_file_names = [tests_working_folder + "keygen_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat" for param in sidh_constants]
 
