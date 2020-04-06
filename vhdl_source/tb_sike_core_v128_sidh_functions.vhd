@@ -959,7 +959,7 @@ begin
         if(not test_only_smallest_size) then
             test_function(test_memory_file_keygen_alice_fast_216_137, 4, test_program_start_keygen_alice_fast, 1, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_alice_fast_250_159, 4, test_program_start_keygen_alice_fast, 1, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
+            test_function(test_memory_file_keygen_alice_fast_250_159, 5, test_program_start_keygen_alice_fast, 1, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
             test_function(test_memory_file_keygen_alice_fast_305_192, 5, test_program_start_keygen_alice_fast, 1, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
@@ -976,7 +976,7 @@ begin
         if(not test_only_smallest_size) then
             test_function(test_memory_file_keygen_bob_fast_216_137, 4, test_program_start_keygen_bob_fast, 1, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_bob_fast_250_159, 4, test_program_start_keygen_bob_fast, 1, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
+            test_function(test_memory_file_keygen_bob_fast_250_159, 5, test_program_start_keygen_bob_fast, 1, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
             test_function(test_memory_file_keygen_bob_fast_305_192, 5, test_program_start_keygen_bob_fast, 1, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
@@ -993,7 +993,7 @@ begin
         if(not test_only_smallest_size) then
             test_function(test_memory_file_shared_secret_alice_fast_216_137, 4, test_program_start_shared_secret_alice_fast, 1, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_alice_fast_250_159, 4, test_program_start_shared_secret_alice_fast, 1, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
+            test_function(test_memory_file_shared_secret_alice_fast_250_159, 5, test_program_start_shared_secret_alice_fast, 1, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
             test_function(test_memory_file_shared_secret_alice_fast_305_192, 5, test_program_start_shared_secret_alice_fast, 1, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
@@ -1010,7 +1010,7 @@ begin
         if(not test_only_smallest_size) then
             test_function(test_memory_file_shared_secret_bob_fast_216_137, 4, test_program_start_shared_secret_bob_fast, 1, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_bob_fast_250_159, 4, test_program_start_shared_secret_bob_fast, 1, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
+            test_function(test_memory_file_shared_secret_bob_fast_250_159, 5, test_program_start_shared_secret_bob_fast, 1, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;
             test_function(test_memory_file_shared_secret_bob_fast_305_192, 5, test_program_start_shared_secret_bob_fast, 1, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;

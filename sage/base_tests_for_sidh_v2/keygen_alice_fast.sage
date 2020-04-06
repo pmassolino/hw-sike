@@ -104,9 +104,9 @@ def test_keygen_alice_fast(base_word_size, extended_word_size, prime_size_bits, 
     if(not error_computation):
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
-                print i
+                print(i)
             sk_alice = randint(0, oa-1)
-    
+            
             error_computation = test_single_keygen_alice_fast(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_alice, oa_bits, splits, max_row, max_int_points)
             if(error_computation):
                 break
@@ -527,7 +527,7 @@ def load_all_keygen_alice_fast(base_word_size, extended_word_size, number_of_bit
             break;
 
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = extended_word_size*2+32
@@ -535,7 +535,7 @@ number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 
 
-#number_of_bits_added = 8
+#number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32

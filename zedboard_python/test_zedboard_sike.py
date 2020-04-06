@@ -4,17 +4,21 @@ import sys
 
 from zedboard_sidh import *
 import sike_core_utils
-import SIKE_round2_constants
 import SIKE_round2_spec
 import sidh_fp2
+import sike_fpga_constants_v128
+import sike_fpga_constants_v256
 
 
 tests_prom_folder = "../assembler/"
 
-starting_position_stack_sidh_core = 224
 program_start_address_test_sike_kem_keygen = 1
 program_start_address_test_sike_kem_enc = 3
 program_start_address_test_sike_kem_dec = 5
+program_start_address_test_sidh_keygen_alice = 7
+program_start_address_test_sidh_keygen_bob = 9
+program_start_address_test_sidh_shared_secret_alice = 11
+program_start_address_test_sidh_shared_secret_bob = 13
 
 sike_core_mac_ram_start_address =                           0x00000;
 sike_core_mac_ram_last_address =                            0x07FFF;
@@ -92,11 +96,7 @@ def load_program(zedboard, prom_file_name, base_word_size, base_word_size_signed
     print(program_written)
     return False
 
-def test_single_sike_keygen(zedboard, fp2, arithmetic_parameters, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s, debug_mode=False):
-
-    extended_word_size = arithmetic_parameters[0]
-    base_word_size = arithmetic_parameters[1]
-    number_of_words = arithmetic_parameters[9]
+def test_single_sike_keygen(zedboard, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s, debug_mode=False):
 
     test_value_sike_sk_list  = sike_core_utils.integer_to_list(base_word_size, 32, sike_sk)
     start_address_sike_sk = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_sk_start_address
@@ -120,7 +120,7 @@ def test_single_sike_keygen(zedboard, fp2, arithmetic_parameters, alice_gen_poin
     true_value_o5  = true_sike_pk[2].polynomial()[0]
     true_value_o5i = true_sike_pk[2].polynomial()[1]
     
-    time.sleep(0.1)
+    #time.sleep(0.1)
     
     while(not zedboard.isFree()):
         time.sleep(0.1)
@@ -184,58 +184,66 @@ def test_single_sike_keygen(zedboard, fp2, arithmetic_parameters, alice_gen_poin
         return True
     return False
 
-def test_sike_keygen(zedboard, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, sike_message_length, sike_shared_secret_length, number_of_tests, debug_mode=False):
+def test_sike_keygen(zedboard, param, number_of_tests, debug_mode=False):
 
-    arithmetic_parameters = sike_core_utils.generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
-    
-    prime_list = arithmetic_parameters[4]
-    prime_plus_one_list = arithmetic_parameters[6]
-    prime_line_list = arithmetic_parameters[18]
-    r_mod_prime_list = arithmetic_parameters[13]
-    r2_list = arithmetic_parameters[15]
-    constant_1_list = arithmetic_parameters[20]
-    number_of_words = arithmetic_parameters[9]
+    number_of_words = param[4]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    prime = param[5]
+    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
+    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
+    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
+    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[16])
+    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
+    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
+    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
     
     error_computation = False
         
     fp2 = sidh_fp2.sidh_fp2(prime)
     
-    oa_bits = int(oa-1).bit_length()
-    ob_bits = int(ob-1).bit_length()
-    t_bits_mask = oa_bits - (((oa_bits + (base_word_size - 1))//base_word_size)-1)*base_word_size
-    oa_mask = 2**t_bits_mask-1
-    t_bits_mask = ob_bits - (((ob_bits + (base_word_size - 1))//base_word_size)-1)*base_word_size
-    ob_mask = 2**t_bits_mask-1
+    oa = param[10]
+    ob = param[11]
+    oa_bits = param[14]
+    ob_bits = param[15]
+    oa_mask = param[12]
+    ob_mask = param[13]
     
-    inv_4 = (fp2(4)**(-1)).polynomial()[0]
-    inv_4_mont = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, int(inv_4))
-    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, inv_4_mont)
+    prime_size_bits = param[6]
+    sike_message_length = param[38]
+    sike_shared_secret_length = param[39]
     
-    test_value_xpa_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[0])
-    test_value_xpai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[1])
-    test_value_xqa_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[2])
-    test_value_xqai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[3])
-    test_value_xra_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[4])
-    test_value_xrai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[5])
-    test_value_xpb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[0])
-    test_value_xpbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[1])
-    test_value_xqb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[2])
-    test_value_xqbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[3])
-    test_value_xrb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[4])
-    test_value_xrbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[5])
+    alice_splits = param[32]
+    alice_max_row = param[33]
+    alice_max_int_points = param[34]
+    bob_splits = param[35]
+    bob_max_row = param[36]
+    bob_max_int_points = param[37]
     
-    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpa_mont)
-    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpai_mont)
-    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqa_mont)
-    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqai_mont)
-    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xra_mont)
-    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrai_mont)
-    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpb_mont)
-    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpbi_mont)
-    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqb_mont)
-    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqbi_mont)
-    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrb_mont)
-    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrbi_mont)
+    starting_position_stack_sidh_core = param[40]
+    
+    if(param[6] == 1):
+        enable_special_prime_line_arithmetic = 1
+    else:
+        enable_special_prime_line_arithmetic = 0
+    
+    alice_gen_points_mont = param[20:26]
+    bob_gen_points_mont = param[26:32]
+    alice_gen_points = param[41:47]
+    bob_gen_points = param[47:53]
+    
+    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
+    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
+    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
+    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
+    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
+    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
+    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
+    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
+    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
+    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
+    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
+    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
     
     zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
     zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
@@ -279,7 +287,7 @@ def test_sike_keygen(zedboard, base_word_size, extended_word_size, prime_size_bi
     zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
     
     zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
-    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, 0)
+    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
     zedboard.write_package(sike_core_reg_prime_address_address, 0)
     zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
     zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
@@ -291,7 +299,7 @@ def test_sike_keygen(zedboard, base_word_size, extended_word_size, prime_size_bi
     for test in fixed_tests:
         sike_s  = bytearray(test[0])
         sike_sk = test[1]
-        error_computation = test_single_sike_keygen(zedboard, fp2, arithmetic_parameters, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s, debug_mode)
+        error_computation = test_single_sike_keygen(zedboard, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s, debug_mode)
         tests_already_performed += 1
         if(error_computation):
             break
@@ -303,41 +311,27 @@ def test_sike_keygen(zedboard, base_word_size, extended_word_size, prime_size_bi
                 print(i)
             sike_s  = bytearray([random.randint(0, 255) for j in range(sike_message_length)])
             sike_sk = random.randint(0, ob-1)
-            error_computation = test_single_sike_keygen(zedboard, fp2, arithmetic_parameters, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s, debug_mode)
+            error_computation = test_single_sike_keygen(zedboard, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s, debug_mode)
         
             if(error_computation):
                 break
     
     return error_computation
 
-def test_all_sike_keygen(zedboard, base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests):
+def test_all_sike_keygen(zedboard, sike_fpga_constants, number_of_tests, only_one_parameter=None):
     error_computation = False
-    for param in SIKE_round2_constants.sidh_constants:
+    if(only_one_parameter != None):
+        all_testing_parameters = sike_fpga_constants[only_one_parameter:only_one_parameter+1]
+    else:
+        all_testing_parameters = sike_fpga_constants
+    for param in all_testing_parameters:
         print("Testing SIKE key generation " +  param[0])
-        prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-        prime_size_bits = int(prime).bit_length()
-        oa = (param[2])**(param[4])
-        ob = (param[3])**(param[5])
-        alice_gen_points = param[6:12]
-        alice_splits = param[18]
-        alice_max_row = param[19]
-        alice_max_int_points = param[20]
-        bob_gen_points = param[12:18]
-        bob_splits = param[21]
-        bob_max_row = param[22]
-        bob_max_int_points = param[23]
-        sike_message_length = param[24]
-        sike_shared_secret_length = param[25]
-        error_computation = test_sike_keygen(zedboard, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, sike_message_length, sike_shared_secret_length, number_of_tests, debug_mode=False)
+        error_computation = test_sike_keygen(zedboard, param, number_of_tests, debug_mode=False)
         if(error_computation):
             break
 
-def test_single_sike_encryption(zedboard, fp2, arithmetic_parameters, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False):
+def test_single_sike_encryption(zedboard, fp2, extended_word_size, number_of_words, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False):
 
-    extended_word_size = arithmetic_parameters[0]
-    base_word_size = arithmetic_parameters[1]
-    number_of_words = arithmetic_parameters[9]
-    
     true_sike_s, true_sike_sk, true_sike_pk = SIKE_round2_spec.SIKE_KEM_gen_key(fp2, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s)
     
     true_sike_pk_phiPx  = true_sike_pk[0].polynomial()[0]
@@ -446,58 +440,66 @@ def test_single_sike_encryption(zedboard, fp2, arithmetic_parameters, alice_gen_
         return True
     return False
 
-def test_sike_encryption(zedboard, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, sike_message_length, sike_shared_secret_length, number_of_tests, debug_mode=False):
+def test_sike_encryption(zedboard, param, number_of_tests, debug_mode=False):
 
-    arithmetic_parameters = sike_core_utils.generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
-    
-    prime_list = arithmetic_parameters[4]
-    prime_plus_one_list = arithmetic_parameters[6]
-    prime_line_list = arithmetic_parameters[18]
-    r_mod_prime_list = arithmetic_parameters[13]
-    r2_list = arithmetic_parameters[15]
-    constant_1_list = arithmetic_parameters[20]
-    number_of_words = arithmetic_parameters[9]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    number_of_words = param[4]
+    prime = param[5]
+    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
+    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
+    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
+    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[16])
+    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
+    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
+    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
     
     error_computation = False
         
     fp2 = sidh_fp2.sidh_fp2(prime)
     
-    oa_bits = int(oa-1).bit_length()
-    ob_bits = int(ob-1).bit_length()
-    t_bits_mask = oa_bits - (((oa_bits + (base_word_size - 1))//base_word_size)-1)*base_word_size
-    oa_mask = 2**t_bits_mask-1
-    t_bits_mask = ob_bits - (((ob_bits + (base_word_size - 1))//base_word_size)-1)*base_word_size
-    ob_mask = 2**t_bits_mask-1
+    oa = param[10]
+    ob = param[11]
+    oa_bits = param[14]
+    ob_bits = param[15]
+    oa_mask = param[12]
+    ob_mask = param[13]
     
-    inv_4 = (fp2(4)**(-1)).polynomial()[0]
-    inv_4_mont = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, int(inv_4))
-    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, inv_4_mont)
+    prime_size_bits = param[6]
+    sike_message_length = param[38]
+    sike_shared_secret_length = param[39]
     
-    test_value_xpa_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[0])
-    test_value_xpai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[1])
-    test_value_xqa_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[2])
-    test_value_xqai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[3])
-    test_value_xra_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[4])
-    test_value_xrai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[5])
-    test_value_xpb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[0])
-    test_value_xpbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[1])
-    test_value_xqb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[2])
-    test_value_xqbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[3])
-    test_value_xrb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[4])
-    test_value_xrbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[5])
+    alice_splits = param[32]
+    alice_max_row = param[33]
+    alice_max_int_points = param[34]
+    bob_splits = param[35]
+    bob_max_row = param[36]
+    bob_max_int_points = param[37]
     
-    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpa_mont)
-    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpai_mont)
-    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqa_mont)
-    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqai_mont)
-    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xra_mont)
-    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrai_mont)
-    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpb_mont)
-    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpbi_mont)
-    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqb_mont)
-    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqbi_mont)
-    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrb_mont)
-    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrbi_mont)
+    starting_position_stack_sidh_core = param[40]
+    
+    if(param[6] == 1):
+        enable_special_prime_line_arithmetic = 1
+    else:
+        enable_special_prime_line_arithmetic = 0
+    
+    alice_gen_points_mont = param[20:26]
+    bob_gen_points_mont = param[26:32]
+    alice_gen_points = param[41:47]
+    bob_gen_points = param[47:53]
+    
+    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
+    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
+    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
+    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
+    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
+    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
+    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
+    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
+    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
+    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
+    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
+    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
     
     zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
     zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
@@ -541,7 +543,7 @@ def test_sike_encryption(zedboard, base_word_size, extended_word_size, prime_siz
     zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
     
     zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
-    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, 0)
+    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
     zedboard.write_package(sike_core_reg_prime_address_address, 0)
     zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
     zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
@@ -554,7 +556,7 @@ def test_sike_encryption(zedboard, base_word_size, extended_word_size, prime_siz
         sike_s  = bytearray(test[0])
         sike_sk = test[1]
         sike_m  = bytearray(test[2])
-        error_computation = test_single_sike_encryption(zedboard, fp2, arithmetic_parameters, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
+        error_computation = test_single_sike_encryption(zedboard, fp2, extended_word_size, number_of_words, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
         tests_already_performed += 1
         if(error_computation):
             break
@@ -567,41 +569,27 @@ def test_sike_encryption(zedboard, base_word_size, extended_word_size, prime_siz
             sike_s  = bytearray([random.randint(0, 255) for j in range(sike_message_length)])
             sike_sk = random.randint(0, ob-1)
             sike_m  = bytearray([random.randint(0, 255) for j in range(sike_message_length)])
-            error_computation = test_single_sike_encryption(zedboard, fp2, arithmetic_parameters, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
+            error_computation = test_single_sike_encryption(zedboard, fp2, extended_word_size, number_of_words, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
         
             if(error_computation):
                 break
     
     return error_computation
 
-def test_all_sike_encryption(zedboard, base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests):
+def test_all_sike_encryption(zedboard, sike_fpga_constants, number_of_tests, only_one_parameter=None):
     error_computation = False
-    for param in SIKE_round2_constants.sidh_constants:
+    if(only_one_parameter != None):
+        all_testing_parameters = sike_fpga_constants[only_one_parameter:only_one_parameter+1]
+    else:
+        all_testing_parameters = sike_fpga_constants
+    for param in all_testing_parameters:
         print("Testing SIKE encryption " +  param[0])
-        prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-        prime_size_bits = int(prime).bit_length()
-        oa = (param[2])**(param[4])
-        ob = (param[3])**(param[5])
-        alice_gen_points = param[6:12]
-        alice_splits = param[18]
-        alice_max_row = param[19]
-        alice_max_int_points = param[20]
-        bob_gen_points = param[12:18]
-        bob_splits = param[21]
-        bob_max_row = param[22]
-        bob_max_int_points = param[23]
-        sike_message_length = param[24]
-        sike_shared_secret_length = param[25]
-        error_computation = test_sike_encryption(zedboard, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, sike_message_length, sike_shared_secret_length, number_of_tests, debug_mode=False)
+        error_computation = test_sike_encryption(zedboard, param, number_of_tests, debug_mode=False)
         if(error_computation):
             break
 
-def test_single_sike_decryption(zedboard, fp2, arithmetic_parameters, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False):
+def test_single_sike_decryption(zedboard, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False):
 
-    extended_word_size = arithmetic_parameters[0]
-    base_word_size = arithmetic_parameters[1]
-    number_of_words = arithmetic_parameters[9]
-    
     true_sike_s, true_sike_sk, true_sike_pk = SIKE_round2_spec.SIKE_KEM_gen_key(fp2, alice_gen_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, ob, ob_bits, sike_message_length, sike_sk, sike_s)
     
     true_sike_ss, true_sike_c0, true_sike_c1 = SIKE_round2_spec.SIKE_KEM_enc(fp2, alice_gen_points, bob_gen_points, alice_splits, alice_max_row, alice_max_int_points, oa, oa_bits, true_sike_pk, sike_message_length, sike_shared_secret_length, sike_m)
@@ -667,7 +655,7 @@ def test_single_sike_decryption(zedboard, fp2, arithmetic_parameters, alice_gen_
     
     zedboard.write_package(sike_core_reg_program_counter_address, program_start_address_test_sike_kem_dec)
     
-    time.sleep(0.1)
+    #time.sleep(0.1)
     
     while(not zedboard.isFree()):
         time.sleep(0.1)
@@ -694,58 +682,66 @@ def test_single_sike_decryption(zedboard, fp2, arithmetic_parameters, alice_gen_
         return True
     return False
 
-def test_sike_decryption(zedboard, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, sike_message_length, sike_shared_secret_length, number_of_tests, debug_mode=False):
+def test_sike_decryption(zedboard, param, number_of_tests, debug_mode=False):
 
-    arithmetic_parameters = sike_core_utils.generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
-    
-    prime_list = arithmetic_parameters[4]
-    prime_plus_one_list = arithmetic_parameters[6]
-    prime_line_list = arithmetic_parameters[18]
-    r_mod_prime_list = arithmetic_parameters[13]
-    r2_list = arithmetic_parameters[15]
-    constant_1_list = arithmetic_parameters[20]
-    number_of_words = arithmetic_parameters[9]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    number_of_words = param[4]
+    prime = param[5]
+    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
+    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
+    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
+    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[16])
+    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
+    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
+    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
     
     error_computation = False
         
     fp2 = sidh_fp2.sidh_fp2(prime)
     
-    oa_bits = int(oa-1).bit_length()
-    ob_bits = int(ob-1).bit_length()
-    t_bits_mask = oa_bits - (((oa_bits + (base_word_size - 1))//base_word_size)-1)*base_word_size
-    oa_mask = 2**t_bits_mask-1
-    t_bits_mask = ob_bits - (((ob_bits + (base_word_size - 1))//base_word_size)-1)*base_word_size
-    ob_mask = 2**t_bits_mask-1
+    oa = param[10]
+    ob = param[11]
+    oa_bits = param[14]
+    ob_bits = param[15]
+    oa_mask = param[12]
+    ob_mask = param[13]
     
-    inv_4 = (fp2(4)**(-1)).polynomial()[0]
-    inv_4_mont = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, int(inv_4))
-    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, inv_4_mont)
+    prime_size_bits = param[6]
+    sike_message_length = param[38]
+    sike_shared_secret_length = param[39]
     
-    test_value_xpa_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[0])
-    test_value_xpai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[1])
-    test_value_xqa_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[2])
-    test_value_xqai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[3])
-    test_value_xra_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[4])
-    test_value_xrai_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, alice_gen_points[5])
-    test_value_xpb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[0])
-    test_value_xpbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[1])
-    test_value_xqb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[2])
-    test_value_xqbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[3])
-    test_value_xrb_mont   = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[4])
-    test_value_xrbi_mont  = sike_core_utils.enter_montgomery_domain(arithmetic_parameters, bob_gen_points[5])
+    alice_splits = param[32]
+    alice_max_row = param[33]
+    alice_max_int_points = param[34]
+    bob_splits = param[35]
+    bob_max_row = param[36]
+    bob_max_int_points = param[37]
     
-    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpa_mont)
-    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpai_mont)
-    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqa_mont)
-    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqai_mont)
-    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xra_mont)
-    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrai_mont)
-    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpb_mont)
-    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xpbi_mont)
-    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqb_mont)
-    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xqbi_mont)
-    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrb_mont)
-    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, test_value_xrbi_mont)
+    starting_position_stack_sidh_core = param[40]
+    
+    if(param[6] == 1):
+        enable_special_prime_line_arithmetic = 1
+    else:
+        enable_special_prime_line_arithmetic = 0
+    
+    alice_gen_points_mont = param[20:26]
+    bob_gen_points_mont = param[26:32]
+    alice_gen_points = param[41:47]
+    bob_gen_points = param[47:53]
+    
+    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
+    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
+    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
+    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
+    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
+    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
+    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
+    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
+    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
+    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
+    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
+    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
     
     zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
     zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
@@ -789,7 +785,7 @@ def test_sike_decryption(zedboard, base_word_size, extended_word_size, prime_siz
     zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
     
     zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
-    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, 0)
+    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
     zedboard.write_package(sike_core_reg_prime_address_address, 0)
     zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
     zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
@@ -802,7 +798,7 @@ def test_sike_decryption(zedboard, base_word_size, extended_word_size, prime_siz
         sike_s  = bytearray(test[0])
         sike_sk = test[1]
         sike_m  = bytearray(test[2])
-        error_computation = test_single_sike_decryption(zedboard, fp2, arithmetic_parameters, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
+        error_computation = test_single_sike_decryption(zedboard, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
         tests_already_performed += 1
         if(error_computation):
             break
@@ -815,63 +811,48 @@ def test_sike_decryption(zedboard, base_word_size, extended_word_size, prime_siz
             sike_s  = bytearray([random.randint(0, 255) for j in range(sike_message_length)])
             sike_sk = random.randint(0, ob-1)
             sike_m  = bytearray([random.randint(0, 255) for j in range(sike_message_length)])
-            error_computation = test_single_sike_decryption(zedboard, fp2, arithmetic_parameters, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
+            error_computation = test_single_sike_decryption(zedboard, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, oa_bits, ob_bits, sike_message_length, sike_shared_secret_length, sike_sk, sike_s, sike_m, debug_mode=False)
         
             if(error_computation):
                 break
     
     return error_computation
 
-def test_all_sike_decryption(zedboard, base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests):
+def test_all_sike_decryption(zedboard, sike_fpga_constants, number_of_tests, only_one_parameter=None):
     error_computation = False
-    for param in SIKE_round2_constants.sidh_constants:
+    if(only_one_parameter != None):
+        all_testing_parameters = sike_fpga_constants[only_one_parameter:only_one_parameter+1]
+    else:
+        all_testing_parameters = sike_fpga_constants
+    for param in all_testing_parameters:
         print("Testing SIKE decryption " +  param[0])
-        prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-        prime_size_bits = int(prime).bit_length()
-        oa = (param[2])**(param[4])
-        ob = (param[3])**(param[5])
-        alice_gen_points = param[6:12]
-        alice_splits = param[18]
-        alice_max_row = param[19]
-        alice_max_int_points = param[20]
-        bob_gen_points = param[12:18]
-        bob_splits = param[21]
-        bob_max_row = param[22]
-        bob_max_int_points = param[23]
-        sike_message_length = param[24]
-        sike_shared_secret_length = param[25]
-        error_computation = test_sike_decryption(zedboard, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, alice_gen_points, alice_splits, alice_max_row, alice_max_int_points, bob_gen_points, bob_splits, bob_max_row, bob_max_int_points, oa, ob, sike_message_length, sike_shared_secret_length, number_of_tests, debug_mode=False)
+        error_computation = test_sike_decryption(zedboard, param, number_of_tests, debug_mode=False)
         if(error_computation):
             break
 
-def test_all_sike_functions(zedboard, version):
+def test_all_sike_functions(zedboard, version, only_one_parameter=None):
     sike_base_word_size = 16
     if(version == '256'):
         sike_extended_word_size = 256
+        sike_fpga_constants = sike_fpga_constants_v256.sike_fpga_constants_v256
     elif(version == '128'):
         sike_extended_word_size = 128
-    sike_accumulator_word_size = 32
-    number_of_bits_added = 8
+        sike_fpga_constants = sike_fpga_constants_v128.sike_fpga_constants_v128
     tests_working_folder = "../hw_sidh_tests_v"+str(sike_extended_word_size)+"/"
-    if(load_program(zedboard, tests_prom_folder + "test_sike_functions_v" + str(sike_extended_word_size)+ ".dat", sike_base_word_size, 4)):
+    if(load_program(zedboard, tests_prom_folder + "test_sike_sidh_functions_v" + str(sike_extended_word_size)+ ".dat", sike_base_word_size, 4)):
         print("Program loaded correctly into SIKE core")
-        test_all_sike_keygen(zedboard, sike_base_word_size, sike_extended_word_size, number_of_bits_added, sike_accumulator_word_size, 100)
-        test_all_sike_encryption(zedboard, sike_base_word_size, sike_extended_word_size, number_of_bits_added, sike_accumulator_word_size, 100)
-        test_all_sike_decryption(zedboard, sike_base_word_size, sike_extended_word_size, number_of_bits_added, sike_accumulator_word_size, 100)
+        test_all_sike_keygen(zedboard, sike_fpga_constants, 100, only_one_parameter)
+        test_all_sike_encryption(zedboard, sike_fpga_constants, 100, only_one_parameter)
+        test_all_sike_decryption(zedboard, sike_fpga_constants, 100, only_one_parameter)
     else:
         print('Program loading failed')
 
-if(sys.argv[1] == '256'):
-    starting_position_stack_sidh_core = starting_position_stack_sidh_core*4
-elif(sys.argv[1] == '128'):
-    starting_position_stack_sidh_core = starting_position_stack_sidh_core*8
-
-zedboard = Zedboard('COM5', sys.argv[1])
+zedboard = Zedboard('COM4', sys.argv[1])
 #zedboard.read_initial_message(34)
 while(not zedboard.isFree()):
     time.sleep(0.01)
 zedboard.flush()
 
-test_all_sike_functions(zedboard, sys.argv[1])
+test_all_sike_functions(zedboard, sys.argv[1], 0)
 
 zedboard.disconnect()

@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-# Implementation by Pedro Maat C. Massolino, hereby denoted as "the implementer".
-#
-# To the extent possible under law, the implementer has waived all copyright
-# and related or neighboring rights to the source code in this file.
-# http://creativecommons.org/publicdomain/zero/1.0/
-#
 import sys
 
 nop_4_stages = {}
@@ -331,10 +323,10 @@ def print_main_class_help():
     print("file_state_output.txt")
     print("The state machine output for each value")
     print('')
-    print("file_state_flow.dat")
+    print("file_state_flow.txt")
     print("The state machine flow for each part")
     print('')
-    print("file_state_compact.dat")
+    print("file_state_compact.txt")
     print("The compact version")
     print('')
     
@@ -350,4 +342,4 @@ if __name__ == "__main__":
     else:
         print("Unknown amount of options")
         print('')
-        print_main_class_help() 
+        print_main_class_help()

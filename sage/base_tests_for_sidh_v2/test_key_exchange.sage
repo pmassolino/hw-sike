@@ -30,13 +30,6 @@ def test_single_key_exchange(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, x
     true_alice_j_invar, true_alice_j_invar_i = sage_shared_secret_alice_fast(fp2, true_pk_bob_phiPX, true_pk_bob_phiPXi, true_pk_bob_phiQX, true_pk_bob_phiQXi, true_pk_bob_phiRX, true_pk_bob_phiRXi, sk_alice, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
     true_bob_j_invar, true_bob_j_invar_i = sage_shared_secret_bob_fast(fp2, true_pk_alice_phiPX, true_pk_alice_phiPXi, true_pk_alice_phiQX, true_pk_alice_phiQXi, true_pk_alice_phiRX, true_pk_alice_phiRXi, sk_bob, ob_bits, splits_bob, max_row_bob, max_int_points_bob, inv_4)
     
-    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiPX))
-    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiPXi))
-    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiQX))
-    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiQXi))
-    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiRX))
-    print(integer_to_list(extended_word_size_signed, number_of_words, true_pk_alice_phiRXi))
-    
     if((debug) or (true_alice_j_invar != true_bob_j_invar) or (true_alice_j_invar_i != true_bob_j_invar_i)):
         print("Error in key exchange ")
         print('')
@@ -100,7 +93,7 @@ def test_key_exchange(base_word_size, extended_word_size, prime_size_bits, numbe
     if(not error_computation):
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
-                print i
+                print(i)
             sk_alice = randint(0, oa-1)
             sk_bob = randint(0, ob-1)
     
@@ -120,13 +113,13 @@ def test_all_key_exchange(base_word_size, extended_word_size, number_of_bits_add
         if error_computation:
             break;
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
 
-#number_of_bits_added = 8
+#number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32

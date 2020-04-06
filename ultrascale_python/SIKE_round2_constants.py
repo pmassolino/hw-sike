@@ -2,6 +2,59 @@
 
 sidh_constants = [
 [
+"p16",
+# prime constant f
+1,
+# prime constant ea
+2,
+# prime constant eb
+3,
+# prime constant la
+8,
+# prime constant lb
+5,
+# coordinate x of point PA - Real
+0x7F4,
+# coordinate x of point PA - Imaginary
+0x1641,
+# coordinate x of point QA - Real
+0xDCC,
+# coordinate x of point QA - Imaginary
+0x6DF,
+# coordinate x of point RA - Real
+0x2490,
+# coordinate x of point RA - Imaginary
+0x3796,
+# coordinate x of point PB - Real
+0x64B7,
+# coordinate x of point PB - Imaginary
+0x0,
+# coordinate x of point QB - Real
+0x80A2,
+# coordinate x of point QB - Imaginary
+0x0,
+# coordinate x of point RB - Real
+0x65DC,
+# coordinate x of point RB - Imaginary
+0xC5E0,
+# splits Alice
+[2, 1, 1],
+# max Alice row
+4,
+# max Alice points
+2,
+# splits Bob
+[2, 1, 1, 1],
+# max Bob row
+5,
+# max Bob points
+3,
+# SIKE SK length, also known as message length
+16,
+# SIKE shared secret length
+16,
+],
+[
 "p434",
 # prime constant f
 1,
@@ -49,6 +102,10 @@ sidh_constants = [
 137,
 # max Bob points
 8,
+# SIKE SK length, also known as message length
+16,
+# SIKE shared secret length
+16,
 ],
 [
 "p503",
@@ -98,6 +155,10 @@ sidh_constants = [
 159,
 # max Bob points
 8,
+# SIKE SK length, also known as message length
+24,
+# SIKE shared secret length
+24,
 ],
 [
 "p610",
@@ -147,6 +208,10 @@ sidh_constants = [
 192,
 # max Bob points
 10,
+# SIKE SK length, also known as message length
+24,
+# SIKE shared secret length
+24,
 ],
 [
 "p751",
@@ -196,6 +261,10 @@ sidh_constants = [
 239,
 # max Bob points
 10,
+# SIKE SK length, also known as message length
+32,
+# SIKE shared secret length
+32,
 ],
 [
 "p964",
@@ -245,5 +314,9 @@ sidh_constants = [
 301,
 # max Bob points
 12,
+# SIKE SK length, also known as message length
+32,
+# SIKE shared secret length
+32,
 ]
 ]

@@ -3208,6 +3208,13 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
     C_S = 0
     S = 0
     
+    prime_sharp_number_of_zeroes = 0
+    for each_prime_sharp in prime_sharp:
+        if(each_prime_sharp == 0):
+            prime_sharp_number_of_zeroes = prime_sharp_number_of_zeroes + 1
+        else:
+            break;
+    
     if(debug):
         print("Debug mode active")
         print("prime + 1")
@@ -3215,7 +3222,7 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         print("a")
         print(a)
 
-    if(operands_size <= 4):
+    if(prime_sharp_number_of_zeroes == 1):
         # First loop, i = 0
         C_S = acc + a[0]*a[0]
         acc = C_S&(internal_acc_modulus)
@@ -3333,7 +3340,71 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 4
+        if(operands_size == 4):
+            # Second loop, i = 4
+            C_S = acc + 2*a[1]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*a[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            C_S = acc + 2*a[2]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            o[3] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 4
+        C_S = acc + 2*a[0]*a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + 2*a[1]*a[3]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3354,9 +3425,108 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[0] = acc&(internal_word_modulus)
+        o[4] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 5
+        if(operands_size == 5):
+            # Second loop, i = 5
+            C_S = acc + 2*a[1]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[2]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + 2*a[2]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + 2*a[3]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[4]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            o[4] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 5
+        C_S = acc + 2*a[0]*a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[1]*a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + 2*a[2]*a[3]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3369,9 +3539,155 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[1] = acc&(internal_word_modulus)
+        C_S = acc + o[4]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 6
+        if(operands_size == 6):
+            # Second loop, i = 6
+            C_S = acc + 2*a[1]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[2]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + 2*a[2]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[3]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + 2*a[3]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + 2*a[4]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[5]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            o[5] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 6
+        C_S = acc + 2*a[0]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[1]*a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[2]*a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[3]*a[3]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3380,15 +3696,425 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = (acc)&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(operands_size == 7):
+            # Second loop, i = 7
+            C_S = acc + 2*a[1]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[2]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[3]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + 2*a[2]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[3]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + 2*a[3]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[4]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + 2*a[4]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            C_S = acc + 2*a[5]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 12
+            C_S = acc + a[6]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[5] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 13
+            o[6] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 7
+        C_S = acc + 2*a[0]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[1]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[2]*a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[3]*a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[7] = (acc)&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 8
+        C_S = acc + 2*a[1]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[2]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[3]*a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[4]*a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 9
+        C_S = acc + 2*a[2]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[3]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[4]*a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 10
+        C_S = acc + 2*a[3]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[4]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         o[2] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 7
+        # Second loop, i = 11
+        C_S = acc + 2*a[4]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[5]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 12
+        C_S = acc + 2*a[5]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 13
+        C_S = acc + 2*a[6]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 14
+        C_S = acc + a[7]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 13
+        o[7] = acc&(internal_word_modulus)
         if(acc < 0):
-            o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            o[7] = -((o[6] ^^ internal_word_modulus) + 1)
         return o
     
-    elif(operands_size <= 6):
+    # TODO: Expand this for other cases smaller than 5.
+    elif(prime_sharp_number_of_zeroes == 2):
         # First loop, i = 0
         C_S = acc + a[0]*a[0]
         acc = C_S&(internal_acc_modulus)
@@ -3403,6 +4129,20 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[1] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 2):
+            # Second loop, i = 2
+            C_S = acc + a[1]*a[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 3
+            o[1] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[1] = -((o[1] ^^ internal_word_modulus) + 1)
+            return o
+            
         # First loop, i = 2
         C_S = acc + 2*a[0]*a[2]
         acc = C_S&(internal_acc_modulus)
@@ -3418,6 +4158,35 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[2] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 3):
+            # Second loop, i = 3
+            C_S = acc + 2*a[1]*a[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 4
+            C_S = acc + a[2]*a[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            o[2] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+            return o
+            
         # First loop, i = 3
         C_S = acc + 2*a[0]*a[3]
         acc = C_S&(internal_acc_modulus)
@@ -3437,6 +4206,58 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 4):
+            # Second loop, i = 4
+            C_S = acc + 2*a[1]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*a[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            C_S = acc + 2*a[2]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            o[3] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            return o
+            
         # First loop, i = 4
         C_S = acc + 2*a[0]*a[4]
         acc = C_S&(internal_acc_modulus)
@@ -3542,6 +4363,7 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             if(acc < 0):
                 o[4] = -((o[4] ^^ internal_word_modulus) + 1)
             return o
+        
         # First loop, i = 5
         C_S = acc + 2*a[0]*a[5]
         acc = C_S&(internal_acc_modulus)
@@ -3573,7 +4395,129 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[5] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 6
+        if(operands_size == 6):
+            # Second loop, i = 6
+            C_S = acc + 2*a[1]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[2]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + 2*a[2]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[3]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + 2*a[3]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + 2*a[4]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[5]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            o[5] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 6
+        C_S = acc + 2*a[0]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + 2*a[1]*a[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3602,9 +4546,178 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[0] = acc&(internal_word_modulus)
+        o[6] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 7
+        if(operands_size == 7):
+            # Second loop, i = 7
+            C_S = acc + 2*a[1]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[2]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[3]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + 2*a[2]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[3]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + 2*a[3]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[4]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + 2*a[4]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            C_S = acc + 2*a[5]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 12
+            C_S = acc + a[6]*a[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[5] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 13
+            o[6] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 7
+        C_S = acc + 2*a[0]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[1]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + 2*a[2]*a[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3629,9 +4742,25 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[1] = acc&(internal_word_modulus)
+        o[7] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 8
+        C_S = acc + 2*a[1]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[2]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + 2*a[3]*a[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3652,9 +4781,29 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[2] = acc&(internal_word_modulus)
+        C_S = acc + o[6]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 9
+        C_S = acc + 2*a[2]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[3]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + 2*a[4]*a[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3667,9 +4816,33 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[3] = acc&(internal_word_modulus)
+        C_S = acc + o[6]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 10
+        C_S = acc + 2*a[3]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[4]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[5]*a[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -3678,13 +4851,98 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[4] = acc&(internal_word_modulus)
+        C_S = acc + o[6]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 11
+        C_S = acc + 2*a[4]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + 2*a[5]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 12
+        C_S = acc + 2*a[5]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 13
+        C_S = acc + 2*a[6]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 14
+        C_S = acc + a[7]*a[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 13
+        o[7] = acc&(internal_word_modulus)
         if(acc < 0):
-            o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            o[7] = -((o[6] ^^ internal_word_modulus) + 1)
         return o
+        
     else:
         # First loop, i = 0
         C_S = acc + a[0]*a[0]
@@ -3711,6 +4969,27 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[2] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 3):
+            # Second loop, i = 3
+            C_S = acc + 2*a[1]*a[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 4
+            C_S = acc + a[2]*a[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            o[2] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 3
         C_S = acc + 2*a[0]*a[3]
         acc = C_S&(internal_acc_modulus)
@@ -3726,6 +5005,50 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 4):
+            # Second loop, i = 4
+            C_S = acc + 2*a[1]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*a[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            C_S = acc + 2*a[2]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            o[3] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 4
         C_S = acc + 2*a[0]*a[4]
         acc = C_S&(internal_acc_modulus)
@@ -3749,6 +5072,77 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[4] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 5):
+            # Second loop, i = 5
+            C_S = acc + 2*a[1]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[2]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + 2*a[2]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + 2*a[3]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[4]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            o[4] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 5
         C_S = acc + 2*a[0]*a[5]
         acc = C_S&(internal_acc_modulus)
@@ -3776,6 +5170,112 @@ def  montgomery_squaring_with_prime_line_0(internal_word_division, internal_word
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[5] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 6):
+            # Second loop, i = 6
+            C_S = acc + 2*a[1]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[2]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*a[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + 2*a[2]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + 2*a[3]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + 2*a[3]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*a[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + 2*a[4]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[5]*a[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            o[5] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 6
         C_S = acc + 2*a[0]*a[6]
         acc = C_S&(internal_acc_modulus)
@@ -5349,6 +6849,13 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
     C_S = 0
     S = 0
     
+    prime_sharp_number_of_zeroes = 0
+    for each_prime_sharp in prime_sharp:
+        if(each_prime_sharp == 0):
+            prime_sharp_number_of_zeroes = prime_sharp_number_of_zeroes + 1
+        else:
+            break
+    
     if(debug):
         print("Debug mode active")
         print("prime plus one")
@@ -5358,7 +6865,7 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         print("b")
         print(b)
     
-    if(operands_size <= 4):
+    if(prime_sharp_number_of_zeroes == 1):
         # First loop, i = 0
         C_S = acc + a[0]*b[0]
         acc = C_S&(internal_acc_modulus)
@@ -5496,7 +7003,79 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 4
+        if(operands_size == 4):
+            # Second loop, i = 4
+            C_S = acc + a[1]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            C_S = acc + a[2]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            o[3] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 4
+        C_S = acc + a[0]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[1]*b[3]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5521,9 +7100,128 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[0] = acc&(internal_word_modulus)
+        C_S = acc + a[4]*b[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 5
+        if(operands_size == 5):
+            # Second loop, i = 5
+            C_S = acc + a[1]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[2]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + a[3]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[4]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            o[4] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 5
+        C_S = acc + a[0]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[1]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[2]*b[3]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5540,9 +7238,187 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[1] = acc&(internal_word_modulus)
+        C_S = acc + a[4]*b[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 6
+        if(operands_size == 6):
+            # Second loop, i = 6
+            C_S = acc + a[1]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + a[2]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[3]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + a[4]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[5]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            o[5] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 6
+        C_S = acc + a[0]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[1]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[2]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[3]*b[3]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5551,14 +7427,536 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[4]*b[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = (acc)&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(operands_size == 7):
+            # Second loop, i = 7
+            C_S = acc + a[1]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[2]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + a[3]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[4]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            C_S = acc + a[5]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 12
+            C_S = acc + a[6]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[5] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 13
+            o[6] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 7
+        C_S = acc + a[0]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[1]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[2]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[3]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[4]*b[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[7] = (acc)&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 8
+        C_S = acc + a[1]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[2]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[3]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[4]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 9
+        C_S = acc + a[2]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[3]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[4]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 10
+        C_S = acc + a[3]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[4]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         o[2] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 7
+        # Second loop, i = 11
+        C_S = acc + a[4]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 12
+        C_S = acc + a[5]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 13
+        C_S = acc + a[6]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 14
+        C_S = acc + a[7]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 15
+        o[7] = acc&(internal_word_modulus)
         if(acc < 0):
-            o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            o[7] = -((o[7] ^^ internal_word_modulus) + 1)
         return o
-    elif(operands_size <= 6):
+            
+    elif(prime_sharp_number_of_zeroes == 2):
         # First loop, i = 0
         C_S = acc + a[0]*b[0]
         acc = C_S&(internal_acc_modulus)
@@ -5577,6 +7975,20 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[1] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 2):
+            # Second loop, i = 2
+            C_S = acc + a[1]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 3
+            o[1] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[1] = -((o[1] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 2
         C_S = acc + a[0]*b[2]
         acc = C_S&(internal_acc_modulus)
@@ -5596,6 +8008,39 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[2] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 3):
+            # Second loop, i = 3
+            C_S = acc + a[1]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 4
+            C_S = acc + a[2]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            o[2] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 3
         C_S = acc + a[0]*b[3]
         acc = C_S&(internal_acc_modulus)
@@ -5623,6 +8068,66 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 4):
+            # Second loop, i = 4
+            C_S = acc + a[1]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            C_S = acc + a[2]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            o[3] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 4
         C_S = acc + a[0]*b[4]
         acc = C_S&(internal_acc_modulus)
@@ -5796,7 +8301,153 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[5] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 6
+        if(operands_size == 6):
+            # Second loop, i = 6
+            C_S = acc + a[1]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + a[2]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[3]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + a[4]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[5]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            o[5] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 6
+        C_S = acc + a[0]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[1]*b[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5833,9 +8484,218 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[0] = acc&(internal_word_modulus)
+        C_S = acc + a[6]*b[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        # Second loop, i = 7
+        if(operands_size == 7):
+            # Second loop, i = 7
+            C_S = acc + a[1]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[2]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + a[3]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[4]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            C_S = acc + a[5]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[6]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 12
+            C_S = acc + a[6]*b[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[6]*prime_sharp[6]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[5] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 13
+            o[6] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+            return o
+        
+        # First loop, i = 7
+        C_S = acc + a[0]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[0]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[1]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[2]*b[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5868,9 +8728,33 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[1] = acc&(internal_word_modulus)
+        C_S = acc + a[6]*b[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[7] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 8
+        C_S = acc + a[1]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[1]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[2]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[3]*b[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5895,9 +8779,37 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[2] = acc&(internal_word_modulus)
+        C_S = acc + a[6]*b[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 9
+        C_S = acc + a[2]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[2]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[3]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[4]*b[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5914,9 +8826,41 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[3] = acc&(internal_word_modulus)
+        C_S = acc + a[6]*b[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 10
+        C_S = acc + a[3]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[3]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[4]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         C_S = acc + a[5]*b[5]
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
@@ -5925,13 +8869,122 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         acc = C_S&(internal_acc_modulus)
         if(C_S < 0):
             acc = -((acc ^^ internal_acc_modulus) + 1)
-        o[4] = acc&(internal_word_modulus)
+        C_S = acc + a[6]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
         acc = acc//(internal_word_division)
         # Second loop, i = 11
+        C_S = acc + a[4]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[4]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[5]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 12
+        C_S = acc + a[5]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[5]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[6]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 13
+        C_S = acc + a[6]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[6]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + a[7]*b[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
         o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 14
+        C_S = acc + a[7]*b[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        C_S = acc + o[7]*prime_sharp[7]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        # Second loop, i = 15
+        o[7] = acc&(internal_word_modulus)
         if(acc < 0):
-            o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            o[7] = -((o[7] ^^ internal_word_modulus) + 1)
         return o
+        
     else:
         # First loop, i = 0
         C_S = acc + a[0]*b[0]
@@ -5966,6 +9019,31 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[2] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 3):
+            # Second loop, i = 3
+            C_S = acc + a[1]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 4
+            C_S = acc + a[2]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            o[2] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 3
         C_S = acc + a[0]*b[3]
         acc = C_S&(internal_acc_modulus)
@@ -5989,6 +9067,58 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[3] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 4):
+            # Second loop, i = 4
+            C_S = acc + a[1]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 5
+            C_S = acc + a[2]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            o[3] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 4
         C_S = acc + a[0]*b[4]
         acc = C_S&(internal_acc_modulus)
@@ -6020,6 +9150,93 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[4] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 5):
+            # Second loop, i = 5
+            C_S = acc + a[1]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 6
+            C_S = acc + a[2]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + a[3]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[4]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            o[4] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 5
         C_S = acc + a[0]*b[5]
         acc = C_S&(internal_acc_modulus)
@@ -6059,6 +9276,136 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[5] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
+        if(operands_size == 6):
+            # Second loop, i = 6
+            C_S = acc + a[1]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[1]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[2]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[1]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[0] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 7
+            C_S = acc + a[2]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[2]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[3]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[2]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[1] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 8
+            C_S = acc + a[3]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[3]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[4]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[3]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[2] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 9
+            C_S = acc + a[4]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[4]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + a[5]*b[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[4]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[3] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 10
+            C_S = acc + a[5]*b[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            C_S = acc + o[5]*prime_sharp[5]
+            acc = C_S&(internal_acc_modulus)
+            if(C_S < 0):
+                acc = -((acc ^^ internal_acc_modulus) + 1)
+            o[4] = acc&(internal_word_modulus)
+            acc = acc//(internal_word_division)
+            # Second loop, i = 11
+            o[5] = acc&(internal_word_modulus)
+            if(acc < 0):
+                o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            return o
+        
         # First loop, i = 6
         C_S = acc + a[0]*b[6]
         acc = C_S&(internal_acc_modulus)
@@ -6106,7 +9453,6 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
             acc = -((acc ^^ internal_acc_modulus) + 1)
         o[6] = (acc)&(internal_word_modulus)
         acc = acc//(internal_word_division)
-        
         if(operands_size == 7):
             # Second loop, i = 7
             C_S = acc + a[1]*b[6]
@@ -7946,13 +11292,12 @@ def load_VHDL_iterative_modular_reduction_test(VHDL_memory_file_name, base_word_
     VHDL_memory_file.close()
     
     
-def test_all_operations():
-    number_of_bits_added = 8
+def test_all_operations(number_of_random_tests=100000):
+    number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 128
     accumulator_word_size = (extended_word_size_signed)*2+32
-    number_of_random_tests = 100000
-    primes = [2^(120)-119, 2^(248)-237, 2^(376)-57, 2^(504)-503, 2^(632)-813, 2^(760)-173, 2^(888)-915, 2^(1016)-303, 2^120-1, 2^248-1, 2^376-1, 2^504-1, 2^632-1, 2^760-1, 2^888-1, 2^1016-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    primes = [2^(128)*2503155504993241601315571986085827 - 1, 2^(128)*369988485035126972924700782451696644186473100389722973815184405301748242 - 1, 2^(128)*54687564869829362182513248937549525219772952158835913478965817740815987158012171902102365647884201078947650423 - 1, 2^(128)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792290 - 1, 2^(128)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175179 - 1, 2^(128)*176599601089934078359548270864285863603827251393046775434920390764769898521366084669687132105709979857873800115716040400421172212786462009325232075541447482362180166602559904626487994750416695920834514229486516405288106797329 - 1, 2^(128)*26102980312143604580379781426139335779091260301758026221495303393196039344305009624874488017227324790317412920525253886011853217074287636537729904547128731845728160914486066244742089352609334182138245049106257642108402738856230144495829015803277090696341313660203 - 1, 2^(256)*42391158275216203514294433068 - 1, 2^(256)*369988485035126972924700782451696644186473100389722973815184405301747940 - 1, 2^(256)*5468756486982936218251324893754952521977295215883591347896581774081598715801217190210236564788420107894765046 - 1, 2^(256)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792715 - 1, 2^(256)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175170 - 1, 2^(256)*176599601089934078359548270864285863603827251393046775434920390764769898521366084669687132105709979857873800115716040400421172212786462009325232075541447482362180166602559904626487994750416695920834514229486516405288106797569 - 1, 2^(384)*2503155504993241601315571986085684 - 1, 2^(384)*369988485035126972924700782451696644186473100389722973815184405301747903 - 1, 2^(384)*54687564869829362182513248937549525219772952158835913478965817740815987158012171902102365647884201078947650478 - 1, 2^(384)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792989 - 1, 2^(384)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175125 - 1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -7987,12 +11332,11 @@ def test_all_operations():
             print("Done")
         if(error):
             break
-    number_of_bits_added = 8
+    number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 256
     accumulator_word_size = (extended_word_size_signed)*2+32
-    number_of_random_tests = 100000
-    primes = [2^(248)-237, 2^(504)-503, 2^(760)-173, 2^(1016)-303, 2^248-1, 2^504-1, 2^760-1, 2^1016-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    primes = [2^240-1, 2^496-1, 2^752-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -8030,12 +11374,12 @@ def test_all_operations():
 
 def print_all_VHDL_tests():
     tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v128/"
-    number_of_bits_added = 8
+    number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 128
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^120-1, 2^248-1, 2^376-1, 2^504-1, 2^632-1, 2^760-1, 2^888-1, 2^1016-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["120_max", "248_max", "376_max", "504_max", "632_max", "760_max", "888_max", "1016_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["112_max", "240_max", "368_max", "496_max", "624_max", "752_max", "880_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     number_of_each_test = 1000
     start_test = 0
     end_test = len(primes)
@@ -8061,12 +11405,12 @@ def print_all_VHDL_tests():
         print("")
         
     tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v256/"
-    number_of_bits_added = 8
+    number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 256
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^248-1, 2^504-1, 2^760-1, 2^1016-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["248_max", "504_max", "760_max", "1016_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    primes = [2^240-1, 2^496-1, 2^752-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["240_max", "496_max", "752_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     number_of_each_test = 1000
     start_test = 0
     end_test = len(primes)
@@ -8094,12 +11438,12 @@ def print_all_VHDL_tests():
         
 def load_all_VHDL_tests():
     tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v128/"
-    number_of_bits_added = 8
+    number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 128
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^120-1, 2^248-1, 2^376-1, 2^504-1, 2^632-1, 2^760-1, 2^888-1, 2^1016-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["120_max", "248_max", "376_max", "504_max", "632_max", "760_max", "888_max", "1016_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["112_max", "240_max", "368_max", "496_max", "624_max", "752_max", "880_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -8118,12 +11462,12 @@ def load_all_VHDL_tests():
         print('')
         
     tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v256/"
-    number_of_bits_added = 8
+    number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 256
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^248-1, 2^504-1, 2^760-1, 2^1016-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["248_max", "504_max", "760_max", "1016_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    primes = [2^240-1, 2^496-1, 2^752-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["240_max", "496_max", "752_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -8148,11 +11492,11 @@ def load_VHDL_test(prime_test=0, operation_type=0, debug_test_number=0, extended
         tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v256/"
     else:
         print('Not a valid size')
-    number_of_bits_added = 8
+    number_of_bits_added = 16
     base_word_size_signed = 16
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^120-1, 2^248-1, 2^376-1, 2^504-1, 2^632-1, 2^760-1, 2^888-1, 2^1016-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["120_max", "248_max", "376_max", "504_max", "632_max", "760_max", "888_max", "1016_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["112_max", "240_max", "368_max", "496_max", "624_max", "752_max", "880_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     prime = primes[prime_test]
     file_name_prime_append = files_name_prime_append[prime_test]
     prime_size_bits = int(prime).bit_length()
@@ -8171,7 +11515,7 @@ def load_VHDL_test(prime_test=0, operation_type=0, debug_test_number=0, extended
     else:
         load_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, debug_test_number, True)
 
-#test_all_operations()
+#test_all_operations(1000)
 #print_all_VHDL_tests()
 #load_all_VHDL_tests()
 
@@ -8180,15 +11524,15 @@ def load_VHDL_test(prime_test=0, operation_type=0, debug_test_number=0, extended
 
 
 
-#number_of_bits_added = 8
-#base_word_size_signed = 17
-#extended_word_size_signed = 272
-#accumulator_word_size = (extended_word_size_signed)*2+34
+#number_of_bits_added = 16
+#base_word_size_signed = 16
+#extended_word_size_signed = 128
+#accumulator_word_size = (extended_word_size_signed)*2+32
 #number_of_random_tests = 1
-#primes = [2^(264)-275, 2^(536)-149, 2^(808)-17, 2^(1080)-405, 2^(4)*3^(3)-1, 2^(250)*3^(159)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1, 2^(504)*3^(331)-1]
+#primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
 #start_test = 0
 #end_test = len(primes)
 #
-#prime = primes[4]
+#prime = primes[10]
 #prime_size_bits = int(prime).bit_length()
-#test_iterative_modular_reduction(base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_random_tests)
+#test_montgomery_multiplication(base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_random_tests)

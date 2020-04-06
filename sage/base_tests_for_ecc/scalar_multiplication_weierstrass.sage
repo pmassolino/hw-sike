@@ -723,7 +723,7 @@ def test_scalar_multiplication_weierstrass(base_word_size, extended_word_size, n
     if(not error_computation):
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
-                print i
+                print(i)
             
             scalar = randint(1, elliptic_curve_constants[2]-1)
             
@@ -1019,7 +1019,7 @@ def load_all_scalar_multiplication_weierstrass(base_word_size, extended_word_siz
             break;
 
 
-number_of_bits_added = 8
+number_of_bits_added = 9
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = extended_word_size*2+32
@@ -1027,7 +1027,7 @@ number_of_tests = 100
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_ecc_tests_v256/"
 
 
-#number_of_bits_added = 8
+#number_of_bits_added = 9
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32

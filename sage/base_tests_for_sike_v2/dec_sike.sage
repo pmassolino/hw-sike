@@ -95,7 +95,7 @@ def test_dec_sike(base_word_size, extended_word_size, prime_size_bits, number_of
     if(not error_computation):
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
-                print i
+                print(i)
             sike_s  = bytearray([randint(0, 255) for j in range(sike_message_length)])
             sike_sk = randint(0, ob-1)
             sike_m = bytearray([randint(0, 255) for i in range(sike_message_length)])
@@ -467,13 +467,13 @@ def load_VHDL_dec_sike_test(VHDL_memory_file_name, base_word_size, extended_word
     while(current_test != (number_of_tests-1)):
         
         loaded_sike_s_list    = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-        loaded_sike_s         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_s_list))
+        loaded_sike_s         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_s_list), loaded_sike_message_length)
         loaded_sike_sk_list   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
         loaded_sike_sk        = list_to_integer(base_word_size_signed, 32, loaded_sike_sk_list)
         loaded_sike_m_list    = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-        loaded_sike_m         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_m_list))
+        loaded_sike_m         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_m_list), loaded_sike_message_length)
         loaded_sike_c1_list   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-        loaded_sike_c1        = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_c1_list))
+        loaded_sike_c1        = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_c1_list), loaded_sike_message_length)
         
         loaded_sike_pk_phiPX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
         loaded_sike_pk_phiPXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
@@ -490,7 +490,7 @@ def load_VHDL_dec_sike_test(VHDL_memory_file_name, base_word_size, extended_word
         loaded_sike_c0_phiRXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
         
         loaded_test_value_o1_list = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-        loaded_test_value_o1 = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_test_value_o1_list))
+        loaded_test_value_o1 = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_test_value_o1_list), loaded_sike_shared_length)
         
         computed_test_value_o1 = dec_sike(arithmetic_parameters, loaded_sike_s, loaded_sike_sk, prime_str_length, loaded_sike_message_length, loaded_sike_shared_length, loaded_sike_pk_phiPX, loaded_sike_pk_phiPXi, loaded_sike_pk_phiQX, loaded_sike_pk_phiQXi, loaded_sike_pk_phiRX, loaded_sike_pk_phiRXi, loaded_sike_c0_phiPX, loaded_sike_c0_phiPXi, loaded_sike_c0_phiQX, loaded_sike_c0_phiQXi, loaded_sike_c0_phiRX, loaded_sike_c0_phiRXi, loaded_sike_c1, test_value_xpa_mont, test_value_xpai_mont, test_value_xqa_mont, test_value_xqai_mont, test_value_xra_mont, test_value_xrai_mont, test_value_xpb_mont, test_value_xpbi_mont, test_value_xqb_mont, test_value_xqbi_mont, test_value_xrb_mont, test_value_xrbi_mont, loaded_oa_bits, loaded_ob_bits, loaded_splits_alice, loaded_splits_bob, loaded_max_row_alice, loaded_max_row_bob, 12, 12, inv_4_mont)
         
@@ -509,13 +509,13 @@ def load_VHDL_dec_sike_test(VHDL_memory_file_name, base_word_size, extended_word
         current_test += 1
     
     loaded_sike_s_list    = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-    loaded_sike_s         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_s_list))
+    loaded_sike_s         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_s_list), loaded_sike_message_length)
     loaded_sike_sk_list   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
     loaded_sike_sk        = list_to_integer(base_word_size_signed, 32, loaded_sike_sk_list)
     loaded_sike_m_list    = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-    loaded_sike_m         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_m_list))
+    loaded_sike_m         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_m_list), loaded_sike_message_length)
     loaded_sike_c1_list   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-    loaded_sike_c1         = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_c1_list))
+    loaded_sike_c1        = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_sike_c1_list), loaded_sike_message_length)
     
     loaded_sike_pk_phiPX  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     loaded_sike_pk_phiPXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
@@ -532,7 +532,7 @@ def load_VHDL_dec_sike_test(VHDL_memory_file_name, base_word_size, extended_word
     loaded_sike_c0_phiRXi = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     
     loaded_test_value_o1_list = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, 32, False)
-    loaded_test_value_o1 = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_test_value_o1_list))
+    loaded_test_value_o1 = int_to_bytearray(list_to_integer(base_word_size_signed, 32, loaded_test_value_o1_list), loaded_sike_shared_length)
     
     computed_test_value_o1 = dec_sike(arithmetic_parameters, loaded_sike_s, loaded_sike_sk, prime_str_length, loaded_sike_message_length, loaded_sike_shared_length, loaded_sike_pk_phiPX, loaded_sike_pk_phiPXi, loaded_sike_pk_phiQX, loaded_sike_pk_phiQXi, loaded_sike_pk_phiRX, loaded_sike_pk_phiRXi, loaded_sike_c0_phiPX, loaded_sike_c0_phiPXi, loaded_sike_c0_phiQX, loaded_sike_c0_phiQXi, loaded_sike_c0_phiRX, loaded_sike_c0_phiRXi, loaded_sike_c1, test_value_xpa_mont, test_value_xpai_mont, test_value_xqa_mont, test_value_xqai_mont, test_value_xra_mont, test_value_xrai_mont, test_value_xpb_mont, test_value_xpbi_mont, test_value_xqb_mont, test_value_xqbi_mont, test_value_xrb_mont, test_value_xrbi_mont, loaded_oa_bits, loaded_ob_bits, loaded_splits_alice, loaded_splits_bob, loaded_max_row_alice, loaded_max_row_bob, 12, 12, inv_4_mont)
     
@@ -590,7 +590,7 @@ def load_all_dec_sike(base_word_size, extended_word_size, number_of_bits_added, 
         if error_computation:
             break;
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = extended_word_size*2+32
@@ -598,7 +598,7 @@ number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v256/"
 
 
-#number_of_bits_added = 8
+#number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32

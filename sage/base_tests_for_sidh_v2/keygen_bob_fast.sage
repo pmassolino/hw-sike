@@ -91,10 +91,10 @@ def test_keygen_bob_fast(base_word_size, extended_word_size, prime_size_bits, nu
     
     # Fixed test
     tests_already_performed = 0
-    fixed_tests = [1*lb, ((ob//lb)-1)*lb]
+    fixed_tests = [0, ob-1]
     for test in fixed_tests:
         sk_bob = test
-        
+        sk_bob = randint(0, 2**256-1)
         error_computation = test_single_keygen_bob_fast(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_bob, ob_bits, splits, max_row, max_int_points)
         tests_already_performed += 1
         if(error_computation):
@@ -105,8 +105,8 @@ def test_keygen_bob_fast(base_word_size, extended_word_size, prime_size_bits, nu
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
                 print(i)
-            sk_bob = randint(1, (ob//lb)-1)*lb
-            
+            sk_bob = randint(0, ob-1)
+            sk_bob = randint(0, 2**256-1)
             error_computation = test_single_keygen_bob_fast(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_bob, ob_bits, splits, max_row, max_int_points)
             if(error_computation):
                 break
@@ -213,7 +213,7 @@ def print_VHDL_keygen_bob_fast_test(VHDL_memory_file_name, base_word_size, exten
     
     # Fixed test
     tests_already_performed = 0
-    fixed_tests = [1*lb, ((ob//lb)-1)*lb]
+    fixed_tests = [0, ob-1]
     for test in fixed_tests:
         sk_bob = test
         
@@ -246,7 +246,7 @@ def print_VHDL_keygen_bob_fast_test(VHDL_memory_file_name, base_word_size, exten
         
     # Random tests
     for i in range(tests_already_performed, number_of_tests):
-        sk_bob = randint(1, (ob//lb)-1)*lb
+        sk_bob = randint(0, ob-1)
     
         test_value_sk_bob_list  = integer_to_list(extended_word_size_signed, number_of_words, sk_bob)
         
@@ -519,14 +519,14 @@ def load_all_keygen_bob_fast(base_word_size, extended_word_size, number_of_bits_
             break;
 
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = (extended_word_size - 1)*2+32
-number_of_tests = 10
+number_of_tests = 100
 
 #tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v128/"
-#number_of_bits_added = 8
+#number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = (extended_word_size - 1)*2+32

@@ -120,9 +120,7 @@ copya inc r tmpf0.0.0 *rd0 b204                                    ;
 ;
 ; sike_c0_phiPX, sike_c0_phiPXi, sike_c0_phiQX, sike_c0_phiQXi, sike_c0_phiRX, sike_c0_phiRXi = sage_keygen_alice_fast(fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, ephemeral_sk, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
 ;
-copy flag #1                                                       ;
 call sidh_keygen_alice                                             ;
-copy flag #0                                                       ;
 copym var86 tmpf16                                                 ;
 copym var87 tmpf17                                                 ;
 copym var88 tmpf18                                                 ;
@@ -178,9 +176,7 @@ copya inc d keccak_absorb sike_m rd1                               ; Absorb SIKE
 bsub b200 #136 sike_m_length                                       ; ctr_shake_rate = 136 - sike_m_length
 copy rd5 #var86.0.0                                                ; Starting word to absorb
 copy rd6 #6                                                        ; Amount of words to be absorbed
-copy flag #1
 call shake_absorb_arrays                                           ;
-copy flag #0
 bshiftr rd1 sike_m_length #1                                       ;
 jumpeql shake_enc_last_needs_round b200 sike_m_length              ;
 copya inc d keccak_absorb sike_c1 rd1                              ; Absorb SIKE_C1
@@ -372,9 +368,7 @@ copya inc d keccak_absorb *rl2 rd1                                 ; Absorb SIKE
 bsub b200 #136 sike_m_length                                       ; ctr_shake_rate = 136 - sike_m_length
 copy rd5 #var86.0.0                                                ; Starting word to absorb
 copy rd6 #6                                                        ; Amount of words to be absorbed
-copy flag #1
 call shake_absorb_arrays                                           ;
-copy flag #0
 bshiftr rd1 sike_m_length #1                                       ;
 jumpeql shake_dec_last_needs_round b200 sike_m_length              ;
 copya inc d keccak_absorb sike_c1 rd1                              ; Absorb SIKE_C1
@@ -457,77 +451,6 @@ badd rd5 rd5 #64                                                   ; Next word i
 copy rd1 b201                                                      ; Amount to load for this word
 copy rd2 rd5                                                       ; Goes to the last word
 jumpl shake_absorb_arrays_begin #0 rd6                             ;
-ret
-;
-;
-; Shake256/Keccak absorb used by the SIKE Encryption and decryption
-;
-; amount of bytes that are to be absorbed            = rd1
-; points to the word to be absorbed                  = rd2
-; accumulator to be used if next is unaligned        = rd4
-; ctr_shake_absorb_rate                              = b200
-; amount of bytes that are to be absorbed for arrays = b201
-; amount of words that are to be absorbed for arrays = b202
-; points to the next word to be absorbed for arrays  = rd5
-; tells if words inside array are not multiple of 16 = b203
-; array size = rd6
-;
-shake_absorb_arrays_old: copy rd1 b201                             ; Amount to load for this word
-badd rd2 rd5 b202                                                  ; Goes to the last word
-bsub rd2 rd2 #1                                                    ;
-shake_absorb_arrays_old_begin: jumpeq shake_absorb_arrays_old_is_aligned b203 #0 ;
-copy keccak_absorb_byte_lsb *rd2                                   ;
-bsub rd2 rd2 #1                                                    ;
-bsub b200 b200 #1                                                  ;
-bsub rd1 rd1 #1                                                    ;
-jumpl shake_absorb_arrays_old_is_aligned #0 b200                       ;
-keccak_go                                                          ;
-copy b200 #136                                                     ;
-shake_absorb_arrays_old_is_aligned: jumpl shake_absorb_arrays_old_last_block rd1 b200 ;
-shake_absorb_arrays_old_is_aligned2: jumpl shake_absorb_arrays_old_is_aligned3 #1 b200 ;
-shake_absorb_arrays_old_is_aligned5: copy keccak_absorb_byte_msb *rd2  ;
-keccak_go                                                          ;
-copy b200 #136                                                     ;
-bsub rd1 rd1 #1                                                    ;
-jumpeq shake_absorb_arrays_old_finish rd1 #0                           ;
-copy keccak_absorb_byte_lsb *rd2                                   ;
-bsub rd2 rd2 #1                                                    ;
-bsub b200 b200 #1                                                  ;
-bsub rd1 rd1 #1                                                    ;
-jumpl shake_absorb_arrays_old_last_block rd1 b200                      ;
-shake_absorb_arrays_old_is_aligned3: copy rd8 b200
-shake_absorb_arrays_old_is_aligned4: bshiftr rd7 rd8 #1                ;
-copya dec d keccak_absorb_swp *rd2 rd7                             ;
-badd rd8 rd7 rd7                                                   ;
-bsub rd2 rd2 rd7                                                   ;
-bsub rd1 rd1 rd8                                                   ;
-bsub b200 b200 rd8                                                 ;
-jumpeq shake_absorb_arrays_old_is_aligned5 b200 #1                     ;
-keccak_go                                                          ;
-copy b200 #136                                                     ;
-jumpeql shake_absorb_arrays_old_is_aligned2 b200 rd1                   ;
-shake_absorb_arrays_old_last_block: jumpl shake_absorb_arrays_old_last_byte rd1 #2 ;
-bshiftr rd7 rd1 #1                                                 ;
-copya dec d keccak_absorb_swp *rd2 rd7                             ;
-bsub rd2 rd2 rd7                                                   ;
-badd rd8 rd7 rd7                                                   ;
-bsub rd1 rd1 rd8                                                   ;
-bsub b200 b200 rd8                                                 ;
-jumpl shake_absorb_arrays_old_last_byte #0 b200                        ;
-keccak_go                                                          ;
-copy b200 #136                                                     ;
-shake_absorb_arrays_old_last_byte: jumpeq shake_absorb_arrays_old_finish rd1 #0 ;
-copy keccak_absorb_byte_lsb *rd2                                   ;
-bsub b200 b200 #1                                                  ;
-jumpl shake_absorb_arrays_old_finish #0 b200                           ;
-keccak_go                                                          ;
-copy b200 #136                                                     ;
-shake_absorb_arrays_old_finish: bsub rd6 rd6 #1                        ;
-badd rd5 rd5 #64                                                   ; Next word in the mac array (64 <= 256, 32 <= 128)
-copy rd1 b201                                                      ; Amount to load for this word
-badd rd2 rd5 b202                                                  ; Goes to the last word
-bsub rd2 rd2 #1                                                    ;
-jumpl shake_absorb_arrays_old_begin #0 rd6                         ;
 ret
 ;
 ;

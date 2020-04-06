@@ -70,7 +70,7 @@ def test_shared_secret_bob_fast(base_word_size, extended_word_size, prime_size_b
     
     # Fixed test
     tests_already_performed = 0
-    fixed_tests = [[1*la, 1*lb]]
+    fixed_tests = [[0, 0], [oa-1, 0], [0, ob-1], [oa-1, ob-1]]
     for test in fixed_tests:
         sk_alice = test[0]
         sk_bob = test[1]
@@ -83,9 +83,9 @@ def test_shared_secret_bob_fast(base_word_size, extended_word_size, prime_size_b
     if(not error_computation):
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
-                print i
-            sk_alice = randint(1, (oa//la)-1)*la
-            sk_bob = randint(1, (ob//lb)-1)*lb
+                print(i)
+            sk_alice = randint(0, oa-1)
+            sk_bob = randint(0, ob-1)
             error_computation = test_single_shared_secret_bob_fast(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_alice, oa_bits, sk_bob, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob)
             if(error_computation):
                 break
@@ -192,7 +192,7 @@ def print_VHDL_shared_secret_bob_fast_test(VHDL_memory_file_name, base_word_size
     
     # Fixed test
     tests_already_performed = 0
-    fixed_tests = [[1*la, 1*lb]]
+    fixed_tests = [[0, 0], [oa-1, 0], [0, ob-1], [oa-1, ob-1]]
     for test in fixed_tests:
         sk_alice = test[0]
         sk_bob = test[1]
@@ -236,8 +236,8 @@ def print_VHDL_shared_secret_bob_fast_test(VHDL_memory_file_name, base_word_size
         
     # Random tests
     for i in range(tests_already_performed, number_of_tests):
-        sk_alice = randint(1, (oa//la)-1)*la
-        sk_bob = randint(1, (ob//lb)-1)*lb
+        sk_alice = randint(0, oa-1)
+        sk_bob = randint(0, ob-1)
     
         alice_phiPX, alice_phiPXi, alice_phiQX, alice_phiQXi, alice_phiRX, alice_phiRXi = sage_keygen_alice_fast(fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_alice, oa_bits, splits_alice, max_row_alice, max_int_points_alice, inv_4)
     
@@ -505,7 +505,7 @@ def load_VHDL_shared_secret_bob_fast_test(VHDL_memory_file_name, base_word_size,
 def test_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_params):
     error_computation = False
     for param in sidh_params:
-        print("Testing key generation " +  param[0])
+        print("Testing Bob shared secret " +  param[0])
         prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
         prime_size_bits = int(prime).bit_length()
         error_computation = test_shared_secret_bob_fast(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, param[4], param[2]**param[4], param[5], param[3]**param[5], param[6], param[7], param[8], param[9], param[10], param[11], param[12], param[13], param[14], param[15], param[16], param[17],
@@ -515,7 +515,7 @@ def test_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_o
             
 def print_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_params, VHDL_file_names):
     for i, param in enumerate(sidh_params):
-        print("Printing key generation " +  param[0])
+        print("Printing Bob shared secret " +  param[0])
         prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
         prime_size_bits = int(prime).bit_length()
         VHDL_memory_file_name = VHDL_file_names[i]
@@ -525,7 +525,7 @@ def print_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_
 def load_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, sidh_params, VHDL_file_names):
     error_computation = False
     for i, param in enumerate(sidh_params):
-        print("Loading key generation " +  param[0])
+        print("Loading Bob shared secret " +  param[0])
         prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
         prime_size_bits = int(prime).bit_length()
         VHDL_memory_file_name = VHDL_file_names[i]
@@ -533,14 +533,14 @@ def load_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_o
         if error_computation:
             break;
 
-number_of_bits_added = 10
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = (extended_word_size - 1)*2+32
 number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 
-#number_of_bits_added = 8
+#number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32

@@ -42,7 +42,7 @@ Generic(
     maximum_number_of_tests : integer := 1;
     
     test_only_smallest_size : boolean := false;
-    skip_keygen : boolean := true;
+    skip_keygen : boolean := false;
     skip_encryption : boolean := false;
     skip_decryption : boolean := false;
     
@@ -1940,7 +1940,7 @@ begin
         if(not test_only_smallest_size) then
             test_keygen(test_memory_file_keygen_216_137, 2, 0);
             wait for PERIOD;
-            test_keygen(test_memory_file_keygen_250_159, 2, 0);
+            test_keygen(test_memory_file_keygen_250_159, 3, 0);
             wait for PERIOD;
             test_keygen(test_memory_file_keygen_305_192, 3, 1);
             wait for PERIOD;
@@ -1957,7 +1957,7 @@ begin
         if(not test_only_smallest_size) then
             test_encryption(test_memory_file_encryption_216_137, 2, 0);
             wait for PERIOD;
-            test_encryption(test_memory_file_encryption_250_159, 2, 0);
+            test_encryption(test_memory_file_encryption_250_159, 3, 0);
             wait for PERIOD;
             test_encryption(test_memory_file_encryption_305_192, 3, 1);
             wait for PERIOD;
@@ -1974,7 +1974,7 @@ begin
         if(not test_only_smallest_size) then
             test_decryption(test_memory_file_decryption_216_137, 2, 0);
             wait for PERIOD;
-            test_decryption(test_memory_file_decryption_250_159, 2, 0);
+            test_decryption(test_memory_file_decryption_250_159, 3, 0);
             wait for PERIOD;
             test_decryption(test_memory_file_decryption_305_192, 3, 1);
             wait for PERIOD;

@@ -9,10 +9,10 @@ load(script_working_folder+"base_tests_for_sidh_v2/sidh_constants.sage")
 
 
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 128
-accumulator_word_size = extended_word_size_signed*2+32
+accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v128/"
 
@@ -41,10 +41,10 @@ print_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_of_b
 load_all_shared_secret_bob_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, sidh_constants, VHDL_file_names)
 
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
-accumulator_word_size = extended_word_size_signed*2+32
+accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 

@@ -41,7 +41,7 @@ Generic(
     base_alu_rotation_level : integer := 4;
     maximum_number_of_tests : integer := 1;
     
-    test_only_smallest_size : boolean := false;
+    test_only_smallest_size : boolean := true;
     skip_keygen : boolean := false;
     skip_encryption : boolean := false;
     skip_decryption : boolean := false;
@@ -958,8 +958,8 @@ begin
         after_time := now;
         wait for tb_delay;
         if(i <= 1) then
-                report "Operands size = " & integer'image(operands_size) & " Operation time = " & integer'image(cycle_counts) & " cycles" severity note;
-            end if;
+            report "Operands size = " & integer'image(operands_size) & " Operation time = " & integer'image(cycle_counts) & " cycles" severity note;
+        end if;
         wait for PERIOD;
         for z in 0 to 5 loop
             current_operation_addres := std_logic_vector(to_unsigned((mac_ram_output_function_start_address+z)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
@@ -1935,17 +1935,17 @@ begin
     wait for PERIOD;
     if( not skip_keygen ) then
         report "Start keygen test." severity note;
-        --test_keygen(test_memory_file_keygen_8_5, 1, 0);
-        --wait for PERIOD;
+            test_keygen(test_memory_file_keygen_8_5, 1, 0);
+            wait for PERIOD;
         if(not test_only_smallest_size) then
-            --test_keygen(test_memory_file_keygen_216_137, 4, 1);
-            --wait for PERIOD;
-            --test_keygen(test_memory_file_keygen_250_159, 4, 1);
-            --wait for PERIOD;
-            --test_keygen(test_memory_file_keygen_305_192, 5, 1);
-            --wait for PERIOD;
-            --test_keygen(test_memory_file_keygen_372_239, 6, 1);
-            --wait for PERIOD;
+            test_keygen(test_memory_file_keygen_216_137, 4, 1);
+            wait for PERIOD;
+            test_keygen(test_memory_file_keygen_250_159, 5, 1);
+            wait for PERIOD;
+            test_keygen(test_memory_file_keygen_305_192, 5, 1);
+            wait for PERIOD;
+            test_keygen(test_memory_file_keygen_372_239, 6, 1);
+            wait for PERIOD;
             test_keygen(test_memory_file_keygen_486_301, 8, 1);
             wait for PERIOD;
         end if;
@@ -1957,7 +1957,7 @@ begin
         if(not test_only_smallest_size) then
             test_encryption(test_memory_file_encryption_216_137, 4, 1);
             wait for PERIOD;
-            test_encryption(test_memory_file_encryption_250_159, 4, 1);
+            test_encryption(test_memory_file_encryption_250_159, 5, 1);
             wait for PERIOD;
             test_encryption(test_memory_file_encryption_305_192, 5, 1);
             wait for PERIOD;
@@ -1974,7 +1974,7 @@ begin
         if(not test_only_smallest_size) then
             test_decryption(test_memory_file_decryption_216_137, 4, 1);
             wait for PERIOD;
-            test_decryption(test_memory_file_decryption_250_159, 4, 1);
+            test_decryption(test_memory_file_decryption_250_159, 5, 1);
             wait for PERIOD;
             test_decryption(test_memory_file_decryption_305_192, 5, 1);
             wait for PERIOD;

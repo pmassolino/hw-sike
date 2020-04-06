@@ -115,7 +115,7 @@ def test_enc_sike(base_word_size, extended_word_size, prime_size_bits, number_of
     if(not error_computation):
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
-                print i
+                print(i)
             sike_s  = bytearray([randint(0, 255) for j in range(sike_message_length)])
             sike_sk = randint(0, ob-1)
             sike_m = bytearray([randint(0, 255) for i in range(sike_message_length)])
@@ -640,7 +640,7 @@ def load_all_enc_sike(base_word_size, extended_word_size, number_of_bits_added, 
         if error_computation:
             break;
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = extended_word_size*2+32
@@ -648,7 +648,7 @@ number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_tests_v256/"
 
 
-#number_of_bits_added = 8
+#number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32

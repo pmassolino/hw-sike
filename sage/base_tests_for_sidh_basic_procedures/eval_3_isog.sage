@@ -335,12 +335,12 @@ def load_VHDL_eval_3_isog_test(VHDL_memory_file_name, base_word_size, extended_w
         print(prime_plus_one)
     loaded_prime_line = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_prime_line != prime_line):
-        print "Error in eval 3 isogenies computation : " + str(current_test)
-        print "Error loading the prime line 0"
-        print "Loaded prime line 0"
-        print loaded_prime_line
-        print "Input prime line 0"
-        print prime_line
+        print("Error in eval 3 isogenies computation : " + str(current_test))
+        print("Error loading the prime line 0")
+        print("Loaded prime line 0")
+        print(loaded_prime_line)
+        print("Input prime line 0")
+        print(prime_line)
     loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_r_mod_prime != r_mod_prime_constant):
         print("Error in eval 3 isogenies computation : " + str(current_test))
@@ -528,13 +528,13 @@ def load_all_VHDL_eval_3_isog_test(base_word_size_signed, extended_word_size_sig
         load_VHDL_eval_3_isog_test(VHDL_file_name, base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         
         
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size_signed = 16
 extended_word_size_signed = 256
 accumulator_word_size = (extended_word_size_signed - 1)*2+32
-primes = [2^(4)*3^(3)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1, 2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-primes_file_name_end = ["4_3.dat", "216_137.dat", "250_159.dat", "305_192.dat", "372_239.dat", "486_301.dat"]
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v257/"
+primes = [2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1, 2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+primes_file_name_end = ["8_5.dat", "216_137.dat", "250_159.dat", "305_192.dat", "372_239.dat", "486_301.dat"]
+tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 VHDL_eval_3_isog_file_names = [(tests_working_folder + "eval_3_isog_test_" + ending) for ending in primes_file_name_end]
 
 #test_all_eval_3_isog(base_word_size_signed, extended_word_size_signed, number_of_bits_added, accumulator_word_size, primes, 1000)

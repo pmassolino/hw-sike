@@ -273,12 +273,12 @@ def load_VHDL_j_inv_test(VHDL_memory_file_name, base_word_size, extended_word_si
         print(r_mod_prime_constant)
     loaded_r2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_r2 != r2_constant):
-        print "Error in j invariant computation : " + str(current_test)
-        print "Error loading the r2"
-        print "Loaded r2"
-        print loaded_r2
-        print "Input r2"
-        print r2_constant
+        print("Error in j invariant computation : " + str(current_test))
+        print("Error loading the r2")
+        print("Loaded r2")
+        print(loaded_r2)
+        print("Input r2")
+        print(r2_constant)
     loaded_constant_1 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_constant_1 != 1):
         print("Error in j invariant computation : " + str(current_test))
@@ -289,7 +289,7 @@ def load_VHDL_j_inv_test(VHDL_memory_file_name, base_word_size, extended_word_si
         print(1)
     loaded_inv_4_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_inv_4_mont != inv_4_mont):
-        print("Error in xTPLe computation : " + str(current_test))
+        print("Error in j invariant computation : " + str(current_test))
         print("Error loading inversion 4")
         print("Loaded inversion 4")
         print(loaded_inv_4_mont)
@@ -297,7 +297,7 @@ def load_VHDL_j_inv_test(VHDL_memory_file_name, base_word_size, extended_word_si
         print(inv_4_mont)
     loaded_prime_size_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, False)
     if(loaded_prime_size_bits != prime_size_bits):
-        print("Error in xDBLe computation : " + str(current_test))
+        print("Error in j invariant computation : " + str(current_test))
         print("Error loading prime size in bits")
         print("Loaded prime size in bits")
         print(loaded_prime_size_bits)
@@ -401,13 +401,13 @@ def load_all_VHDL_j_inv_test(base_word_size_signed, extended_word_size_signed, n
         prime_size_bits = int(prime).bit_length()
         load_VHDL_j_inv_test(VHDL_file_name, base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
     
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size_signed = 16
 extended_word_size_signed = 256
 accumulator_word_size = (extended_word_size_signed - 1)*2+32
-primes = [2^(4)*3^(3)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1, 2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-primes_file_name_end = ["4_3.dat", "216_137.dat", "250_159.dat", "305_192.dat", "372_239.dat", "486_301.dat"]
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v257/"
+primes = [2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1, 2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+primes_file_name_end = ["8_5.dat", "216_137.dat", "250_159.dat", "305_192.dat", "372_239.dat", "486_301.dat"]
+tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 VHDL_j_inv_file_names = [(tests_working_folder + "j_inv_test_" + ending) for ending in primes_file_name_end]
 
 #test_all_j_inv(base_word_size_signed, extended_word_size_signed, number_of_bits_added, accumulator_word_size, primes, 1000)

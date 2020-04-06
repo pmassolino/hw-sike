@@ -70,7 +70,7 @@ def test_shared_secret_alice_fast(base_word_size, extended_word_size, prime_size
     
     # Fixed test
     tests_already_performed = 0
-    fixed_tests = [[1*la, 1*lb], [((oa//la)-1)*la, 1*lb], [1*la, ((ob//lb)-1)*lb], [((oa//la)-1)*la, ((ob//lb)-1)*lb]]
+    fixed_tests = [[0, 0], [oa-1, 0], [0, ob-1], [oa-1, ob-1]]
     for test in fixed_tests:
         sk_alice = test[0]
         sk_bob = test[1]
@@ -83,9 +83,9 @@ def test_shared_secret_alice_fast(base_word_size, extended_word_size, prime_size
     if(not error_computation):
         for i in range(tests_already_performed, number_of_tests):
             if(((i %(1000)) == 0)):
-                print i
-            sk_alice = randint(1, (oa//la)-1)*la
-            sk_bob = randint(1, (ob//lb)-1)*lb
+                print(i)
+            sk_alice = randint(0, oa-1)
+            sk_bob = randint(0, ob-1)
             error_computation = test_single_shared_secret_alice_fast(arithmetic_parameters, fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_alice, oa_bits, sk_bob, ob_bits, splits_alice, splits_bob, max_row_alice, max_row_bob, max_int_points_alice, max_int_points_bob)
             if(error_computation):
                 break
@@ -192,7 +192,7 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
     
     # Fixed test
     tests_already_performed = 0
-    fixed_tests = [[1*la, 1*lb], [((oa//la)-1)*la, 1*lb], [1*la, ((ob//lb)-1)*lb], [((oa//la)-1)*la, ((ob//lb)-1)*lb]]
+    fixed_tests = [[0, 0], [oa-1, 0], [0, ob-1], [oa-1, ob-1]]
     for test in fixed_tests:
         sk_alice = test[0]
         sk_bob = test[1]
@@ -236,8 +236,8 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
         
     # Random tests
     for i in range(tests_already_performed, number_of_tests):
-        sk_alice = randint(1, (oa//la)-1)*la
-        sk_bob = randint(1, (ob//lb)-1)*lb
+        sk_alice = randint(0, oa-1)
+        sk_bob = randint(0, ob-1)
     
         bob_phiPX, bob_phiPXi, bob_phiQX, bob_phiQXi, bob_phiRX, bob_phiRXi = sage_keygen_bob_fast(fp2, xpa, xpai, xqa, xqai, xra, xrai, xpb, xpbi, xqb, xqbi, xrb, xrbi, sk_bob, ob_bits, splits_bob, max_row_bob, max_int_points_bob, inv_4)
         
@@ -534,14 +534,14 @@ def load_all_shared_secret_alice_fast(base_word_size, extended_word_size, number
             break;
         
 
-number_of_bits_added = 10
+number_of_bits_added = 16
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = (extended_word_size - 1)*2+32
 number_of_tests = 10
 tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 
-#number_of_bits_added = 8
+#number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32
@@ -554,9 +554,9 @@ VHDL_file_names = [tests_working_folder + "shared_secret_alice_fast_" + str(para
 #print_all_shared_secret_alice_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, number_of_tests, sidh_constants, VHDL_file_names)
 #load_all_shared_secret_alice_fast(base_word_size, extended_word_size, number_of_bits_added, accumulator_word_size, sidh_constants, VHDL_file_names)
 
-param = sidh_constants[0]
-print "Loading shared secret slice " +  param[0]
-prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-prime_size_bits = int(prime).bit_length()
-VHDL_memory_file_name = tests_working_folder + "shared_secret_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
-error_computation = load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, 1, True)
+#param = sidh_constants[0]
+#print("Loading shared secret slice " +  param[0])
+#prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
+#prime_size_bits = int(prime).bit_length()
+#VHDL_memory_file_name = tests_working_folder + "shared_secret_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
+#error_computation = load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, 1, True)

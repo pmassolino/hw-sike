@@ -566,15 +566,15 @@ def load_all_VHDL_ladder_3_pt_test(base_word_size_signed, extended_word_size_sig
         load_VHDL_ladder_3_pt_test(VHDL_file_name+"_oa_bits.dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         load_VHDL_ladder_3_pt_test(VHDL_file_name+"_ob_bits.dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size_signed = 16
 extended_word_size_signed = 256
 accumulator_word_size = (extended_word_size_signed - 1)*2+32
-oas = [2^(4), 2^(216), 2^(250), 2^(305), 2^(372), 2^(486)]
-obs = [3^(3), 3^(137), 3^(159), 3^(192), 3^(239), 3^(301)]
+oas = [2^(8), 2^(216), 2^(250), 2^(305), 2^(372), 2^(486)]
+obs = [3^(5), 3^(137), 3^(159), 3^(192), 3^(239), 3^(301)]
 primes = [oas[i]*obs[i]-1 for i in range(len(oas))]
-primes_file_name_end = ["4_3", "216_137", "250_159", "305_192", "372_239", "486_301"]
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v257/"
+primes_file_name_end = ["8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 VHDL_ladder_3_pt_file_names = [(tests_working_folder + "ladder_3_pt_test_" + ending) for ending in primes_file_name_end]
 
 #test_all_ladder_3_pt(base_word_size_signed, extended_word_size_signed, number_of_bits_added, accumulator_word_size, primes, oas, obs, 100)

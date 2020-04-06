@@ -18,7 +18,7 @@ load(script_working_folder+"base_tests_for_sidh_basic_procedures/eval_3_isog.sag
 load(script_working_folder+"base_tests_for_sidh_basic_procedures/eval_2_isog.sage")
 
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size_signed = 16
 extended_word_size_signed = 128
 accumulator_word_size = extended_word_size_signed*2+32
@@ -115,7 +115,7 @@ test_all_eval_2_isog(base_word_size_signed, extended_word_size_signed, number_of
 print_all_VHDL_eval_2_isog_test(base_word_size_signed, extended_word_size_signed, number_of_bits_added, accumulator_word_size, primes, VHDL_eval_2_isog_file_names, 100)
 load_all_VHDL_eval_2_isog_test(base_word_size_signed, extended_word_size_signed, number_of_bits_added, accumulator_word_size, primes, VHDL_eval_2_isog_file_names)
 
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size_signed = 16
 extended_word_size_signed = 256
 accumulator_word_size = extended_word_size_signed*2+32

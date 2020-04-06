@@ -123,7 +123,7 @@ def test_sike_kem_param(fp2, alice_gen_points, bob_gen_points, oa, ob, oa_bits, 
         performed_tests += 1
     return error_computation
 
-def test_all_parameters(sidh_parameters, message_lengths, shared_secret_lengths, number_of_tests):
+def test_all_parameters(sidh_parameters, number_of_tests):
     error_computation = False
     for i, sidh_param in enumerate(sidh_parameters):
         print("SIKE parameter " + sidh_param[0])
@@ -141,8 +141,8 @@ def test_all_parameters(sidh_parameters, message_lengths, shared_secret_lengths,
         bob_splits = sidh_param[21]
         bob_max_row = sidh_param[22]
         bob_max_int_points = sidh_param[23]
-        message_length = message_lengths[i]
-        shared_secret_length = shared_secret_lengths[i]
+        message_length = sidh_param[24]
+        shared_secret_length = sidh_param[25]
         error_computation = test_sike_kem_param(fp2, alice_gen_points, bob_gen_points, oa, ob, oa_bits, ob_bits, alice_splits, alice_max_row, alice_max_int_points, bob_splits, bob_max_row, bob_max_int_points, message_length, shared_secret_length, number_of_tests)
         if(error_computation):
             break
@@ -150,6 +150,4 @@ def test_all_parameters(sidh_parameters, message_lengths, shared_secret_lengths,
 
 if __name__ == "__main__": 
     sidh_parameters = SIKE_round2_constants.sidh_constants
-    message_lengths = [16, 24, 24, 32, 32]
-    shared_secret_lengths = [16, 24, 24, 32, 32]
-    test_all_parameters(sidh_parameters, message_lengths, shared_secret_lengths)
+    test_all_parameters(sidh_parameters, 100)

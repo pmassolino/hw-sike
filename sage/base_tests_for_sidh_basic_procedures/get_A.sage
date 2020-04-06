@@ -471,13 +471,13 @@ def load_all_VHDL_get_A_test(base_word_size_signed, extended_word_size_signed, n
 #print_VHDL_get_A_test(tests_working_folder+"get_A_test_372_239.dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, p, 100)
 #load_VHDL_get_A_test(tests_working_folder+"get_A_test_372_239.dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, p)
     
-number_of_bits_added = 8
+number_of_bits_added = 16
 base_word_size_signed = 16
 extended_word_size_signed = 256
 accumulator_word_size = (extended_word_size_signed - 1)*2+32
-primes = [2^(4)*3^(3)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1, 2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-primes_file_name_end = ["4_3.dat", "216_137.dat", "250_159.dat", "305_192.dat", "372_239.dat", "486_301.dat"]
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v257/"
+primes = [2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1, 2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+primes_file_name_end = ["8_5.dat", "216_137.dat", "250_159.dat", "305_192.dat", "372_239.dat", "486_301.dat"]
+tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
 VHDL_get_A_file_names = [(tests_working_folder + "get_A_test_" + ending) for ending in primes_file_name_end]
     
 #test_all_get_A(base_word_size_signed, extended_word_size_signed, number_of_bits_added, accumulator_word_size, primes, 1000)
