@@ -1,5 +1,5 @@
-home_folder = "/home/pedro/"
-script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+if 'script_working_folder' not in globals() and 'script_working_folder' not in locals():
+    script_working_folder = "/home/pedro/hw-sidh/vhdl_project/sage/"
 load(script_working_folder+"base_functions.sage")
 
 def fp_inv(arithmetic_parameters, a, b, debug=False):

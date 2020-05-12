@@ -3,22 +3,23 @@
 prime:0
 prime_plus_one:1
 prime_line:2
-const_r:3
-const_r2:4
-const_1:5
-inv_4:6
-sidh_xpa:7
-sidh_xpai:8
-sidh_xqa:9
-sidh_xqai:10
-sidh_xra:11
-sidh_xrai:12
-sidh_xpb:13
-sidh_xpbi:14
-sidh_xqb:15
-sidh_xqbi:16
-sidh_xrb:17
-sidh_xrbi:18
+prime2:3
+const_r:4
+const_r2:5
+const_1:6
+inv_4:7
+sidh_xpa:8
+sidh_xpai:9
+sidh_xqa:10
+sidh_xqai:11
+sidh_xra:12
+sidh_xrai:13
+sidh_xpb:14
+sidh_xpbi:15
+sidh_xqb:16
+sidh_xqbi:17
+sidh_xrb:18
+sidh_xrbi:19
 ;
 ; Program itself
 ;
@@ -33,8 +34,7 @@ copy flag #1                                                       ;
 call fp_inv                                                        ;
 copy flag #0                                                       ;
 mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17                  ;
-copym tmpf16 tmpf24                                                ;
-copym tmpf17 tmpf25                                                ;
+mitred tmpf16 tmpf24 tmpf17 tmpf25                                 ;
 fin                                                                ;
 ;
 ; Test Field^2 inversion
@@ -48,11 +48,8 @@ copym tmpf3 tmpf27                                                 ;
 copy flag #1                                                       ;
 call fp2_inv                                                       ; 
 copy flag #0                                                       ;
-mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19 
-copym tmpf16 tmpf24                                                ; 
-copym tmpf17 tmpf25                                                ; 
-copym tmpf18 tmpf26                                                ; 
-copym tmpf19 tmpf27                                                ; 
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
 fin                                                                ; 
 ;
 ; Test j invariant
@@ -67,8 +64,7 @@ copy flag #1                                                       ;
 call j_invar                                                       ; 
 copy flag #0                                                       ;
 mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17                  ; 
-copym tmpf16 tmpf24                                                ; 
-copym tmpf17 tmpf25                                                ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25                                 ;
 fin                                                                ; 
 ;
 ; Test get A
@@ -85,8 +81,7 @@ copy flag #1                                                       ;
 call get_A                                                         ; 
 copy flag #0                                                       ;
 mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17                  ; 
-copym tmpf16 tmpf24                                                ; 
-copym tmpf17 tmpf25                                                ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25                                 ;
 fin                                                                ; 
 ;
 ; Test 2 way inversion
@@ -105,14 +100,8 @@ copy flag #1                                                       ;
 call fp2_inv_2_way                                                 ; 
 copy flag #0                                                       ;
 mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19 tmpf28 const_1 tmpf20 tmpf29 const_1 tmpf21 tmpf30 const_1 tmpf22 tmpf31 const_1 tmpf23
-copym tmpf16 tmpf24                                                ; 
-copym tmpf17 tmpf25                                                ; 
-copym tmpf18 tmpf26                                                ; 
-copym tmpf19 tmpf27                                                ; 
-copym tmpf20 tmpf28                                                ; 
-copym tmpf21 tmpf29                                                ; 
-copym tmpf22 tmpf30                                                ; 
-copym tmpf23 tmpf31                                                ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
+mitred tmpf20 tmpf28 tmpf21 tmpf29 tmpf22 tmpf30 tmpf23 tmpf31     ;
 fin                                                                ; 
 ;
 ; Test ladder 3 point
@@ -131,10 +120,7 @@ copy flag #1                                                       ;
 call ladder_3_point                                                ; 
 copy flag #0                                                       ;
 mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19
-copym tmpf16 tmpf24                                                ; 
-copym tmpf17 tmpf25                                                ; 
-copym tmpf18 tmpf26                                                ; 
-copym tmpf19 tmpf27                                                ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
 fin                                                                ; 
 ;
 ; Test xDBLe
@@ -153,10 +139,7 @@ copy flag #1                                                       ;
 call xDBLe                                                         ; 
 copy flag #0                                                       ;
 mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19
-copym tmpf16 tmpf24                                                ; 
-copym tmpf17 tmpf25                                                ; 
-copym tmpf18 tmpf26                                                ; 
-copym tmpf19 tmpf27                                                ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
 fin                                                                ; 
 ;
 ; Test get 4 isogenies
@@ -172,16 +155,9 @@ call get_4_isog                                                    ;
 copy flag #0                                                       ;
 mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19 tmpf30 const_1 tmpf20 tmpf31 const_1 tmpf21 tmpf32 const_1 tmpf22 tmpf33 const_1 tmpf23
 mmulm tmpf34 const_1 tmpf24 tmpf35 const_1 tmpf25                  ;
-copym tmpf16 tmpf26                                                ; 
-copym tmpf17 tmpf27                                                ; 
-copym tmpf18 tmpf28                                                ; 
-copym tmpf19 tmpf29                                                ; 
-copym tmpf20 tmpf30                                                ; 
-copym tmpf21 tmpf31                                                ; 
-copym tmpf22 tmpf32                                                ; 
-copym tmpf23 tmpf33                                                ; 
-copym tmpf24 tmpf34                                                ; 
-copym tmpf25 tmpf35                                                ; 
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+mitred tmpf20 tmpf30 tmpf21 tmpf31 tmpf22 tmpf32 tmpf23 tmpf33     ;
+mitred tmpf24 tmpf34 tmpf25 tmpf35                                 ;
 fin                                                                ; 
 ;
 ; Test eval 4 isogenies
@@ -203,10 +179,7 @@ copy flag #1                                                       ;
 call eval_4_isog                                                   ; 
 copy flag #0                                                       ;
 mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
-copym tmpf16 tmpf26                                                ; 
-copym tmpf17 tmpf27                                                ; 
-copym tmpf18 tmpf28                                                ; 
-copym tmpf19 tmpf29                                                ; 
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
 fin                                                                ; 
 ;
 ; Test xTPLe
@@ -225,10 +198,7 @@ copy flag #1                                                       ;
 call xTPLe                                                         ; 
 copy flag #0                                                       ;
 mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19
-copym tmpf16 tmpf24                                                ; 
-copym tmpf17 tmpf25                                                ; 
-copym tmpf18 tmpf26                                                ; 
-copym tmpf19 tmpf27                                                ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
 fin                                                                ; 
 ;
 ; Test get 3 isogenies
@@ -243,14 +213,8 @@ copy flag #1                                                       ;
 call get_3_isog                                                    ; 
 copy flag #0                                                       ;
 mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19 tmpf30 const_1 tmpf20 tmpf31 const_1 tmpf21 tmpf32 const_1 tmpf22 tmpf33 const_1 tmpf23
-copym tmpf16 tmpf26                                                ; 
-copym tmpf17 tmpf27                                                ; 
-copym tmpf18 tmpf28                                                ; 
-copym tmpf19 tmpf29                                                ; 
-copym tmpf20 tmpf30                                                ; 
-copym tmpf21 tmpf31                                                ; 
-copym tmpf22 tmpf32                                                ; 
-copym tmpf23 tmpf33                                                ; 
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+mitred tmpf20 tmpf30 tmpf21 tmpf31 tmpf22 tmpf32 tmpf23 tmpf33     ;
 fin                                                                ; 
 ;
 ; Test eval 3 isogenies
@@ -269,10 +233,7 @@ copy flag #1                                                       ;
 call eval_3_isog                                                   ; 
 copy flag #0                                                       ;
 mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
-copym tmpf16 tmpf26                                                ; 
-copym tmpf17 tmpf27                                                ; 
-copym tmpf18 tmpf28                                                ; 
-copym tmpf19 tmpf29                                                ; 
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
 fin                                                                ; 
 ;
 ; Test get 2 isogenies
@@ -287,10 +248,7 @@ copy flag #1                                                       ;
 call get_2_isog                                                    ; 
 copy flag #0                                                       ;
 mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
-copym tmpf16 tmpf26                                                ; 
-copym tmpf17 tmpf27                                                ; 
-copym tmpf18 tmpf28                                                ; 
-copym tmpf19 tmpf29                                                ; 
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
 fin                                                                ; 
 ;
 ; Test eval 2 isogenies
@@ -309,10 +267,7 @@ copy flag #1                                                       ;
 call eval_2_isog                                                   ; 
 copy flag #0                                                       ;
 mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
-copym tmpf16 tmpf26                                                ; 
-copym tmpf17 tmpf27                                                ; 
-copym tmpf18 tmpf28                                                ; 
-copym tmpf19 tmpf29                                                ; 
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
 fin                                                                ; 
 ;
 ;

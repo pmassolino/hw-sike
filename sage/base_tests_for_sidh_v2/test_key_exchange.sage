@@ -1,6 +1,6 @@
 proof.arithmetic(False)
-home_folder = "/home/pedro/"
-script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+if 'script_working_folder' not in globals() and 'script_working_folder' not in locals():
+    script_working_folder = "/home/pedro/hw-sidh/vhdl_project/sage/"
 load(script_working_folder+"base_tests_for_sidh_v2/all_sidh_functions.sage")
 load(script_working_folder+"base_tests_for_sidh_v2/sidh_constants.sage")
 
@@ -113,13 +113,13 @@ def test_all_key_exchange(base_word_size, extended_word_size, number_of_bits_add
         if error_computation:
             break;
 
-number_of_bits_added = 16
+number_of_bits_added = 3
 base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = extended_word_size*2+32
 number_of_tests = 10
 
-#number_of_bits_added = 16
+#number_of_bits_added = 3
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32

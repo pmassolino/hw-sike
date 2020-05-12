@@ -1,0 +1,1569 @@
+        when multiplication_direct_0 =>
+            next_state <= multiplication_direct_0;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_direct_2 =>
+            next_state <= multiplication_direct_2;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= multiplication_direct_3;
+                else
+                    next_state <= multiplication_direct_7;
+                end if;
+            end if;
+        when multiplication_direct_3 =>
+            next_state <= multiplication_direct_3;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_4;
+            end if;
+        when multiplication_direct_4 =>
+            next_state <= multiplication_direct_4;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_5;
+            end if;
+        when multiplication_direct_5 =>
+            next_state <= multiplication_direct_5;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_direct_7 =>
+            next_state <= multiplication_direct_7;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_8;
+            end if;
+        when multiplication_direct_8 =>
+            next_state <= multiplication_direct_8;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_9;
+            end if;
+        when multiplication_direct_9 =>
+            next_state <= multiplication_direct_9;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= multiplication_direct_10;
+                else
+                    next_state <= multiplication_direct_16;
+                end if;
+            end if;
+        when multiplication_direct_10 =>
+            next_state <= multiplication_direct_10;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_11;
+            end if;
+        when multiplication_direct_11 =>
+            next_state <= multiplication_direct_11;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_12;
+            end if;
+        when multiplication_direct_12 =>
+            next_state <= multiplication_direct_12;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_13;
+            end if;
+        when multiplication_direct_13 =>
+            next_state <= multiplication_direct_13;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_14;
+            end if;
+        when multiplication_direct_14 =>
+            next_state <= multiplication_direct_14;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_direct_16 =>
+            next_state <= multiplication_direct_16;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_17;
+            end if;
+        when multiplication_direct_17 =>
+            next_state <= multiplication_direct_17;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_18;
+            end if;
+        when multiplication_direct_18 =>
+            next_state <= multiplication_direct_18;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_19;
+            end if;
+        when multiplication_direct_19 =>
+            next_state <= multiplication_direct_19;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_20;
+            end if;
+        when multiplication_direct_20 =>
+            next_state <= multiplication_direct_20;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_21;
+            end if;
+        when multiplication_direct_21 =>
+            next_state <= multiplication_direct_21;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_22;
+            end if;
+        when multiplication_direct_22 =>
+            next_state <= multiplication_direct_22;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_23;
+            end if;
+        when multiplication_direct_23 =>
+            next_state <= multiplication_direct_23;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_24;
+            end if;
+        when multiplication_direct_24 =>
+            next_state <= multiplication_direct_24;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_25;
+            end if;
+        when multiplication_direct_25 =>
+            next_state <= multiplication_direct_25;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_26;
+            end if;
+        when multiplication_direct_26 =>
+            next_state <= multiplication_direct_26;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_direct_27;
+            end if;
+        when multiplication_direct_27 =>
+            next_state <= multiplication_direct_27;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_direct_0 => 
+            next_state <= square_direct_0;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_direct_2 => 
+            next_state <= square_direct_2;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= square_direct_3;
+                else
+                    next_state <= square_direct_6;
+                end if;
+            end if;
+        when square_direct_3 => 
+            next_state <= square_direct_3;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_4;
+            end if;
+        when square_direct_4 => 
+            next_state <= square_direct_4;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_direct_6 => 
+            next_state <= square_direct_6;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_7;
+            end if;
+        when square_direct_7 => 
+            next_state <= square_direct_7;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= square_direct_8;
+                else
+                    next_state <= square_direct_12;
+                end if;
+            end if;
+        when square_direct_8 => 
+            next_state <= square_direct_8;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_9;
+            end if;
+        when square_direct_9 => 
+            next_state <= square_direct_9;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_10;
+            end if;
+        when square_direct_10 => 
+            next_state <= square_direct_10;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_direct_12 => 
+            next_state <= square_direct_12;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_13;
+            end if;
+        when square_direct_13 => 
+            next_state <= square_direct_13;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_14;
+            end if;
+        when square_direct_14 => 
+            next_state <= square_direct_14;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_15;
+            end if;
+        when square_direct_15 => 
+            next_state <= square_direct_15;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_16;
+            end if;
+        when square_direct_16 => 
+            next_state <= square_direct_16;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_17;
+            end if;
+        when square_direct_17 => 
+            next_state <= square_direct_17;
+            if(penultimate_operation = '1') then
+                next_state <= square_direct_18;
+            end if;
+        when square_direct_18 => 
+            next_state <= square_direct_18;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_with_reduction_0 => 
+            next_state <= multiplication_with_reduction_0;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_1;
+            end if;
+        when multiplication_with_reduction_1 => 
+            next_state <= multiplication_with_reduction_1;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_2;
+            end if;
+        when multiplication_with_reduction_2 => 
+            next_state <= multiplication_with_reduction_2;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_3;
+            end if;
+        when multiplication_with_reduction_3 => 
+            next_state <= multiplication_with_reduction_3;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_with_reduction_5 => 
+            next_state <= multiplication_with_reduction_5;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_6;
+            end if;
+        when multiplication_with_reduction_6 => 
+            next_state <= multiplication_with_reduction_6;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_7;
+            end if;
+        when multiplication_with_reduction_7 => 
+            next_state <= multiplication_with_reduction_7;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= multiplication_with_reduction_8;
+                else
+                    next_state <= multiplication_with_reduction_16;
+                end if;
+            end if;
+        when multiplication_with_reduction_8 => 
+            next_state <= multiplication_with_reduction_8;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_9;
+            end if;
+        when multiplication_with_reduction_9 => 
+            next_state <= multiplication_with_reduction_9;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_10;
+            end if;
+        when multiplication_with_reduction_10 => 
+            next_state <= multiplication_with_reduction_10;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_11;
+            end if;
+        when multiplication_with_reduction_11 => 
+            next_state <= multiplication_with_reduction_11;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_12;
+            end if;
+        when multiplication_with_reduction_12 => 
+            next_state <= multiplication_with_reduction_12;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_13;
+            end if;
+        when multiplication_with_reduction_13 => 
+            next_state <= multiplication_with_reduction_13;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_14;
+            end if;
+        when multiplication_with_reduction_14 => 
+            next_state <= multiplication_with_reduction_14;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_with_reduction_16 => 
+            next_state <= multiplication_with_reduction_16;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_17;
+            end if;
+        when multiplication_with_reduction_17 => 
+            next_state <= multiplication_with_reduction_17;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_18;
+            end if;
+        when multiplication_with_reduction_18 => 
+            next_state <= multiplication_with_reduction_18;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_19;
+            end if;
+        when multiplication_with_reduction_19 => 
+            next_state <= multiplication_with_reduction_19;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_20;
+            end if;
+        when multiplication_with_reduction_20 => 
+            next_state <= multiplication_with_reduction_20;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_21;
+            end if;
+        when multiplication_with_reduction_21 => 
+            next_state <= multiplication_with_reduction_21;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_22;
+            end if;
+        when multiplication_with_reduction_22 => 
+            next_state <= multiplication_with_reduction_22;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_23;
+            end if;
+        when multiplication_with_reduction_23 => 
+            next_state <= multiplication_with_reduction_23;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= multiplication_with_reduction_24;
+                else
+                    next_state <= multiplication_with_reduction_35;
+                end if;
+            end if;
+        when multiplication_with_reduction_24 => 
+            next_state <= multiplication_with_reduction_24;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_25;
+            end if;
+        when multiplication_with_reduction_25 => 
+            next_state <= multiplication_with_reduction_25;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_26;
+            end if;
+        when multiplication_with_reduction_26 => 
+            next_state <= multiplication_with_reduction_26;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_27;
+            end if;
+        when multiplication_with_reduction_27 => 
+            next_state <= multiplication_with_reduction_27;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_28;
+            end if;
+        when multiplication_with_reduction_28 => 
+            next_state <= multiplication_with_reduction_28;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_29;
+            end if;
+        when multiplication_with_reduction_29 => 
+            next_state <= multiplication_with_reduction_29;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_30;
+            end if;
+        when multiplication_with_reduction_30 => 
+            next_state <= multiplication_with_reduction_30;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_31;
+            end if;
+        when multiplication_with_reduction_31 => 
+            next_state <= multiplication_with_reduction_31;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_32;
+            end if;
+        when multiplication_with_reduction_32 => 
+            next_state <= multiplication_with_reduction_32;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_33;
+            end if;
+        when multiplication_with_reduction_33 => 
+            next_state <= multiplication_with_reduction_33;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+       when multiplication_with_reduction_35 => 
+            next_state <= multiplication_with_reduction_35;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_36;
+            end if;
+        when multiplication_with_reduction_36 => 
+            next_state <= multiplication_with_reduction_36;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_37;
+            end if;
+        when multiplication_with_reduction_37 => 
+            next_state <= multiplication_with_reduction_37;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_38;
+            end if;
+        when multiplication_with_reduction_38 => 
+            next_state <= multiplication_with_reduction_38;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_39;
+            end if;
+        when multiplication_with_reduction_39 => 
+            next_state <= multiplication_with_reduction_39;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_40;
+            end if;
+        when multiplication_with_reduction_40 => 
+            next_state <= multiplication_with_reduction_40;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_41;
+            end if;
+        when multiplication_with_reduction_41 => 
+            next_state <= multiplication_with_reduction_41;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_42;
+            end if;
+        when multiplication_with_reduction_42 => 
+            next_state <= multiplication_with_reduction_42;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_43;
+            end if;
+        when multiplication_with_reduction_43 => 
+            next_state <= multiplication_with_reduction_43;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_44;
+            end if;
+        when multiplication_with_reduction_44 => 
+            next_state <= multiplication_with_reduction_44;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_45;
+            end if;
+        when multiplication_with_reduction_45 => 
+            next_state <= multiplication_with_reduction_45;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_46;
+            end if;
+        when multiplication_with_reduction_46 => 
+            next_state <= multiplication_with_reduction_46;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_47;
+            end if;
+        when multiplication_with_reduction_47 => 
+            next_state <= multiplication_with_reduction_47;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_48;
+            end if;
+        when multiplication_with_reduction_48 => 
+            next_state <= multiplication_with_reduction_48;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_49;
+            end if;
+        when multiplication_with_reduction_49 => 
+            next_state <= multiplication_with_reduction_49;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_50;
+            end if;
+        when multiplication_with_reduction_50 => 
+            next_state <= multiplication_with_reduction_50;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_51;
+            end if;
+        when multiplication_with_reduction_51 => 
+            next_state <= multiplication_with_reduction_51;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_52;
+            end if;
+        when multiplication_with_reduction_52 => 
+            next_state <= multiplication_with_reduction_52;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_53;
+            end if;
+        when multiplication_with_reduction_53 => 
+            next_state <= multiplication_with_reduction_53;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_54;
+            end if;
+        when multiplication_with_reduction_54 => 
+            next_state <= multiplication_with_reduction_54;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_55;
+            end if;
+        when multiplication_with_reduction_55 => 
+            next_state <= multiplication_with_reduction_55;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_56;
+            end if;
+        when multiplication_with_reduction_56 => 
+            next_state <= multiplication_with_reduction_56;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_57;
+            end if;
+        when multiplication_with_reduction_57 => 
+            next_state <= multiplication_with_reduction_57;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_58;
+            end if;
+        when multiplication_with_reduction_58 => 
+            next_state <= multiplication_with_reduction_58;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_59;
+            end if;
+        when multiplication_with_reduction_59 => 
+            next_state <= multiplication_with_reduction_59;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_with_reduction_special_prime_0 => 
+            next_state <= multiplication_with_reduction_special_prime_0;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_1;
+            end if;
+        when multiplication_with_reduction_special_prime_1 => 
+            next_state <= multiplication_with_reduction_special_prime_1;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_with_reduction_special_prime_3 => 
+            next_state <= multiplication_with_reduction_special_prime_3;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= multiplication_with_reduction_special_prime_4;
+                else
+                    next_state <= multiplication_with_reduction_special_prime_10;
+                end if;
+            end if;
+        when multiplication_with_reduction_special_prime_4 => 
+            next_state <= multiplication_with_reduction_special_prime_4;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_5;
+            end if;
+        when multiplication_with_reduction_special_prime_5 => 
+            next_state <= multiplication_with_reduction_special_prime_5;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_6;
+            end if;
+        when multiplication_with_reduction_special_prime_6 => 
+            next_state <= multiplication_with_reduction_special_prime_6;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_7;
+            end if;
+        when multiplication_with_reduction_special_prime_7 => 
+            next_state <= multiplication_with_reduction_special_prime_7;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_8;
+            end if;
+        when multiplication_with_reduction_special_prime_8 => 
+            next_state <= multiplication_with_reduction_special_prime_8;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_with_reduction_special_prime_10 => 
+            next_state <= multiplication_with_reduction_special_prime_10;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_11;
+            end if;
+        when multiplication_with_reduction_special_prime_11 => 
+            next_state <= multiplication_with_reduction_special_prime_11;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_12;
+            end if;
+        when multiplication_with_reduction_special_prime_12 => 
+            next_state <= multiplication_with_reduction_special_prime_12;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_13;
+            end if;
+        when multiplication_with_reduction_special_prime_13 => 
+            next_state <= multiplication_with_reduction_special_prime_13;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_14;
+            end if;
+        when multiplication_with_reduction_special_prime_14 => 
+            next_state <= multiplication_with_reduction_special_prime_14;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_15;
+            end if;
+        when multiplication_with_reduction_special_prime_15 => 
+            next_state <= multiplication_with_reduction_special_prime_15;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= multiplication_with_reduction_special_prime_16;
+                else
+                    next_state <= multiplication_with_reduction_special_prime_25;
+                end if;
+            end if;
+        when multiplication_with_reduction_special_prime_16 => 
+            next_state <= multiplication_with_reduction_special_prime_16;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_17;
+            end if;
+        when multiplication_with_reduction_special_prime_17 => 
+            next_state <= multiplication_with_reduction_special_prime_17;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_18;
+            end if;
+        when multiplication_with_reduction_special_prime_18 => 
+            next_state <= multiplication_with_reduction_special_prime_18;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_19;
+            end if;
+        when multiplication_with_reduction_special_prime_19 => 
+            next_state <= multiplication_with_reduction_special_prime_19;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_20;
+            end if;
+        when multiplication_with_reduction_special_prime_20 => 
+            next_state <= multiplication_with_reduction_special_prime_20;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_21;
+            end if;
+        when multiplication_with_reduction_special_prime_21 => 
+            next_state <= multiplication_with_reduction_special_prime_21;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_22;
+            end if;
+        when multiplication_with_reduction_special_prime_22 => 
+            next_state <= multiplication_with_reduction_special_prime_22;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_23;
+            end if;
+        when multiplication_with_reduction_special_prime_23 => 
+            next_state <= multiplication_with_reduction_special_prime_23;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when multiplication_with_reduction_special_prime_25 => 
+            next_state <= multiplication_with_reduction_special_prime_25;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_26;
+            end if;
+        when multiplication_with_reduction_special_prime_26 => 
+            next_state <= multiplication_with_reduction_special_prime_26;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_27;
+            end if;
+        when multiplication_with_reduction_special_prime_27 => 
+            next_state <= multiplication_with_reduction_special_prime_27;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_28;
+            end if;
+        when multiplication_with_reduction_special_prime_28 => 
+            next_state <= multiplication_with_reduction_special_prime_28;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_29;
+            end if;
+        when multiplication_with_reduction_special_prime_29 => 
+            next_state <= multiplication_with_reduction_special_prime_29;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_30;
+            end if;
+        when multiplication_with_reduction_special_prime_30 => 
+            next_state <= multiplication_with_reduction_special_prime_30;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_31;
+            end if;
+        when multiplication_with_reduction_special_prime_31 => 
+            next_state <= multiplication_with_reduction_special_prime_31;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_32;
+            end if;
+        when multiplication_with_reduction_special_prime_32 => 
+            next_state <= multiplication_with_reduction_special_prime_32;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_33;
+            end if;
+        when multiplication_with_reduction_special_prime_33 => 
+            next_state <= multiplication_with_reduction_special_prime_33;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_34;
+            end if;
+        when multiplication_with_reduction_special_prime_34 => 
+            next_state <= multiplication_with_reduction_special_prime_34;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_35;
+            end if;
+        when multiplication_with_reduction_special_prime_35 => 
+            next_state <= multiplication_with_reduction_special_prime_35;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_36;
+            end if;
+        when multiplication_with_reduction_special_prime_36 => 
+            next_state <= multiplication_with_reduction_special_prime_36;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_37;
+            end if;
+        when multiplication_with_reduction_special_prime_37 => 
+            next_state <= multiplication_with_reduction_special_prime_37;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_38;
+            end if;
+        when multiplication_with_reduction_special_prime_38 => 
+            next_state <= multiplication_with_reduction_special_prime_38;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_39;
+            end if;
+        when multiplication_with_reduction_special_prime_39 => 
+            next_state <= multiplication_with_reduction_special_prime_39;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_40;
+            end if;
+        when multiplication_with_reduction_special_prime_40 => 
+            next_state <= multiplication_with_reduction_special_prime_40;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_41;
+            end if;
+        when multiplication_with_reduction_special_prime_41 => 
+            next_state <= multiplication_with_reduction_special_prime_41;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_42;
+            end if;
+        when multiplication_with_reduction_special_prime_42 => 
+            next_state <= multiplication_with_reduction_special_prime_42;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_43;
+            end if;
+        when multiplication_with_reduction_special_prime_43 => 
+            next_state <= multiplication_with_reduction_special_prime_43;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_44;
+            end if;
+        when multiplication_with_reduction_special_prime_44 => 
+            next_state <= multiplication_with_reduction_special_prime_44;
+            if(penultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_45;
+            end if;
+        when multiplication_with_reduction_special_prime_45 => 
+            next_state <= multiplication_with_reduction_special_prime_45;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_0 => 
+            next_state <= square_with_reduction_0;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_1;
+            end if;
+        when square_with_reduction_1 => 
+            next_state <= square_with_reduction_1;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_2;
+            end if;
+        when square_with_reduction_2 => 
+            next_state <= square_with_reduction_2;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_3;
+            end if;
+        when square_with_reduction_3 => 
+            next_state <= square_with_reduction_3;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_5 => 
+            next_state <= square_with_reduction_5;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_6;
+            end if;
+        when square_with_reduction_6 => 
+            next_state <= square_with_reduction_6;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_7;
+            end if;
+        when square_with_reduction_7 => 
+            next_state <= square_with_reduction_7;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= square_with_reduction_8;
+                else
+                    next_state <= square_with_reduction_15;
+                end if;
+            end if;
+        when square_with_reduction_8 => 
+            next_state <= square_with_reduction_8;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_9;
+            end if;
+        when square_with_reduction_9 => 
+            next_state <= square_with_reduction_9;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_10;
+            end if;
+        when square_with_reduction_10 => 
+            next_state <= square_with_reduction_10;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_11;
+            end if;
+        when square_with_reduction_11 => 
+            next_state <= square_with_reduction_11;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_12;
+            end if;
+        when square_with_reduction_12 => 
+            next_state <= square_with_reduction_12;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_13;
+            end if;
+        when square_with_reduction_13 => 
+            next_state <= square_with_reduction_13;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_15 => 
+            next_state <= square_with_reduction_15;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_16;
+            end if;
+        when square_with_reduction_16 => 
+            next_state <= square_with_reduction_16;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_17;
+            end if;
+        when square_with_reduction_17 => 
+            next_state <= square_with_reduction_17;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_18;
+            end if;
+        when square_with_reduction_18 => 
+            next_state <= square_with_reduction_18;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_19;
+            end if;
+        when square_with_reduction_19 => 
+            next_state <= square_with_reduction_19;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_20;
+            end if;
+        when square_with_reduction_20 => 
+            next_state <= square_with_reduction_20;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_21;
+            end if;
+        when square_with_reduction_21 => 
+            next_state <= square_with_reduction_21;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= square_with_reduction_22;
+                else
+                    next_state <= square_with_reduction_31;
+                end if;
+            end if;
+        when square_with_reduction_22 => 
+            next_state <= square_with_reduction_22;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_23;
+            end if;
+        when square_with_reduction_23 => 
+            next_state <= square_with_reduction_23;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_24;
+            end if;
+        when square_with_reduction_24 => 
+            next_state <= square_with_reduction_24;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_25;
+            end if;
+        when square_with_reduction_25 => 
+            next_state <= square_with_reduction_25;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_26;
+            end if;
+        when square_with_reduction_26 => 
+            next_state <= square_with_reduction_26;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_27;
+            end if;
+        when square_with_reduction_27 => 
+            next_state <= square_with_reduction_27;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_28;
+            end if;
+        when square_with_reduction_28 => 
+            next_state <= square_with_reduction_28;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_29;
+            end if;
+        when square_with_reduction_29 => 
+            next_state <= square_with_reduction_29;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_31 => 
+            next_state <= square_with_reduction_31;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_32;
+            end if;
+        when square_with_reduction_32 => 
+            next_state <= square_with_reduction_32;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_33;
+            end if;
+        when square_with_reduction_33 => 
+            next_state <= square_with_reduction_33;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_34;
+            end if;
+        when square_with_reduction_34 => 
+            next_state <= square_with_reduction_34;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_35;
+            end if;
+        when square_with_reduction_35 => 
+            next_state <= square_with_reduction_35;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_36;
+            end if;
+        when square_with_reduction_36 => 
+            next_state <= square_with_reduction_36;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_37;
+            end if;
+        when square_with_reduction_37 => 
+            next_state <= square_with_reduction_37;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_38;
+            end if;
+        when square_with_reduction_38 => 
+            next_state <= square_with_reduction_38;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_39;
+            end if;
+        when square_with_reduction_39 => 
+            next_state <= square_with_reduction_39;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_40;
+            end if;
+        when square_with_reduction_40 => 
+            next_state <= square_with_reduction_40;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_41;
+            end if;
+        when square_with_reduction_41 => 
+            next_state <= square_with_reduction_41;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_42;
+            end if;
+        when square_with_reduction_42 => 
+            next_state <= square_with_reduction_42;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_43;
+            end if;
+        when square_with_reduction_43 => 
+            next_state <= square_with_reduction_43;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_44;
+            end if;
+        when square_with_reduction_44 => 
+            next_state <= square_with_reduction_44;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_45;
+            end if;
+        when square_with_reduction_45 => 
+            next_state <= square_with_reduction_45;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_46;
+            end if;
+        when square_with_reduction_46 => 
+            next_state <= square_with_reduction_46;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_47;
+            end if;
+        when square_with_reduction_47 => 
+            next_state <= square_with_reduction_47;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_48;
+            end if;
+        when square_with_reduction_48 => 
+            next_state <= square_with_reduction_48;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_49;
+            end if;
+        when square_with_reduction_49 => 
+            next_state <= square_with_reduction_49;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_50;
+            end if;
+        when square_with_reduction_50 => 
+            next_state <= square_with_reduction_50;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_special_prime_0 => 
+            next_state <= square_with_reduction_special_prime_0;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_1;
+            end if;
+        when square_with_reduction_special_prime_1 => 
+            next_state <= square_with_reduction_special_prime_1;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_special_prime_3 => 
+            next_state <= square_with_reduction_special_prime_3;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= square_with_reduction_special_prime_4;
+                else
+                    next_state <= square_with_reduction_special_prime_9;
+                end if;
+            end if;
+        when square_with_reduction_special_prime_4 =>
+            next_state <= square_with_reduction_special_prime_4;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_5;
+            end if;
+        when square_with_reduction_special_prime_5 => 
+            next_state <= square_with_reduction_special_prime_5;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_6;
+            end if;
+        when square_with_reduction_special_prime_6 => 
+            next_state <= square_with_reduction_special_prime_6;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_7;
+            end if;
+        when square_with_reduction_special_prime_7 => 
+            next_state <= square_with_reduction_special_prime_7;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_special_prime_9 => 
+            next_state <= square_with_reduction_special_prime_9;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_10;
+            end if;
+        when square_with_reduction_special_prime_10 => 
+            next_state <= square_with_reduction_special_prime_10;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_11;
+            end if;
+        when square_with_reduction_special_prime_11 => 
+            next_state <= square_with_reduction_special_prime_11;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_12;
+            end if;
+        when square_with_reduction_special_prime_12 => 
+            next_state <= square_with_reduction_special_prime_12;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_13;
+            end if;
+        when square_with_reduction_special_prime_13 => 
+            next_state <= square_with_reduction_special_prime_13;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= square_with_reduction_special_prime_14;
+                else
+                    next_state <= square_with_reduction_special_prime_21;
+                end if;
+            end if;
+        when square_with_reduction_special_prime_14 => 
+            next_state <= square_with_reduction_special_prime_14;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_15;
+            end if;
+        when square_with_reduction_special_prime_15 => 
+            next_state <= square_with_reduction_special_prime_15;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_16;
+            end if;
+        when square_with_reduction_special_prime_16 => 
+            next_state <= square_with_reduction_special_prime_16;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_17;
+            end if;
+        when square_with_reduction_special_prime_17 => 
+            next_state <= square_with_reduction_special_prime_17;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_18;
+            end if;
+        when square_with_reduction_special_prime_18 => 
+            next_state <= square_with_reduction_special_prime_18;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_19;
+            end if;
+        when square_with_reduction_special_prime_19 => 
+            next_state <= square_with_reduction_special_prime_19;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when square_with_reduction_special_prime_21 => 
+            next_state <= square_with_reduction_special_prime_21;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_22;
+            end if;
+        when square_with_reduction_special_prime_22 => 
+            next_state <= square_with_reduction_special_prime_22;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_23;
+            end if;
+        when square_with_reduction_special_prime_23 => 
+            next_state <= square_with_reduction_special_prime_23;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_24;
+            end if;
+        when square_with_reduction_special_prime_24 => 
+            next_state <= square_with_reduction_special_prime_24;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_25;
+            end if;
+        when square_with_reduction_special_prime_25 => 
+            next_state <= square_with_reduction_special_prime_25;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_26;
+            end if;
+        when square_with_reduction_special_prime_26 => 
+            next_state <= square_with_reduction_special_prime_26;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_27;
+            end if;
+        when square_with_reduction_special_prime_27 => 
+            next_state <= square_with_reduction_special_prime_27;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_28;
+            end if;
+        when square_with_reduction_special_prime_28 => 
+            next_state <= square_with_reduction_special_prime_28;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_29;
+            end if;
+        when square_with_reduction_special_prime_29 => 
+            next_state <= square_with_reduction_special_prime_29;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_30;
+            end if;
+        when square_with_reduction_special_prime_30 => 
+            next_state <= square_with_reduction_special_prime_30;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_31;
+            end if;
+        when square_with_reduction_special_prime_31 => 
+            next_state <= square_with_reduction_special_prime_31;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_32;
+            end if;
+        when square_with_reduction_special_prime_32 => 
+            next_state <= square_with_reduction_special_prime_32;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_33;
+            end if;
+        when square_with_reduction_special_prime_33 => 
+            next_state <= square_with_reduction_special_prime_33;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_34;
+            end if;
+        when square_with_reduction_special_prime_34 => 
+            next_state <= square_with_reduction_special_prime_34;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_35;
+            end if;
+        when square_with_reduction_special_prime_35 => 
+            next_state <= square_with_reduction_special_prime_35;
+            if(penultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_36;
+            end if;
+        when square_with_reduction_special_prime_36 => 
+            next_state <= square_with_reduction_special_prime_36;
+            if(penultimate_operation = '1') then
+                next_state <= nop_8_stages;
+            end if;
+        when addition_subtraction_direct_0 =>
+            next_state <= addition_subtraction_direct_0;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_direct_2 =>
+            next_state <= addition_subtraction_direct_2;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= addition_subtraction_direct_3;
+                else
+                    next_state <= addition_subtraction_direct_5;
+                end if;
+            end if;
+        when addition_subtraction_direct_3 =>
+            next_state <= addition_subtraction_direct_3;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_direct_5 =>
+            next_state <= addition_subtraction_direct_5;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= addition_subtraction_direct_6;
+                else
+                    next_state <= addition_subtraction_direct_8;
+                end if;
+            end if;
+        when addition_subtraction_direct_6 =>
+            next_state <= addition_subtraction_direct_6;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_direct_8 =>
+            next_state <= addition_subtraction_direct_8;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_direct_9;
+            end if;
+        when addition_subtraction_direct_9 =>
+            next_state <= addition_subtraction_direct_9;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when iterative_modular_reduction_0 =>
+            next_state <= iterative_modular_reduction_0;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_1;
+            end if;    
+        when iterative_modular_reduction_1 =>
+            next_state <= iterative_modular_reduction_1;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_2;
+            end if;
+        when iterative_modular_reduction_2 =>
+            next_state <= iterative_modular_reduction_2;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_3;
+            end if;
+        when iterative_modular_reduction_3 =>
+            next_state <= iterative_modular_reduction_3;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when iterative_modular_reduction_5 =>
+            next_state <= iterative_modular_reduction_5;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_6;
+            end if;
+        when iterative_modular_reduction_6 =>
+            next_state <= iterative_modular_reduction_6;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_7;
+            end if;
+        when iterative_modular_reduction_7 =>
+            next_state <= iterative_modular_reduction_7;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_8;
+            end if;
+        when iterative_modular_reduction_8 =>
+            next_state <= iterative_modular_reduction_8;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_9;
+            end if;
+        when iterative_modular_reduction_9 =>
+            next_state <= iterative_modular_reduction_9;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_10;
+            end if;
+        when iterative_modular_reduction_10 =>
+            next_state <= iterative_modular_reduction_10;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_11;
+            end if;
+        when iterative_modular_reduction_11 =>
+            next_state <= iterative_modular_reduction_11;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when iterative_modular_reduction_13 =>
+            next_state <= iterative_modular_reduction_13;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_14;
+            end if;
+        when iterative_modular_reduction_14 =>
+            next_state <= iterative_modular_reduction_14;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_15;
+            end if;
+        when iterative_modular_reduction_15 =>
+            next_state <= iterative_modular_reduction_15;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_16;
+            end if;
+        when iterative_modular_reduction_16 =>
+            next_state <= iterative_modular_reduction_16;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_17;
+            end if;
+        when iterative_modular_reduction_17 =>
+            next_state <= iterative_modular_reduction_17;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_18;
+            end if;
+        when iterative_modular_reduction_18 =>
+            next_state <= iterative_modular_reduction_18;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_19;
+            end if;
+        when iterative_modular_reduction_19 =>
+            next_state <= iterative_modular_reduction_19;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_20;
+            end if;
+        when iterative_modular_reduction_20 =>
+            next_state <= iterative_modular_reduction_20;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_21;
+            end if;
+        when iterative_modular_reduction_21 =>
+            next_state <= iterative_modular_reduction_21;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_22;
+            end if;
+        when iterative_modular_reduction_22 =>
+            next_state <= iterative_modular_reduction_22;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when iterative_modular_reduction_24 =>
+            next_state <= iterative_modular_reduction_24;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_25;
+            end if;
+        when iterative_modular_reduction_25 =>
+            next_state <= iterative_modular_reduction_25;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_26;
+            end if;
+        when iterative_modular_reduction_26 =>
+            next_state <= iterative_modular_reduction_26;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_27;
+            end if;
+        when iterative_modular_reduction_27 =>
+            next_state <= iterative_modular_reduction_27;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_28;
+            end if;
+        when iterative_modular_reduction_28 =>
+            next_state <= iterative_modular_reduction_28;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_29;
+            end if;
+        when iterative_modular_reduction_29 =>
+            next_state <= iterative_modular_reduction_29;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_30;
+            end if;
+        when iterative_modular_reduction_30 =>
+            next_state <= iterative_modular_reduction_30;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_31;
+            end if;
+        when iterative_modular_reduction_31 =>
+            next_state <= iterative_modular_reduction_31;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_32;
+            end if;
+        when iterative_modular_reduction_32 =>
+            next_state <= iterative_modular_reduction_32;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_33;
+            end if;
+        when iterative_modular_reduction_33 =>
+            next_state <= iterative_modular_reduction_33;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_34;
+            end if;
+        when iterative_modular_reduction_34 =>
+            next_state <= iterative_modular_reduction_34;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_35;
+            end if;
+        when iterative_modular_reduction_35 =>
+            next_state <= iterative_modular_reduction_35;
+            if(penultimate_operation = '1') then
+                next_state <= iterative_modular_reduction_36;
+            end if;
+        when iterative_modular_reduction_36 =>
+            next_state <= iterative_modular_reduction_36;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_0 =>
+            next_state <= addition_subtraction_with_reduction_0;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_1;
+            end if;
+        when addition_subtraction_with_reduction_1 =>
+            next_state <= addition_subtraction_with_reduction_1;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_2;
+            end if;
+        when addition_subtraction_with_reduction_2 =>
+            next_state <= addition_subtraction_with_reduction_2;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_3;
+            end if;
+        when addition_subtraction_with_reduction_3 =>
+            next_state <= addition_subtraction_with_reduction_3;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_5 =>
+            next_state <= addition_subtraction_with_reduction_5;
+            if(penultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= addition_subtraction_with_reduction_6;
+                else
+                    next_state <= addition_subtraction_with_reduction_14;
+                end if;
+            end if;
+        when addition_subtraction_with_reduction_6 =>
+            next_state <= addition_subtraction_with_reduction_6;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_7;
+            end if;
+        when addition_subtraction_with_reduction_7 =>
+            next_state <= addition_subtraction_with_reduction_7;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_8;
+            end if;
+        when addition_subtraction_with_reduction_8 =>
+            next_state <= addition_subtraction_with_reduction_8;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_9;
+            end if;
+        when addition_subtraction_with_reduction_9 =>
+            next_state <= addition_subtraction_with_reduction_9;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_10;
+            end if;
+        when addition_subtraction_with_reduction_10 =>
+            next_state <= addition_subtraction_with_reduction_10;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_11;
+            end if;
+        when addition_subtraction_with_reduction_11 =>
+            next_state <= addition_subtraction_with_reduction_11;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_12;
+            end if;
+        when addition_subtraction_with_reduction_12 =>
+            next_state <= addition_subtraction_with_reduction_12;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_14 =>
+            next_state <= addition_subtraction_with_reduction_14;
+            if(penultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= addition_subtraction_with_reduction_15;
+                else
+                    next_state <= addition_subtraction_with_reduction_26;
+                end if;
+            end if;
+        when addition_subtraction_with_reduction_15 =>
+            next_state <= addition_subtraction_with_reduction_15;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_16;
+            end if;
+        when addition_subtraction_with_reduction_16 =>
+            next_state <= addition_subtraction_with_reduction_16;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_17;
+            end if;
+        when addition_subtraction_with_reduction_17 =>
+            next_state <= addition_subtraction_with_reduction_17;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_18;
+            end if;
+        when addition_subtraction_with_reduction_18 =>
+            next_state <= addition_subtraction_with_reduction_18;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_19;
+            end if;
+        when addition_subtraction_with_reduction_19 =>
+            next_state <= addition_subtraction_with_reduction_19;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_20;
+            end if;
+        when addition_subtraction_with_reduction_20 =>
+            next_state <= addition_subtraction_with_reduction_20;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_21;
+            end if;
+        when addition_subtraction_with_reduction_21 =>
+            next_state <= addition_subtraction_with_reduction_21;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_22;
+            end if;
+        when addition_subtraction_with_reduction_22 =>
+            next_state <= addition_subtraction_with_reduction_22;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_23;
+            end if;
+        when addition_subtraction_with_reduction_23 =>
+            next_state <= addition_subtraction_with_reduction_23;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_24;
+            end if;
+        when addition_subtraction_with_reduction_24 =>
+            next_state <= addition_subtraction_with_reduction_24;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_26 =>
+            next_state <= addition_subtraction_with_reduction_26;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_27;
+            end if;
+        when addition_subtraction_with_reduction_27 =>
+            next_state <= addition_subtraction_with_reduction_27;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_28;
+            end if;
+        when addition_subtraction_with_reduction_28 =>
+            next_state <= addition_subtraction_with_reduction_28;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_29;
+            end if;
+        when addition_subtraction_with_reduction_29 =>
+            next_state <= addition_subtraction_with_reduction_29;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_30;
+            end if;
+        when addition_subtraction_with_reduction_30 =>
+            next_state <= addition_subtraction_with_reduction_30;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_31;
+            end if;
+        when addition_subtraction_with_reduction_31 =>
+            next_state <= addition_subtraction_with_reduction_31;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_32;
+            end if;
+        when addition_subtraction_with_reduction_32 =>
+            next_state <= addition_subtraction_with_reduction_32;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_33;
+            end if;
+        when addition_subtraction_with_reduction_33 =>
+            next_state <= addition_subtraction_with_reduction_33;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_34;
+            end if;
+        when addition_subtraction_with_reduction_34 =>
+            next_state <= addition_subtraction_with_reduction_34;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_35;
+            end if;
+        when addition_subtraction_with_reduction_35 =>
+            next_state <= addition_subtraction_with_reduction_35;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_36;
+            end if;
+        when addition_subtraction_with_reduction_36 =>
+            next_state <= addition_subtraction_with_reduction_36;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_37;
+            end if;
+        when addition_subtraction_with_reduction_37 =>
+            next_state <= addition_subtraction_with_reduction_37;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_38;
+            end if;
+        when addition_subtraction_with_reduction_38 =>
+            next_state <= addition_subtraction_with_reduction_38;
+            if(penultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_39;
+            end if;
+        when addition_subtraction_with_reduction_39 =>
+            next_state <= addition_subtraction_with_reduction_39;
+            if(penultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;

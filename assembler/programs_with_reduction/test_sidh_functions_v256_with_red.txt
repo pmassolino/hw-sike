@@ -1,0 +1,1606 @@
+; This program is to test some SIDH necessary functions
+; Constants positions
+prime:0
+prime_plus_one:1
+prime_line:2
+prime2:3
+const_r:4
+const_r2:5
+const_1:6
+inv_4:7
+sidh_xpa:8
+sidh_xpai:9
+sidh_xqa:10
+sidh_xqai:11
+sidh_xra:12
+sidh_xrai:13
+sidh_xpb:14
+sidh_xpbi:15
+sidh_xqb:16
+sidh_xqbi:17
+sidh_xrb:18
+sidh_xrbi:19
+sidh_oa_bits:49567
+sidh_ob_bits:49568
+sidh_prime_size:49569
+sidh_splits_alice:49570
+sidh_splits_bob:49873
+sidh_max_row_alice:49872
+sidh_max_row_bob:50175
+;
+; Program itself
+;
+fin                                                                ; 0
+test_keygen_alice: call sidh_keygen_alice                          ;
+fin                                                                ;
+test_keygen_bob: call sidh_keygen_bob                              ;
+fin                                                                ;
+test_shared_secret_alice: call sidh_shared_secret_alice            ;
+fin                                                                ;
+test_shared_secret_bob: call sidh_shared_secret_bob                ;
+fin                                                                ;
+; Keygen fast alice                                                ;
+; 
+; secret key = tmpf0
+; phiPX   = var2 + i*var3
+; phiQX   = var4 + i*var5
+; phiRX   = var6 + i*var7
+; phiPZ   = var8 + i*var9
+; phiQZ   = var10 + i*var11
+; phiRZ   = var12 + i*var13
+; A24plus = var14 + i*var15
+; C24     = var16 + i*var17
+; RX      = var18 + i*var19
+; RZ      = var20 + i*var21
+; k1      = var22 + i*var23
+; k2      = var24 + i*var25
+; k3      = var26 + i*var27
+; index = b168
+; npts  = b169
+; ii = b170
+; row = b171
+; temp = b172
+; ptsX  = [var28 .. var39]
+; ptsXi = [var40 .. var51]
+; ptsZ  = [var52 .. var63]
+; ptsZi = [var64 .. var75]
+; pts_index = [b173 ... b184]
+; ptsX  + npts     = rd26
+; ptsXi + npts     = rd27
+; ptsZ  + npts     = rd28
+; ptsZi + npts     = rd29
+; pts_index + npts = rd30
+;
+sidh_keygen_alice: lconstm var9 #0                                 ; Initializing with 0's
+lconstm var11 #0                                                   ;
+lconstm var13 #0                                                   ;
+lconstm var15 #0                                                   ;
+lconstm var17 #0                                                   ;
+;
+copym var8 const_r                                                 ; Adding r == 1 in Montgomery
+copym var10 const_r                                                ;
+copym var12 const_r                                                ;
+;
+madd_subr var14 const_r + const_r                                  ; Adding 2r == 2 in Montgomery
+madd_subr var16 var14 + var14                                      ; 
+madd_subr tmpf8 var14 + var16                                      ; 
+lconstm tmpf9 #0                                                   ; Ai = 0
+madd_subr var14 var16 + var16                                      ; 
+;
+copym var2 sidh_xpb                                                ; Initializing variables
+copym var3 sidh_xpbi                                               ;
+copym var4 sidh_xqb                                                ;
+copym var5 sidh_xqbi                                               ;
+copym var6 sidh_xrb                                                ;
+copym var7 sidh_xrbi                                               ;
+;
+copy b168 #0                                                       ;
+copy b169 #0                                                       ;
+copy b170 #0                                                       ;
+;
+; RX, RXi, RZ, RZi = ladder_3_pt(fp2, sk, oa_bits, xpa, xpai, xqa, xqai, xra, xrai, A, Ai, inv_4)
+;
+copym tmpf2 sidh_xpa                                               ; Perform ladder 3 points
+copym tmpf3 sidh_xpai                                              ;
+copym tmpf4 sidh_xqa                                               ;
+copym tmpf5 sidh_xqai                                              ;
+copym tmpf6 sidh_xra                                               ;
+copym tmpf7 sidh_xrai                                              ;
+copy tmpf1.0.0 sidh_oa_bits
+call ladder_3_point                                                ;
+; Check if special 2 isogeny case
+bland b128 sidh_oa_bits #1
+jumpeq sidh_keygen_alice_no_2_isog_case b128 #0
+; SX, SXi, SZ, SZi = xDBLe(fp2, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, oa_bits-1)
+copym var28 var18                                                  ; Copy RX, RXi, RZ and RZi
+copym var40 var19                                                  ; Copy RX, RXi, RZ and RZi
+copym var52 var20                                                  ; Copy RX, RXi, RZ and RZi
+copym var64 var21                                                  ; Copy RX, RXi, RZ and RZi
+bsub rd20 sidh_oa_bits #1
+call xDBLe
+; A24plus, A24plusi, C24, C24i = sage_get_2_isog(fp2, SX, SXi, SZ, SZi)
+call get_2_isog
+; phiPX, phiPXi, phiPZ, phiPZi = sage_eval_2_isog(fp2, SX, SXi, SZ, SZi, phiPX, phiPXi, phiPZ, phiPZi)
+copy rd20 #var2                                                    ;
+copy rd21 #var3                                                    ;
+copy rd22 #var8                                                    ;
+copy rd23 #var9                                                    ;
+call eval_2_isog
+; phiQX, phiQXi, phiQZ, phiQZi = sage_eval_2_isog(fp2, SX, SXi, SZ, SZi, phiQX, phiQXi, phiQZ, phiQZi)
+copy rd20 #var4                                                    ;
+copy rd21 #var5                                                    ;
+copy rd22 #var10                                                   ;
+copy rd23 #var11                                                   ;
+call eval_2_isog
+; phiRX, phiRXi, phiRZ, phiRZi = sage_eval_2_isog(fp2, SX, SXi, SZ, SZi, phiRX, phiRXi, phiRZ, phiRZi)
+copy rd20 #var6                                                    ;
+copy rd21 #var7                                                    ;
+copy rd22 #var12                                                   ;
+copy rd23 #var13                                                   ;
+call eval_2_isog
+; RX, RXi, RZ, RZi = sage_eval_2_isog(fp2, SX, SXi, SZ, SZi, RX, RXi, RZ, RZi)
+copy rd20 #var28                                                   ;
+copy rd21 #var40                                                   ;
+copy rd22 #var52                                                   ;
+copy rd23 #var64                                                   ;
+call eval_2_isog
+copym var18 var28                                                  ; Copy RX, RXi, RZ and RZi
+copym var19 var40                                                  ; Copy RX, RXi, RZ and RZi
+copym var20 var52                                                  ; Copy RX, RXi, RZ and RZi
+copym var21 var64                                                  ; Copy RX, RXi, RZ and RZi
+;
+sidh_keygen_alice_no_2_isog_case: copy b171 #1                     ;
+copy rd26 #(4)var28                                                ;
+copy rd27 #(4)var40                                                ;
+copy rd28 #(4)var52                                                ;
+copy rd29 #(4)var64                                                ;
+copy rd30 #b173                                                    ;
+;
+; while (index < max_row-row)
+;     ptsX[npts]  = RX
+;     ptsXi[npts] = RXi
+;     ptsZ[npts]  = RZ
+;     ptsZi[npts] = RZi
+;     pts_index[npts] = index
+;     npts += 1
+;     m = splits[ii]
+;     ii += 1
+;     double_m = m+m
+;     index += m
+;     RX, RXi, RZ, RZi = xDBLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, double_m)
+;
+sidh_keygen_alice_loop_1:bsub rd1 sidh_max_row_alice b171          ;
+jumpeql sidh_keygen_alice_loop_2_end rd1 b168                      ;
+sidh_keygen_alice_loop_2: copym *rd26 var18                        ; ptsX[npts]  = RX
+copym *rd27 var19                                                  ; ptsXi[npts] = RXi
+copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
+copym *rd29 var21                                                  ; ptsZi[npts] = RZi
+copy *rd30 b168                                                    ; pts_index[npts] = index
+badd b169 b169 #1                                                  ; npts += 1
+badd rd26 rd26 #4                                                  ;
+badd rd27 rd27 #4                                                  ;
+badd rd28 rd28 #4                                                  ;
+badd rd29 rd29 #4                                                  ;
+badd rd30 rd30 #1                                                  ;
+badd rd5 b170 #sidh_splits_alice                                   ;
+copy rd20 *rd5                                                     ; m = splits[ii]
+badd b170 b170 #1                                                  ; ii += 1
+badd b168 b168 rd20                                                ; index += m;
+badd rd20 rd20 rd20                                                ;
+call xDBLe                                                         ;
+bsub rd1 sidh_max_row_alice b171                                   ;
+jumpl sidh_keygen_alice_loop_2 b168 rd1                            ;
+;
+; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+sidh_keygen_alice_loop_2_end: call get_4_isog                      ;
+;
+; for i in range(npts)
+;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_4_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i, k3, k3i)
+;
+copy b172 b169                                                     ;
+copy rd20 #var28                                                   ;
+copy rd21 #var40                                                   ;
+copy rd22 #var52                                                   ;
+copy rd23 #var64                                                   ;
+sidh_keygen_alice_loop_3:bsub b172 b172 #1                         ;
+call eval_4_isog                                                   ;
+badd rd20 rd20 #1                                                  ;
+badd rd21 rd21 #1                                                  ;
+badd rd22 rd22 #1                                                  ;
+badd rd23 rd23 #1                                                  ;
+jumpl sidh_keygen_alice_loop_3 #0 b172                             ;
+;
+; phiPX, phiPXi, phiPZ, phiPZi = eval_4_isog(arithmetic_parameters, phiPX, phiPXi, phiPZ, phiPZi, k1, k1i, k2, k2i, k3, k3i)
+;
+copy rd20 #var2                                                 ; 
+copy rd21 #var3                                                 ;
+copy rd22 #var8                                                 ;
+copy rd23 #var9                                                 ;
+call eval_4_isog                                                ;
+;
+; phiQX, phiQXi, phiQZ, phiQZi = eval_4_isog(arithmetic_parameters, phiQX, phiQXi, phiQZ, phiQZi, k1, k1i, k2, k2i, k3, k3i)
+;
+copy rd20 #var4                                                 ; 
+copy rd21 #var5                                                 ;
+copy rd22 #var10                                                ;
+copy rd23 #var11                                                ;
+call eval_4_isog                                                ;
+;
+; phiRX, phiRXi, phiRZ, phiRZi = eval_4_isog(arithmetic_parameters, phiRX, phiRXi, phiRZ, phiRZi, k1, k1i, k2, k2i, k3, k3i)
+;
+copy rd20 #var6                                                 ; 
+copy rd21 #var7                                                 ;
+copy rd22 #var12                                                ;
+copy rd23 #var13                                                ;
+call eval_4_isog                                                ;
+;
+; npts -= 1
+bsub b169 b169 #1                                                  ;
+bsub rd26 rd26 #4                                                  ;
+bsub rd27 rd27 #4                                                  ;
+bsub rd28 rd28 #4                                                  ;
+bsub rd29 rd29 #4                                                  ;
+bsub rd30 rd30 #1                                                  ;
+; RX    = ptsX[npts]
+; RXi   = ptsXi[npts]
+; RZ    = ptsZ[npts]
+; RZi   = ptsZi[npts]
+; index = pts_index[npts]
+copym var18 *rd26                                                  ;
+copym var19 *rd27                                                  ;
+copym var20 *rd28                                                  ;
+copym var21 *rd29                                                  ;
+copy b168 *rd30                                                    ;
+; for row in range(1, max_row)
+badd b171 b171 #1                                                  ;
+jumpl sidh_keygen_alice_loop_1 b171 sidh_max_row_alice                  ;
+;
+; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+call get_4_isog                                                    ;
+;
+; phiPX, phiPXi, phiPZ, phiPZi = eval_4_isog(arithmetic_parameters, phiPX, phiPXi, phiPZ, phiPZi, k1, k1i, k2, k2i, k3, k3i)
+;
+copy rd20 #var2                                                    ; 
+copy rd21 #var3                                                    ;
+copy rd22 #var8                                                    ;
+copy rd23 #var9                                                    ;
+call eval_4_isog                                                   ;
+;
+; phiQX, phiQXi, phiQZ, phiQZi = eval_4_isog(arithmetic_parameters, phiQX, phiQXi, phiQZ, phiQZi, k1, k1i, k2, k2i, k3, k3i)
+;
+copy rd20 #var4                                                    ; 
+copy rd21 #var5                                                    ;
+copy rd22 #var10                                                   ;
+copy rd23 #var11                                                   ;
+call eval_4_isog                                                   ;
+;
+; phiRX, phiRXi, phiRZ, phiRZi = eval_4_isog(arithmetic_parameters, phiRX, phiRXi, phiRZ, phiRZi, k1, k1i, k2, k2i, k3, k3i)
+;
+copy rd20 #var6                                                    ; 
+copy rd21 #var7                                                    ;
+copy rd22 #var12                                                   ;
+copy rd23 #var13                                                   ;
+call eval_4_isog                                                   ;
+;
+copym tmpf0 var8                                                   ;
+copym tmpf1 var9                                                   ;
+copym tmpf2 var10                                                  ;
+copym tmpf3 var11                                                  ;
+copym tmpf4 var12                                                  ;
+copym tmpf5 var13                                                  ;
+copym tmpf6 const_r                                                ;
+copym tmpf7 const_r                                                ;
+call fp2_inv_2_way                                                 ;
+mmulm fp2t0 tmpf17 var2 fp2t1 tmpf16 var3 fp2t2 tmpf16 var2 fp2t3 tmpf17 var3 fp2t4 tmpf19 var4 fp2t5 tmpf18 var5 fp2t6 tmpf18 var4 fp2t7 tmpf19 var5
+madd_subr var3 fp2t0 + fp2t1 var2 fp2t2 - fp2t3 var5 fp2t4 + fp2t5 var4 fp2t6 - fp2t7
+mmulm fp2t0 tmpf21 var6 fp2t1 tmpf20 var7 fp2t2 tmpf20 var6 fp2t3 tmpf21 var7
+madd_subr var7 fp2t0 + fp2t1 var6 fp2t2 - fp2t3
+mmulm tmpf22 var2 const_1 tmpf23 var3 const_1 tmpf24 var4 const_1 tmpf25 var5 const_1 tmpf26 var6 const_1 tmpf27 var7 const_1
+mitred tmpf16 tmpf22 tmpf17 tmpf23 tmpf18 tmpf24 tmpf19 tmpf25     ;
+mitred tmpf20 tmpf26 tmpf21 tmpf27                                 ;
+ret                                                                ;
+;
+;
+;
+; Keygen fast bob                                                  ;
+; 
+; secret key = tmpf0
+; phiPX    = var2 + i*var3
+; phiQX    = var4 + i*var5
+; phiRX    = var6 + i*var7
+; phiPZ    = var8 + i*var9
+; phiQZ    = var10 + i*var11
+; phiRZ    = var12 + i*var13
+; A24plus  = var14 + i*var15
+; A24minus = var16 + i*var17
+; RX       = var18 + i*var19
+; RZ       = var20 + i*var21
+; k1       = var22 + i*var23
+; k2       = var24 + i*var25
+; index = b168
+; npts  = b169
+; ii = b170
+; row = b171
+; temp = b172
+; ptsX  = [var28 .. var39]
+; ptsXi = [var40 .. var51]
+; ptsZ  = [var52 .. var63]
+; ptsZi = [var64 .. var75]
+; pts_index = [b173 ... b184]
+; ptsX  + npts     = rd26
+; ptsXi + npts     = rd27
+; ptsZ  + npts     = rd28
+; ptsZi + npts     = rd29
+; pts_index + npts = rd30
+;
+sidh_keygen_bob: lconstm var9 #0                                   ; Initializing with 0's
+lconstm var11 #0                                                   ;
+lconstm var13 #0                                                   ;
+lconstm var15 #0                                                   ;
+lconstm var17 #0                                                   ;
+;
+copym var8 const_r                                                 ; Adding r == 1 in Montgomery
+copym var10 const_r                                                ;
+copym var12 const_r                                                ;
+madd_subr tmpf20 const_r + const_r                                 ; Adding 2r == 2 in Montgomery
+madd_subr var16 tmpf20 + tmpf20                                    ;
+madd_subr tmpf8 tmpf20 + var16 var14 var16 + var16                 ;
+lconstm tmpf9 #0                                                   ;
+;
+copym var2 sidh_xpa                                                ; Initializing variables
+copym var3 sidh_xpai                                               ;
+copym var4 sidh_xqa                                                ;
+copym var5 sidh_xqai                                               ;
+copym var6 sidh_xra                                                ;
+copym var7 sidh_xrai                                               ;
+;
+copy b168 #0                                                       ;
+copy b169 #0                                                       ;
+copy b170 #0                                                       ;
+;
+;
+; RX, RXi, RZ, RZi = ladder_3_pt(fp2, sk, ob_bits-1, xpb, xpbi, xqb, xqbi, xrb, xrbi, A, Ai, inv_4)
+;
+copym tmpf2 sidh_xpb                                               ; Perform ladder 3 points
+copym tmpf3 sidh_xpbi                                              ;
+copym tmpf4 sidh_xqb                                               ;
+copym tmpf5 sidh_xqbi                                              ;
+copym tmpf6 sidh_xrb                                               ;
+copym tmpf7 sidh_xrbi                                              ;
+bsub b128 sidh_ob_bits #1
+copy tmpf1.0.0 b128
+call ladder_3_point                                                ;
+copy b171 #1                                                       ;
+copy rd26 #(4)var28                                                ;
+copy rd27 #(4)var40                                                ;
+copy rd28 #(4)var52                                                ;
+copy rd29 #(4)var64                                                ;
+copy rd30 #b173                                                    ;
+;
+; while (index < max_row-row)
+;     ptsX[npts]  = RX
+;     ptsXi[npts] = RXi
+;     ptsZ[npts]  = RZ
+;     ptsZi[npts] = RZi
+;     pts_index[npts] = index
+;     npts += 1
+;     m = splits[ii]
+;     ii += 1
+;     index += m
+;     RX, RXi, RZ, RZi = xTPLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24minus, A24minusi, A24plus, A24plusi, m);
+;
+sidh_keygen_bob_loop_1: bsub rd1 sidh_max_row_bob b171             ;
+jumpeql sidh_keygen_bob_loop_2_end rd1 b168                        ;
+sidh_keygen_bob_loop_2: copym *rd26 var18                          ; ptsX[npts]  = RX
+copym *rd27 var19                                                  ; ptsXi[npts] = RXi
+copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
+copym *rd29 var21                                                  ; ptsZi[npts] = RZi
+copy *rd30 b168                                                    ; pts_index[npts] = index
+badd b169 b169 #1                                                  ; npts += 1
+badd rd26 rd26 #4                                                  ;
+badd rd27 rd27 #4                                                  ;
+badd rd28 rd28 #4                                                  ;
+badd rd29 rd29 #4                                                  ;
+badd rd30 rd30 #1                                                  ;
+badd rd5 b170 #sidh_splits_bob                                     ;
+copy rd20 *rd5                                                     ; m = splits[ii]
+badd b170 b170 #1                                                  ; ii += 1
+badd b168 b168 rd20                                                ; index += m;
+call xTPLe                                                         ;
+bsub rd1 sidh_max_row_bob b171                                     ;
+jumpl sidh_keygen_bob_loop_2 b168 rd1                                   ;
+;
+; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+sidh_keygen_bob_loop_2_end:call get_3_isog                              ;
+;
+; for i in range(npts)
+;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_3_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i)
+;
+copy b172 b169                                                     ;
+copy rd20 #var28                                                   ;
+copy rd21 #var40                                                   ;
+copy rd22 #var52                                                   ;
+copy rd23 #var64                                                   ;
+sidh_keygen_bob_loop_3: bsub b172 b172 #1                          ;
+call eval_3_isog                                                   ;
+badd rd20 rd20 #1                                                  ;
+badd rd21 rd21 #1                                                  ;
+badd rd22 rd22 #1                                                  ;
+badd rd23 rd23 #1                                                  ;
+jumpl sidh_keygen_bob_loop_3 #0 b172                               ;
+;
+; phiPX, phiPXi, phiPZ, phiPZi = eval_3_isog(arithmetic_parameters, phiPX, phiPXi, phiPZ, phiPZi, k1, k1i, k2, k2i)
+;
+copy rd20 #var2                                                    ; 
+copy rd21 #var3                                                    ;
+copy rd22 #var8                                                    ;
+copy rd23 #var9                                                    ;
+call eval_3_isog                                                   ;
+;
+; phiQX, phiQXi, phiQZ, phiQZi = eval_3_isog(arithmetic_parameters, phiQX, phiQXi, phiQZ, phiQZi, k1, k1i, k2, k2i)
+;
+copy rd20 #var4                                                    ; 
+copy rd21 #var5                                                    ;
+copy rd22 #var10                                                   ;
+copy rd23 #var11                                                   ;
+call eval_3_isog                                                   ;
+;
+; phiRX, phiRXi, phiRZ, phiRZi = eval_3_isog(arithmetic_parameters, phiRX, phiRXi, phiRZ, phiRZi, k1, k1i, k2, k2i)
+;
+copy rd20 #var6                                                    ; 
+copy rd21 #var7                                                    ;
+copy rd22 #var12                                                   ;
+copy rd23 #var13                                                   ;
+call eval_3_isog                                                   ;
+;
+; npts -= 1
+bsub b169 b169 #1                                                  ;
+bsub rd26 rd26 #4                                                  ;
+bsub rd27 rd27 #4                                                  ;
+bsub rd28 rd28 #4                                                  ;
+bsub rd29 rd29 #4                                                  ;
+bsub rd30 rd30 #1                                                  ;
+; RX    = ptsX[npts]
+; RXi   = ptsXi[npts]
+; RZ    = ptsZ[npts]
+; RZi   = ptsZi[npts]
+; index = pts_index[npts]
+copym var18 *rd26                                                  ;
+copym var19 *rd27                                                  ;
+copym var20 *rd28                                                  ;
+copym var21 *rd29                                                  ;
+copy b168 *rd30                                                    ;
+; for row in range(1, max_row)
+badd b171 b171 #1                                                  ;
+jumpl sidh_keygen_bob_loop_1 b171 sidh_max_row_bob                      ;
+;
+; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+call get_3_isog                                                    ;
+;
+; phiPX, phiPXi, phiPZ, phiPZi = eval_3_isog(arithmetic_parameters, phiPX, phiPXi, phiPZ, phiPZi, k1, k1i, k2, k2i)
+;
+copy rd20 #var2                                                    ; 
+copy rd21 #var3                                                    ;
+copy rd22 #var8                                                    ;
+copy rd23 #var9                                                    ;
+call eval_3_isog                                                   ;
+;
+; phiQX, phiQXi, phiQZ, phiQZi = eval_3_isog(arithmetic_parameters, phiQX, phiQXi, phiQZ, phiQZi, k1, k1i, k2, k2i)
+;
+copy rd20 #var4                                                    ; 
+copy rd21 #var5                                                    ;
+copy rd22 #var10                                                   ;
+copy rd23 #var11                                                   ;
+call eval_3_isog                                                   ;
+;
+; phiRX, phiRXi, phiRZ, phiRZi = eval_3_isog(arithmetic_parameters, phiRX, phiRXi, phiRZ, phiRZi, k1, k1i, k2, k2i)
+;
+copy rd20 #var6                                                    ; 
+copy rd21 #var7                                                    ;
+copy rd22 #var12                                                   ;
+copy rd23 #var13                                                   ;
+call eval_3_isog                                                   ;
+;
+copym tmpf0 var8                                                   ;
+copym tmpf1 var9                                                   ;
+copym tmpf2 var10                                                  ;
+copym tmpf3 var11                                                  ;
+copym tmpf4 var12                                                  ;
+copym tmpf5 var13                                                  ;
+copym tmpf6 const_r                                                ;
+copym tmpf7 const_r                                                ;
+call fp2_inv_2_way                                                 ;
+mmulm fp2t0 tmpf17 var2 fp2t1 tmpf16 var3 fp2t2 tmpf16 var2 fp2t3 tmpf17 var3 fp2t4 tmpf19 var4 fp2t5 tmpf18 var5 fp2t6 tmpf18 var4 fp2t7 tmpf19 var5
+madd_subr var3 fp2t0 + fp2t1 var2 fp2t2 - fp2t3 var5 fp2t4 + fp2t5 var4 fp2t6 - fp2t7
+mmulm fp2t0 tmpf21 var6 fp2t1 tmpf20 var7 fp2t2 tmpf20 var6 fp2t3 tmpf21 var7
+madd_subr var7 fp2t0 + fp2t1 var6 fp2t2 - fp2t3
+mmulm tmpf22 var2 const_1 tmpf23 var3 const_1 tmpf24 var4 const_1 tmpf25 var5 const_1 tmpf26 var6 const_1 tmpf27 var7 const_1
+mitred tmpf16 tmpf22 tmpf17 tmpf23 tmpf18 tmpf24 tmpf19 tmpf25     ;
+mitred tmpf20 tmpf26 tmpf21 tmpf27                                 ;
+ret                                                                ;
+;
+;
+;
+; Shared secret fast alice                                         ;
+;
+; xpb     = var0 + i*var1
+; xqb     = var2 + i*var3
+; xrb     = var4 + i*var5
+; secret key = var6
+; A24plus = var14 + i*var15
+; C24     = var16 + i*var17
+; RX      = var18 + i*var19
+; RZ      = var20 + i*var21
+; k1      = var22 + i*var23
+; k2      = var24 + i*var25
+; k3      = var26 + i*var27
+; index = b168
+; npts  = b169
+; ii = b170
+; row = b171
+; temp = b172
+; ptsX  = [var28 .. var39]
+; ptsXi = [var40 .. var51]
+; ptsZ  = [var52 .. var63]
+; ptsZi = [var64 .. var75]
+; pts_index = [b173 ... b184]
+; ptsX  + npts     = rd26
+; ptsXi + npts     = rd27
+; ptsZ  + npts     = rd28
+; ptsZi + npts     = rd29
+; pts_index + npts = rd30
+;
+sidh_shared_secret_alice: mmulm var0 tmpf0 const_r2 var1 tmpf1 const_r2 var2 tmpf2 const_r2 var3 tmpf3 const_r2 var4 tmpf4 const_r2 var5 tmpf5 const_r2
+;
+; a, ai = get_A(arithmetic_parameters, xpb, xpbi, xqb, xqbi, xrb, xrbi)
+;
+copym tmpf0 var0                                                   ;
+copym tmpf1 var1                                                   ;
+copym tmpf2 var2                                                   ;
+copym tmpf3 var3                                                   ;
+copym tmpf4 var4                                                   ;
+copym tmpf5 var5                                                   ;
+copym var6 tmpf6                                                   ;
+call get_A                                                         ;
+lconstm var17 #0                                                   ; Initializing with 0's
+copym var15 tmpf17                                                 ;
+madd_subr var16 const_r + const_r                                  ; Adding 2r == 2 in Montgomery
+madd_subr var14 var16 + tmpf16 var16 var16 + var16                 ; Adding 4r == 4 in Montgomery
+;
+copy b168 #0                                                       ;
+copy b169 #0                                                       ;
+copy b170 #0                                                       ;
+;
+; RX, RXi, RZ, RZi = ladder_3_pt(arithmetic_parameters, sk, oa_bits, xpb, xpbi, xqb, xqbi, xrb, xrbi, a, ai, inv_4)
+;
+copym tmpf0 var6                                                   ; 
+copy tmpf1.0.0 sidh_oa_bits                                        ; 
+copym tmpf2 var0                                                   ; 
+copym tmpf3 var1                                                   ;
+copym tmpf4 var2                                                   ;
+copym tmpf5 var3                                                   ;
+copym tmpf6 var4                                                   ;
+copym tmpf7 var5                                                   ;
+copym tmpf8 tmpf16                                                 ; 
+copym tmpf9 tmpf17                                                 ; 
+call ladder_3_point                                                ;
+; Check if special 2 isogeny case
+bland b128 sidh_oa_bits #1
+jumpeq sidh_shared_secret_alice_no_2_isog_case b128 #0
+; SX, SXi, SZ, SZi = xDBLe(fp2, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, oa_bits-1)
+copym var28 var18                                                  ; Copy RX, RXi, RZ and RZi
+copym var40 var19                                                  ; Copy RX, RXi, RZ and RZi
+copym var52 var20                                                  ; Copy RX, RXi, RZ and RZi
+copym var64 var21                                                  ; Copy RX, RXi, RZ and RZi
+bsub rd20 sidh_oa_bits #1
+call xDBLe
+; A24plus, A24plusi, C24, C24i = sage_get_2_isog(fp2, SX, SXi, SZ, SZi)
+call get_2_isog
+; RX, RXi, RZ, RZi = sage_eval_2_isog(fp2, RX, RXi, RZ, RZi, SX, SXi, SZ, SZi)
+copy rd20 #var28                                                   ;
+copy rd21 #var40                                                   ;
+copy rd22 #var52                                                   ;
+copy rd23 #var64                                                   ;
+call eval_2_isog
+copym var18 var28                                                  ; Copy RX, RXi, RZ and RZi
+copym var19 var40                                                  ; Copy RX, RXi, RZ and RZi
+copym var20 var52                                                  ; Copy RX, RXi, RZ and RZi
+copym var21 var64                                                  ; Copy RX, RXi, RZ and RZi
+sidh_shared_secret_alice_no_2_isog_case: copy b171 #1              ;
+copy rd26 #(4)var28                                                ;
+copy rd27 #(4)var40                                                ;
+copy rd28 #(4)var52                                                ;
+copy rd29 #(4)var64                                                ;
+copy rd30 #b173                                                    ;
+;
+; while (index < max_row-row)
+;     ptsX[npts]  = RX
+;     ptsXi[npts] = RXi
+;     ptsZ[npts]  = RZ
+;     ptsZi[npts] = RZi
+;     pts_index[npts] = index
+;     npts += 1
+;     m = splits[ii]
+;     ii += 1
+;     double_m = m+m
+;     index += m
+;     RX, RXi, RZ, RZi = xDBLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24plus, A24plusi, C24, C24i, double_m)
+;
+sidh_shared_secret_alice_loop_1: bsub rd1 sidh_max_row_alice b171  ;
+jumpeql sidh_shared_secret_alice_loop_2_end rd1 b168               ;
+sidh_shared_secret_alice_loop_2: copym *rd26 var18                 ; ptsX[npts]  = RX
+copym *rd27 var19                                                  ; ptsXi[npts] = RXi
+copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
+copym *rd29 var21                                                  ; ptsZi[npts] = RZi
+copy *rd30 b168                                                    ; pts_index[npts] = index
+badd b169 b169 #1                                                  ; npts += 1
+badd rd26 rd26 #4                                                  ;
+badd rd27 rd27 #4                                                  ;
+badd rd28 rd28 #4                                                  ;
+badd rd29 rd29 #4                                                  ;
+badd rd30 rd30 #1                                                  ;
+badd rd5 b170 #sidh_splits_alice                                   ;
+copy rd20 *rd5                                                     ; m = splits[ii]
+badd b170 b170 #1                                                  ; ii += 1
+badd b168 b168 rd20                                                ; index += m;
+badd rd20 rd20 rd20                                                ;
+call xDBLe                                                         ;
+bsub rd1 sidh_max_row_alice b171                                   ;
+jumpl sidh_shared_secret_alice_loop_2 b168 rd1                     ;
+;
+; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+sidh_shared_secret_alice_loop_2_end: call get_4_isog               ;
+;
+; for i in range(npts)
+;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_4_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i, k3, k3i)
+;
+copy b172 b169                                                     ;
+copy rd20 #var28                                                   ;
+copy rd21 #var40                                                   ;
+copy rd22 #var52                                                   ;
+copy rd23 #var64                                                   ;
+sidh_shared_secret_alice_loop_3: bsub b172 b172 #1                 ;
+call eval_4_isog                                                   ;
+badd rd20 rd20 #1                                                  ;
+badd rd21 rd21 #1                                                  ;
+badd rd22 rd22 #1                                                  ;
+badd rd23 rd23 #1                                                  ;
+jumpl sidh_shared_secret_alice_loop_3 #0 b172                      ;
+;
+; npts -= 1
+bsub b169 b169 #1                                                  ;
+bsub rd26 rd26 #4                                                  ;
+bsub rd27 rd27 #4                                                  ;
+bsub rd28 rd28 #4                                                  ;
+bsub rd29 rd29 #4                                                  ;
+bsub rd30 rd30 #1                                                  ;
+; RX    = ptsX[npts]
+; RXi   = ptsXi[npts]
+; RZ    = ptsZ[npts]
+; RZi   = ptsZi[npts]
+; index = pts_index[npts]
+copym var18 *rd26                                                  ;
+copym var19 *rd27                                                  ;
+copym var20 *rd28                                                  ;
+copym var21 *rd29                                                  ;
+copy b168 *rd30                                                    ;
+; for row in range(1, max_row)
+badd b171 b171 #1                                                  ;
+jumpl sidh_shared_secret_alice_loop_1 b171 sidh_max_row_alice      ;
+;
+; A24plus, A24plusi, C24, C24i, k1, k1i, k2, k2i, k3, k3i = get_4_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+call get_4_isog                                                    ;
+;
+; a  = 2*(2*A24plus-C24)
+; ai = 2*(2*A24plusi-C24i)
+;
+madd_subr tmpf0 var14 + var14 tmpf1 var15 + var15                  ;
+madd_subr tmpf0 tmpf0 - var16 tmpf1 tmpf1 - var17                  ;
+madd_subr tmpf0 tmpf0 + tmpf0 tmpf1 tmpf1 + tmpf1                  ;
+;
+; value_j_inv, value_j_invi = j_inv(fp2, a, ai, c, ci)
+;
+copym tmpf2 var16                                                  ;
+copym tmpf3 var17                                                  ;
+call j_invar                                                       ;
+mmulm tmpf0 tmpf16 const_1 tmpf1 tmpf17 const_1                    ;
+mitred tmpf16 tmpf0 tmpf17 tmpf1                                   ;
+ret                                                                ;
+;
+;
+;
+; Shared secret fast bob                                           ;
+;
+; xpa      = var0 + i*var1
+; xqa      = var2 + i*var3
+; xra      = var4 + i*var5
+; secret key = var6
+; A24plus  = var14 + i*var15
+; A24minus = var16 + i*var17
+; RX       = var18 + i*var19
+; RZ       = var20 + i*var21
+; k1       = var22 + i*var23
+; k2       = var24 + i*var25
+; index = b168
+; npts  = b169
+; ii = b170
+; row = b171
+; temp = b172
+; ptsX  = [var28 .. var39]
+; ptsXi = [var40 .. var51]
+; ptsZ  = [var52 .. var63]
+; ptsZi = [var64 .. var75]
+; pts_index = [b173 ... b184]
+; ptsX  + npts     = rd26
+; ptsXi + npts     = rd27
+; ptsZ  + npts     = rd28
+; ptsZi + npts     = rd29
+; pts_index + npts = rd30
+;
+sidh_shared_secret_bob: mmulm var0 tmpf0 const_r2 var1 tmpf1 const_r2 var2 tmpf2 const_r2 var3 tmpf3 const_r2 var4 tmpf4 const_r2 var5 tmpf5 const_r2
+;
+; a, ai = get_A(arithmetic_parameters, xpa, xpai, xqa, xqai, xra, xrai)
+;
+copym tmpf0 var0                                                   ;
+copym tmpf1 var1                                                   ;
+copym tmpf2 var2                                                   ;
+copym tmpf3 var3                                                   ;
+copym tmpf4 var4                                                   ;
+copym tmpf5 var5                                                   ;
+copym var6 tmpf6                                                   ;
+call get_A                                                         ;
+copym var15 tmpf17                                                 ;
+copym var17 tmpf17                                                 ;
+madd_subr tmpf18 const_r + const_r                                 ; Adding 2r == 2 in Montgomery
+madd_subr var14 tmpf16 + tmpf18 var16 tmpf16 - tmpf18              ; Adding 2r +/- a
+;
+copy b168 #0                                                       ;
+copy b169 #0                                                       ;
+copy b170 #0                                                       ;
+;
+; RX, RXi, RZ, RZi = ladder_3_pt(arithmetic_parameters, sk, ob_bits-1, xpa, xpai, xqa, xqai, xra, xrai, a, ai, inv_4)
+;
+copym tmpf0 var6                                                   ; 
+bsub b128 sidh_ob_bits #1                                          ;
+copy tmpf1.0.0 b128                                                ; 
+copym tmpf2 var0                                                   ; 
+copym tmpf3 var1                                                   ;
+copym tmpf4 var2                                                   ;
+copym tmpf5 var3                                                   ;
+copym tmpf6 var4                                                   ;
+copym tmpf7 var5                                                   ;
+copym tmpf8 tmpf16                                                 ; 
+copym tmpf9 tmpf17                                                 ; 
+call ladder_3_point                                                ;
+copy b171 #1                                                       ;
+copy rd26 #(4)var28                                                ;
+copy rd27 #(4)var40                                                ;
+copy rd28 #(4)var52                                                ;
+copy rd29 #(4)var64                                                ;
+copy rd30 #b173                                                    ;
+; 
+; while (index < max_row-row)
+;     ptsX[npts]  = RX
+;     ptsXi[npts] = RXi
+;     ptsZ[npts]  = RZ
+;     ptsZi[npts] = RZi
+;     pts_index[npts] = index;
+;     npts += 1
+;     m = splits[ii]
+;     ii += 1
+;     index += m;
+;     RX, RXi, RZ, RZi = xTPLe(arithmetic_parameters, RX, RXi, RZ, RZi, A24minus, A24minusi, A24plus, A24plusi, m);
+;
+sidh_shared_secret_bob_loop_1: bsub rd1 sidh_max_row_bob b171      ;
+jumpeql sidh_shared_secret_bob_loop_2_end rd1 b168                 ;
+sidh_shared_secret_bob_loop_2: copym *rd26 var18                   ; ptsX[npts]  = RX
+copym *rd27 var19                                                  ; ptsXi[npts] = RXi
+copym *rd28 var20                                                  ; ptsZ[npts]  = RZ
+copym *rd29 var21                                                  ; ptsZi[npts] = RZi
+copy *rd30 b168                                                    ; pts_index[npts] = index
+badd b169 b169 #1                                                  ; npts += 1
+badd rd26 rd26 #4                                                  ;
+badd rd27 rd27 #4                                                  ;
+badd rd28 rd28 #4                                                  ;
+badd rd29 rd29 #4                                                  ;
+badd rd30 rd30 #1                                                  ;
+badd rd5 b170 #sidh_splits_bob                                     ;
+copy rd20 *rd5                                                     ; m = splits[ii]
+badd b170 b170 #1                                                  ; ii += 1
+badd b168 b168 rd20                                                ; index += m;
+call xTPLe                                                         ;
+bsub rd1 sidh_max_row_bob b171                                     ;
+jumpl sidh_shared_secret_bob_loop_2 b168 rd1                            ;
+;
+; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+sidh_shared_secret_bob_loop_2_end: call get_3_isog                      ;
+;
+; for i in range(npts):
+;     ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i] = eval_3_isog(arithmetic_parameters, ptsX[i], ptsXi[i], ptsZ[i], ptsZi[i], k1, k1i, k2, k2i)
+;
+copy b172 b169                                                     ;
+copy rd20 #var28                                                   ;
+copy rd21 #var40                                                   ;
+copy rd22 #var52                                                   ;
+copy rd23 #var64                                                   ;
+sidh_shared_secret_bob_loop_3: bsub b172 b172 #1                   ;
+call eval_3_isog                                                   ;
+badd rd20 rd20 #1                                                  ;
+badd rd21 rd21 #1                                                  ;
+badd rd22 rd22 #1                                                  ;
+badd rd23 rd23 #1                                                  ;
+jumpl sidh_shared_secret_bob_loop_3 #0 b172                        ;
+;
+; npts -= 1
+bsub b169 b169 #1                                                  ;
+bsub rd26 rd26 #4                                                  ;
+bsub rd27 rd27 #4                                                  ;
+bsub rd28 rd28 #4                                                  ;
+bsub rd29 rd29 #4                                                  ;
+bsub rd30 rd30 #1                                                  ;
+; RX    = ptsX[npts]
+; RXi   = ptsXi[npts]
+; RZ    = ptsZ[npts]
+; RZi   = ptsZi[npts]
+; index = pts_index[npts]
+copym var18 *rd26                                                  ;
+copym var19 *rd27                                                  ;
+copym var20 *rd28                                                  ;
+copym var21 *rd29                                                  ;
+copy b168 *rd30                                                    ;
+; for row in range(1, max_row)
+badd b171 b171 #1                                                  ;
+jumpl sidh_shared_secret_bob_loop_1 b171 sidh_max_row_bob          ;
+;
+; A24minus, A24minusi, A24plus, A24plusi, k1, k1i, k2, k2i = get_3_isog(arithmetic_parameters, RX, RXi, RZ, RZi)
+;
+call get_3_isog                                                    ;
+;
+; a  = 2*(A24plus+A24minus)
+; ai = 2*(A24plusi+A24minusi)
+; c  = A24plus-A24minus
+; ci = A24plusi-A24minusi
+;
+madd_subr tmpf1 var15 + var17 tmpf0 var14 + var16 tmpf3 var15 - var17 tmpf2 var14 - var16
+madd_subr tmpf1 tmpf1 + tmpf1 tmpf0 tmpf0 + tmpf0
+;
+; value_j_inv, value_j_invi = j_inv(arithmetic_parameters, a, ai, c, ci)
+;
+call j_invar                                                       ;
+mmulm tmpf0 tmpf16 const_1 tmpf1 tmpf17 const_1                    ;
+mitred tmpf16 tmpf0 tmpf17 tmpf1                                   ;
+ret                                                                ;
+;
+;
+;
+; Field inversion
+; Input value to be inverted tmpf0, tmpf1
+; Output value to be inverted tmpf16, tmpf17
+fp_inv: copym tmpf24 const_r                                       ; 
+copym tmpf25 tmpf0                                                 ; 
+copym tmpf28 const_r                                               ; 
+copym tmpf29 tmpf1                                                 ; 
+copy rd3 roperands                                                 ; 
+bsmul rd3 rd3 #16                                                  ; 
+badd rd3 rd3 #15                                                   ; Position where the MSB prime is.
+copy rd4 #tmpf33                                                   ; Prime - 2, base address.(tmpf33 == m53)
+bsmul rd4 rd4 #64                                                  ; Multiply 64 to be accessible by the base alu.
+badd rd3 rd3 rd4                                                   ;
+lconstm tmpf32 #2                                                  ; 
+madd_subd tmpf33 prime - tmpf32                                    ; 
+copy rd1 roperands                                                 ; 
+badd rd1 rd1 #1                                                    ; 
+bsmul rd1 rd1 #16                                                  ; 
+bsmul rd5 rd1 #16                                                  ; rd5 has the maximum number of bits the prime could have.
+copy rd4 b417                                                      ; rd4 has the current number of bits.
+badd rd4 rd4 #16                                                   ; 
+jumpeql fp_inv_loop5 rd5 rd4                                       ; remove unnecessary 0's from the most significant part.
+fp_inv_loop4: badd rd4 rd4 #16                                     ; Only remove words multiple of 16.
+bsub rd1 rd1 #1                                                    ; It would be possible to remove until detect a bit 1, maybe in the future.
+bsub rd3 rd3 #1                                                    ; 
+jumpl fp_inv_loop4 rd4 rd5                                         ; 
+fp_inv_loop5: copy rd4 #tmpf24                                     ; tmpf24 = m44
+copy rd5 #tmpf25                                                   ; tmpf25 = m45
+copy rd6 #tmpf28                                                   ; tmpf28 = m48
+copy rd7 #tmpf29                                                   ; tmpf29 = m49
+copy rd8 #tmpf26                                                   ; tmpf26 = m46 <=> m44
+copy rd9 #tmpf27                                                   ; tmpf27 = m47 <=> m45
+copy rd10 #tmpf30                                                  ; tmpf30 = m50 <=> m48
+copy rd11 #tmpf31                                                  ; tmpf31 = m51 <=> m49
+fp_inv_loop1: copy rd2 #16                                         ; 
+copy scalar *rd3                                                   ;
+fp_inv_loop2: mmulm tmpf27 tmpf25 *rm4 tmpf26 tmpf24 *rm4 tmpf31 tmpf29 *rm6 tmpf30 tmpf28 *rm6
+bshiftl scalar scalar #1                                           ;
+mmulm tmpf25 tmpf27 *rm8 tmpf24 tmpf26 *rm8 tmpf29 tmpf31 *rm10 tmpf28 tmpf30 *rm10
+bshiftl scalar scalar #1                                           ;
+bsub rd2 rd2 #2                                                    ;
+jumpl fp_inv_loop2 #0 rd2                                          ; 
+bsub rd3 rd3 #1                                                    ; 
+bsub rd1 rd1 #1                                                    ; 
+jumpl fp_inv_loop1 #0 rd1                                          ; 
+copym tmpf16 tmpf24                                                ; 
+copym tmpf17 tmpf28                                                ; 
+ret                                                                ; 
+;
+; Field^2 inversion
+; Input value to be inverted tmpf0 tmpf1 tmpf2 tmpf3
+; Output value to be inverted tmpf16 tmpf17 tmpf18 tmpf19
+fp2_inv: msqum tmpf25 tmpf1 tmpf24 tmpf0 tmpf29 tmpf3 tmpf28 tmpf2
+pushm tmpf3
+pushm tmpf2
+pushm tmpf1
+pushm tmpf0
+madd_subr tmpf0 tmpf25 + tmpf24 tmpf1 tmpf29 + tmpf28
+call fp_inv
+popm tmpf24               ; original tmpf0
+popm tmpf25               ; original tmpf1
+popm tmpf28               ; original tmpf2
+popm tmpf29               ; original tmpf3
+lconstm tmpf26 #0
+madd_subr tmpf27 tmpf26 - tmpf25 tmpf31 tmpf26 - tmpf29
+copym tmpf25 tmpf16
+copym tmpf29 tmpf17
+mmulm tmpf16 tmpf25 tmpf24 tmpf17 tmpf25 tmpf27 tmpf18 tmpf29 tmpf28 tmpf19 tmpf29 tmpf31
+ret
+;
+; Computes the j_invariant of a curve defined by a, c
+; a = tmpf0 + i*tmpf1
+; c = tmpf2 + i*tmpf3
+; t0 = tmpf24 + i*tmpf25
+; t1 = var4 + i*var5
+; t2 = tmpf26 + i*tmpf27
+; t3 = tmpf28 + i*tmpf29
+; t4 = tmpf30 + i*tmpf31
+;
+j_invar: pushm var4
+pushm var5
+; #t0 = A^2
+; #t1 = C^2
+mmulm fp2t0 tmpf1 tmpf0 fp2t1 tmpf0 tmpf1 fp2t2 tmpf0 tmpf0 fp2t3 tmpf1 tmpf1 fp2t4 tmpf3 tmpf2 fp2t5 tmpf2 tmpf3 fp2t6 tmpf2 tmpf2 fp2t7 tmpf3 tmpf3
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 var5 fp2t4 + fp2t5 var4 fp2t6 - fp2t7
+;
+; #t2 = t0-t1
+; #t3 = t1+t1
+madd_subr tmpf26 tmpf24 - var4 tmpf27 tmpf25 - var5 tmpf28 var4 + var4 tmpf29 var5 + var5
+;
+; #t0 = t2-t3
+madd_subr tmpf24 tmpf26 - tmpf28 tmpf25 tmpf27 - tmpf29
+;
+; #t2 = t0+t0
+; #t3 = t0-t1
+madd_subr tmpf26 tmpf24 + tmpf24 tmpf27 tmpf25 + tmpf25 tmpf28 tmpf24 - var4 tmpf29 tmpf25 - var5
+;
+; #t0 = t2+t2
+madd_subr tmpf24 tmpf26 + tmpf26 tmpf25 tmpf27 + tmpf27
+;
+; #t2 = t0^2
+; #t4 = t1^2
+mmulm fp2t0 tmpf24 tmpf25 fp2t1 tmpf25 tmpf24 fp2t2 tmpf24 tmpf24 fp2t3 tmpf25 tmpf25 fp2t4 var4 var5 fp2t5 var5 var4 fp2t6 var4 var4 fp2t7 var5 var5
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3 tmpf31 fp2t4 + fp2t5 tmpf30 fp2t6 - fp2t7
+;
+; #t1 = t0*t2
+; #t5 = t3*t4
+mmulm fp2t0 tmpf25 tmpf26 fp2t1 tmpf24 tmpf27 fp2t2 tmpf24 tmpf26 fp2t3 tmpf25 tmpf27 fp2t4 tmpf29 tmpf30 fp2t5 tmpf31 tmpf28 fp2t6 tmpf30 tmpf28 fp2t7 tmpf29 tmpf31
+madd_subr var5 fp2t0 + fp2t1 var4 fp2t2 - fp2t3 tmpf1 fp2t4 + fp2t5 tmpf0 fp2t6 - fp2t7
+;
+; #t0 = 1 / t5
+call fp2_inv
+;
+; #t2 = t1*t0
+mmulm fp2t0 tmpf16 var5 fp2t1 tmpf17 var4 fp2t2 tmpf16 var4 fp2t3 tmpf17 var5
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3
+;
+; #t0 = t2+t2
+madd_subr tmpf24 tmpf26 + tmpf26 tmpf25 tmpf27 + tmpf27
+;
+; #t1 = t0+t0
+madd_subr tmpf16 tmpf24 + tmpf24 tmpf17 tmpf25 + tmpf25
+;
+popm var5
+popm var4
+ret
+;
+; Computes the A of a curve defined by it is three points
+;   A = (XP*XQ+XP*XR+XQ*XR-1)^2 
+;       / (4*XP*XQ*XR) - XP - XQ - XR
+; Input values tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5
+; Output values tmpf16, tmpf17
+;
+; xp = tmpf0 + i*tmpf1
+; xq = tmpf2 + i*tmpf3
+; xr = tmpf4 + i*tmpf5
+; t0 = tmpf24 + i*tmpf25
+; t1 = tmpf26 + i*tmpf27
+; t2 = var4 + i*var5
+; t3 = tmpf28 + i*tmpf29
+; t4 = var6 + i*var7
+; t5 = tmpf30 + i*tmpf31
+;
+get_A: pushm var4
+pushm var5
+pushm var6
+pushm var7
+; #t0 = XP+XQ
+; #t1 = XR+XR
+madd_subr tmpf24 tmpf0 + tmpf2 tmpf25 tmpf1 + tmpf3 tmpf26 tmpf4 + tmpf4 tmpf27 tmpf5 + tmpf5
+;
+; #t2 = XP*XQ
+; #t3 = t0*XR
+mmulm fp2t0 tmpf1 tmpf2 fp2t1 tmpf0 tmpf3 fp2t2 tmpf0 tmpf2 fp2t3 tmpf1 tmpf3 fp2t4 tmpf25 tmpf4 fp2t5 tmpf24 tmpf5 fp2t6 tmpf24 tmpf4 fp2t7 tmpf25 tmpf5
+madd_subr var5 fp2t0 + fp2t1 var4 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; #t4 = t0+XR
+; #t5 = t2+t3
+madd_subr var6 tmpf24 + tmpf4 var7 tmpf25 + tmpf5 tmpf30 var4 + tmpf28 tmpf31 var5 + tmpf29
+;
+; #t0 = t5-1
+; #t3 = t2+t2
+madd_subr tmpf24 tmpf30 - const_r tmpf28 var4 + var4 tmpf29 var5 + var5
+copym tmpf25 tmpf31
+;
+; #t2 = t0^2
+; #t5 = t3*t1
+mmulm fp2t0 tmpf25 tmpf24 fp2t1 tmpf24 tmpf25 fp2t2 tmpf24 tmpf24 fp2t3 tmpf25 tmpf25 fp2t4 tmpf29 tmpf26 fp2t5 tmpf28 tmpf27 fp2t6 tmpf28 tmpf26 fp2t7 tmpf29 tmpf27
+madd_subr var5 fp2t0 + fp2t1 var4 fp2t2 - fp2t3 tmpf1 fp2t4 + fp2t5 tmpf0 fp2t6 - fp2t7
+;
+; #t0 = 1/t5
+call fp2_inv
+;
+; #t1 = t2*t0
+mmulm fp2t0 var5 tmpf16 fp2t1 var4 tmpf17 fp2t2 var4 tmpf16 fp2t3 var5 tmpf17
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3
+;
+; #t0 = t1-t4
+madd_subr tmpf16 tmpf26 - var6 tmpf17 tmpf27 - var7
+;
+popm var7
+popm var6
+popm var5
+popm var4
+ret
+;
+; Inversion of up to four values in fp2
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23
+; z1 = tmpf24 + i*tmpf25
+; z2 = tmpf26 + i*tmpf27
+; z3 = tmpf28 + i*tmpf29
+; z4 = tmpf30 + i*tmpf31
+; t1 = tmpf0 + i*tmpf1
+; t2 = tmpf2 + i*tmpf3
+fp2_inv_2_way: pushm tmpf0
+pushm tmpf1
+pushm tmpf2
+pushm tmpf3
+pushm tmpf4
+pushm tmpf5
+pushm tmpf6
+pushm tmpf7
+; #t0 = z1*z2
+; #t1 = z3*z4
+mmulm fp2t0 tmpf1 tmpf2 fp2t1 tmpf0 tmpf3 fp2t2 tmpf0 tmpf2 fp2t3 tmpf1 tmpf3 fp2t4 tmpf5 tmpf6 fp2t5 tmpf4 tmpf7 fp2t6 tmpf4 tmpf6 fp2t7 tmpf5 tmpf7
+madd_subr tmpf1 fp2t0 + fp2t1 tmpf0 fp2t2 - fp2t3 tmpf3 fp2t4 + fp2t5 tmpf2 fp2t6 - fp2t7
+;
+; #t0 = 1 / t0 
+; #t1 = 1 / t1
+call fp2_inv
+;
+popm tmpf31
+popm tmpf30
+popm tmpf29
+popm tmpf28
+popm tmpf27
+popm tmpf26
+popm tmpf25
+popm tmpf24
+copym tmpf32 tmpf18
+copym tmpf33 tmpf19
+; #o1 = t0*z2
+; #o2 = t0*z1
+mmulm fp2t0 tmpf17 tmpf26 fp2t1 tmpf16 tmpf27 fp2t2 tmpf16 tmpf26 fp2t3 tmpf17 tmpf27 fp2t4 tmpf17 tmpf24 fp2t5 tmpf16 tmpf25 fp2t6 tmpf16 tmpf24 fp2t7 tmpf17 tmpf25
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+; #o3 = t1*z4
+; #o4 = t1*z3
+mmulm fp2t0 tmpf33 tmpf30 fp2t1 tmpf32 tmpf31 fp2t2 tmpf32 tmpf30 fp2t3 tmpf33 tmpf31 fp2t4 tmpf33 tmpf28 fp2t5 tmpf32 tmpf29 fp2t6 tmpf32 tmpf28 fp2t7 tmpf33 tmpf29
+madd_subr tmpf21 fp2t0 + fp2t1 tmpf20 fp2t2 - fp2t3 tmpf23 fp2t4 + fp2t5 tmpf22 fp2t6 - fp2t7
+;
+ret
+;
+; Ladder 3 points
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8, tmpf9
+; Outputs var18, var19, var20, var21
+;
+; exponent = tmpf0
+; exponent_bits = tmpf1
+; xp    = tmpf2 + i*tmpf3
+; xq    = tmpf4 + i*tmpf5
+; xpq   = tmpf6 + i*tmpf7
+; a     = tmpf8 + i*tmpf9
+; r1    = var18 + i*var19
+; z1    = var20 + i*var21
+; a24   = tmpf20 + i*tmpf21
+; r0    = tmpf22 + i*tmpf23
+; z0    = tmpf24 + i*tmpf25
+; r2    = tmpf26 + i*tmpf27
+; z2    = tmpf28 + i*tmpf29
+; t0    = tmpf30 + i*tmpf31
+; t1    = tmpf32 + i*tmpf33
+; t2    = tmpf34 + i*tmpf35
+; t3    = tmpf36 + i*tmpf37
+; t7    = tmpf38 + i*tmpf39
+; t8    = tmpf10 + i*tmpf11
+;
+ladder_3_point: madd_subr tmpf31 const_r + const_r
+; Compute a24
+madd_subr tmpf30 tmpf31 + tmpf8
+mmulm tmpf20 tmpf30 inv_4 tmpf21 tmpf9 inv_4
+; #r0 = XQ;  z0 = 1
+copym tmpf22 tmpf4
+copym tmpf23 tmpf5
+copym tmpf24 const_r
+lconstm tmpf25 #0
+;
+; #r1 = XP;  z1 = 1
+copym var18 tmpf2
+copym var19 tmpf3
+copym var20 tmpf24
+copym var21 tmpf25
+;
+; #r2 = XPQ; z2 = 1
+copym tmpf26 tmpf6
+copym tmpf27 tmpf7
+copym tmpf28 tmpf24
+copym tmpf29 tmpf25
+;
+; Copy address registers
+copy rd4 #tmpf26                                                  ; tmpf26 = m46
+copy rd5 #var18                                                   ; var18 = m36
+copy rd6 #tmpf27                                                  ; tmpf27 = m47
+copy rd7 #var19                                                   ; var19 = m37
+copy rd8 #tmpf28                                                  ; tmpf28 = m48
+copy rd9 #var20                                                   ; var20 = m38
+copy rd10 #tmpf29                                                 ; tmpf29 = m49
+copy rd11 #var21                                                  ; var21 = m39
+;
+; Copy exponent
+copy rd1 #tmpf0.0.0
+copy rd2 tmpf1.0.0
+ladder_3_point_loop1: copy rd3 #16
+copy scalar *rd1
+;
+; exponent == 0
+; #r0, r0i, z0, z0i, r2, r2i, z2, z2i = xDBLADD(arithmetic_parameters, r0, r0i, z0, z0i, r2, r2i, z2, z2i, r1, r1i, a24, a24i)
+; #r2 = r2*z1
+; exponent == 1
+; #r0, r0i, z0, z0i, r1, r1i, z1, z1i = xDBLADD(arithmetic_parameters, r0, r0i, z0, z0i, r1, r1i, z1, z1i, r2, r2i, a24, a24i)
+; #r1 = r1*z2
+;
+; for both exponents
+; #tmpf22, tmpf23, tmpf24, tmpf25, *rl4, *rl6, *rl8, *rl10 = xDBLADD(arithmetic_parameters, tmpf22, tmpf23, tmpf24, tmpf25, *rl4, *rl6, *rl8, *rl10, *rl5, *rl7, tmpf20, tmpf24i)
+; #*rl4 = *rl4 * *rl9
+; # t0 = r0+z0
+; # t1 = r0-z0
+ladder_3_point_loop2: madd_subr tmpf31 tmpf23 + tmpf25 tmpf30 tmpf22 + tmpf24 tmpf33 tmpf23 - tmpf25 tmpf32 tmpf22 - tmpf24
+;
+; # t2 = *rl4+*rl8
+; # t3 = *rl4-*rl8
+madd_subr tmpf35 *rl6 + *rl10 tmpf34 *rl4 + *rl8 tmpf37 *rl6 - *rl10 tmpf36 *rl4 - *rl8
+;
+; # *rl8 = t0*t3
+; # t7   = t1*t2
+mmulm fp2t0 tmpf31 tmpf36 fp2t1 tmpf30 tmpf37 fp2t2 tmpf30 tmpf36 fp2t3 tmpf31 tmpf37 fp2t4 tmpf33 tmpf34 fp2t5 tmpf32 tmpf35 fp2t6 tmpf32 tmpf34 fp2t7 tmpf33 tmpf35
+madd_subr *rl10 fp2t0 + fp2t1 *rl8 fp2t2 - fp2t3 tmpf39 fp2t4 + fp2t5 tmpf38 fp2t6 - fp2t7
+;
+; # t2 = t0^2
+; # t3 = t1^2
+mmulm fp2t0 tmpf31 tmpf30 fp2t1 tmpf30 tmpf31 fp2t2 tmpf30 tmpf30 fp2t3 tmpf31 tmpf31 fp2t4 tmpf33 tmpf32 fp2t5 tmpf32 tmpf33 fp2t6 tmpf32 tmpf32 fp2t7 tmpf33 tmpf33
+madd_subr tmpf35 fp2t0 + fp2t1 tmpf34 fp2t2 - fp2t3 tmpf37 fp2t4 + fp2t5 tmpf36 fp2t6 - fp2t7
+;
+; # t0   = t2-t3
+; # t1   = *rl8-t7
+madd_subr tmpf31 tmpf35 - tmpf37 tmpf30 tmpf34 - tmpf36 tmpf33 *rl10 - tmpf39 tmpf32 *rl8 - tmpf38
+;
+; # *rl4 = a24*t0
+; # r0   = t2*t3
+mmulm fp2t0 tmpf21 tmpf30 fp2t1 tmpf20 tmpf31 fp2t2 tmpf20 tmpf30 fp2t3 tmpf21 tmpf31 fp2t4 tmpf35 tmpf36 fp2t5 tmpf34 tmpf37 fp2t6 tmpf34 tmpf36 fp2t7 tmpf35 tmpf37
+madd_subr *rl6 fp2t0 + fp2t1 *rl4 fp2t2 - fp2t3 tmpf23 fp2t4 + fp2t5 tmpf22 fp2t6 - fp2t7
+;
+; # t2   = *rl4+t3
+; # t8   = *rl8+t7
+madd_subr tmpf35 *rl6 + tmpf37 tmpf34 *rl4 + tmpf36 tmpf11 *rl10 + tmpf39 tmpf10 *rl8 + tmpf38
+;
+; # t3   = t1^2
+; # *rl4 = t8^2
+mmulm fp2t0 tmpf33 tmpf32 fp2t1 tmpf32 tmpf33 fp2t2 tmpf32 tmpf32 fp2t3 tmpf33 tmpf33 fp2t4 tmpf11 tmpf10 fp2t5 tmpf10 tmpf11 fp2t6 tmpf10 tmpf10 fp2t7 tmpf11 tmpf11
+madd_subr tmpf37 fp2t0 + fp2t1 tmpf36 fp2t2 - fp2t3 *rl6 fp2t4 + fp2t5 *rl4 fp2t6 - fp2t7
+;
+; # z0    =   t2 * t0
+; # *rl8  = *rl5 * t3
+mmulm fp2t0 tmpf35 tmpf30 fp2t1 tmpf34 tmpf31 fp2t2 tmpf34 tmpf30 fp2t3 tmpf35 tmpf31 fp2t4 *rl7 tmpf36 fp2t5 *rl5 tmpf37 fp2t6 *rl5 tmpf36 fp2t7 *rl7 tmpf37
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 *rl10 fp2t4 + fp2t5 *rl8 fp2t6 - fp2t7
+;
+; #*rl4 = *rl4 * *rl9
+mmulm fp2t0 *rl6 *rl9 fp2t1 *rl4 *rl11 fp2t2 *rl4 *rl9 fp2t3 *rl6 *rl11
+madd_subr *rl6 fp2t0 + fp2t1 *rl4 fp2t2 - fp2t3
+;
+bshiftr scalar scalar #1
+bsub rd2 rd2 #1
+bsub rd3 rd3 #1
+jumpeq ladder_3_point_loop_finish #0 rd2
+jumpl ladder_3_point_loop2 #0 rd3
+badd rd1 rd1 #1
+jump ladder_3_point_loop1
+ladder_3_point_loop_finish: ret
+;
+; xDBLe
+; Inputs  var18, var19, var20, var21, var14, var15, var16, var17, rd20
+; Outputs var18, var19, var20, var21
+;
+; x     = var18 + i*var19
+; z     = var20 + i*var21
+; a24   = var14 + i*var15
+; c24   = var16 + i*var17
+; repetition = rd20
+; t0    = var18 + i*var19
+; t1    = var20 + i*var21
+; t2    = tmpf24 + i*tmpf25
+; t3    = tmpf26 + i*tmpf27
+; t4    = tmpf28 + i*tmpf29
+; t5    = tmpf30 + i*tmpf31
+;
+; # t0 = X; t1 = Z
+xDBLe: nop
+; # t4 = t0-t1
+; # t5 = t0+t1
+xDBLe_loop1: madd_subr tmpf29 var19 - var21 tmpf28 var18 - var20 tmpf31 var19 + var21 tmpf30 var18 + var20
+;
+; # t2 = t4^2
+; # t3 = t5^2
+mmulm fp2t0 tmpf29 tmpf28 fp2t1 tmpf28 tmpf29 fp2t2 tmpf28 tmpf28 fp2t3 tmpf29 tmpf29 fp2t4 tmpf31 tmpf30 fp2t5 tmpf30 tmpf31 fp2t6 tmpf30 tmpf30 fp2t7 tmpf31 tmpf31
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+;
+; # t0 = t3-t2
+madd_subr var19 tmpf27 - tmpf25 var18 tmpf26 - tmpf24 
+;
+; # t4 = a24*t0
+; # t1 = c24*t2
+mmulm fp2t0 var15 var18 fp2t1 var14 var19 fp2t2 var14 var18 fp2t3 var15 var19 fp2t4 var17 tmpf24 fp2t5 var16 tmpf25 fp2t6 var16 tmpf24 fp2t7 var17 tmpf25
+madd_subr tmpf29 fp2t0 + fp2t1 tmpf28 fp2t2 - fp2t3 var21 fp2t4 + fp2t5 var20 fp2t6 - fp2t7
+;
+; # t2 = t1+t4
+madd_subr tmpf25 var21 + tmpf29 tmpf24 var20 + tmpf28
+;
+; # t0 = t3*t1
+; # t1 = t0*t2
+mmulm fp2t0 tmpf27 var20 fp2t1 tmpf26 var21 fp2t2 tmpf26 var20 fp2t3 tmpf27 var21 fp2t4 var19 tmpf24 fp2t5 var18 tmpf25 fp2t6 var18 tmpf24 fp2t7 var19 tmpf25
+madd_subr var19 fp2t0 + fp2t1 var18 fp2t2 - fp2t3 var21 fp2t4 + fp2t5 var20 fp2t6 - fp2t7
+;
+bsub rd20 rd20 #1
+jumpl xDBLe_loop1 #0 rd20
+ret
+;
+; Get 4 isogenies
+; Inputs  var18, var19, var20, var21
+; Outputs var14, var15, var16, var17, var22, var23, var24, var25, var26, var27
+;
+; x4    = var18 + i*var19
+; z4    = var20 + i*var21
+;
+; t5    = var14 + i*var15
+; t3    = var16 + i*var17
+; t1    = var22 + i*var23
+; t2    = var24 + i*var25
+; t4    = var26 + i*var27
+; t0    = tmpf26 + i*tmpf27
+;
+; #t0 = X4^2
+; #t1 = Z4^2
+get_4_isog: mmulm fp2t0 var19 var18 fp2t1 var18 var19 fp2t2 var18 var18 fp2t3 var19 var19 fp2t4 var21 var20 fp2t5 var20 var21 fp2t6 var20 var20 fp2t7 var21 var21
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3 var23 fp2t4 + fp2t5 var22 fp2t6 - fp2t7
+;
+; #t2 = t0^2
+; #t3 = t1^2
+mmulm fp2t0 tmpf27 tmpf26 fp2t1 tmpf26 tmpf27 fp2t2 tmpf26 tmpf26 fp2t3 tmpf27 tmpf27 fp2t4 var23 var22 fp2t5 var22 var23 fp2t6 var22 var22 fp2t7 var23 var23
+madd_subr var25 fp2t0 + fp2t1 var24 fp2t2 - fp2t3 var17 fp2t4 + fp2t5 var16 fp2t6 - fp2t7
+;
+; #t0 = t2-t3
+; #t4 = t1+t1
+madd_subr tmpf27 var25 - var17 tmpf26 var24 - var16 var27 var23 + var23 var26 var22 + var22
+;
+; #t1 = t4+t4
+; #t2 = X4-Z4
+madd_subr var23 var27 + var27 var22 var26 + var26 var25 var19 - var21 var24 var18 - var20
+;
+; #t4 = X4+Z4
+; #t5 = t0+t3
+madd_subr var27 var19 + var21 var26 var18 + var20 var15 tmpf27 + var17 var14 tmpf26 + var16
+;
+ret
+;
+; Eval 4 isogenies
+; Inputs  (*rd20), (*rd21), (*rd22), (*rd23), var22, var23, var24, var25, var26, var27
+; Outputs (*rd20), (*rd21), (*rd22), (*rd23)
+;
+; x     = (*rd20) + i*(*rd21)
+; z     = (*rd22) + i*(*rd23)
+; k1    = var22 + i*var23
+; k2    = var24 + i*var25
+; k3    = var26 + i*var27
+;
+; t1    = tmpf16 + i*tmpf17
+; t5    = tmpf18 + i*tmpf19
+; t0    = tmpf24 + i*tmpf25
+; t2    = tmpf26 + i*tmpf27
+; t3    = tmpf28 + i*tmpf29
+; t4    = tmpf30 + i*tmpf31
+;
+; #t0 = x+z
+; #t1 = x-z
+eval_4_isog: madd_subr tmpf25 *rd21 + *rd23 tmpf24 *rd20 + *rd22 tmpf17 *rd21 - *rd23 tmpf16 *rd20 - *rd22
+;
+; #t2 = k2*t0
+; #t3 = k3*t1
+mmulm fp2t0 var25 tmpf24 fp2t1 var24 tmpf25 fp2t2 var24 tmpf24 fp2t3 var25 tmpf25 fp2t4 var27 tmpf16 fp2t5 var26 tmpf17 fp2t6 var26 tmpf16 fp2t7 var27 tmpf17
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; #t4 = t3+t2
+; #t5 = t3-t2
+madd_subr tmpf31 tmpf29 + tmpf27 tmpf30 tmpf28 + tmpf26 tmpf19 tmpf29 - tmpf27 tmpf18 tmpf28 - tmpf26
+;
+; #t2 = t4^2
+; #t3 = t0*t1
+mmulm fp2t0 tmpf30 tmpf31 fp2t1 tmpf31 tmpf30 fp2t2 tmpf30 tmpf30 fp2t3 tmpf31 tmpf31 fp2t4 tmpf25 tmpf16 fp2t5 tmpf24 tmpf17 fp2t6 tmpf24 tmpf16 fp2t7 tmpf25 tmpf17
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; #t0 = t5^2
+; #t1 = k1*t3
+mmulm fp2t0 tmpf19 tmpf18 fp2t1 tmpf18 tmpf19 fp2t2 tmpf18 tmpf18 fp2t3 tmpf19 tmpf19 fp2t4 var23 tmpf28 fp2t5 var22 tmpf29 fp2t6 var22 tmpf28 fp2t7 var23 tmpf29
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf17 fp2t4 + fp2t5 tmpf16 fp2t6 - fp2t7
+;
+; #t3 = t2+t1
+; #t4 = t0-t1
+madd_subr tmpf29 tmpf27 + tmpf17 tmpf28 tmpf26 + tmpf16 tmpf31 tmpf25 - tmpf17 tmpf30 tmpf24 - tmpf16
+;
+; #t1 = t2*t3
+; #t5 = t0*t4
+mmulm fp2t0 tmpf27 tmpf28 fp2t1 tmpf26 tmpf29 fp2t2 tmpf26 tmpf28 fp2t3 tmpf27 tmpf29 fp2t4 tmpf25 tmpf30 fp2t5 tmpf24 tmpf31 fp2t6 tmpf24 tmpf30 fp2t7 tmpf25 tmpf31
+madd_subr *rd21 fp2t0 + fp2t1 *rd20 fp2t2 - fp2t3 *rd23 fp2t4 + fp2t5 *rd22 fp2t6 - fp2t7
+;
+ret
+;
+; xTPLe
+; Inputs  var18, var19, var20, var21, var16, var17, var14, var15, rd20
+; Outputs var18, var19, var20, var21
+;
+; x     = var18 + i*var19
+; z     = var20 + i*var21
+; a24m  = var16 + i*var17
+; a24p  = var14 + i*var15
+; repetition = rd20
+; t0    = var18 + i*var19
+; t1    = var20 + i*var21
+; t2    = tmpf24 + i*tmpf25
+; t3    = tmpf26 + i*tmpf27
+; t4    = tmpf28 + i*tmpf29
+; t5    = tmpf30 + i*tmpf31
+; t6    = tmpf32 + i*tmpf33
+; t7    = tmpf34 + i*tmpf35
+; t8    = tmpf36 + i*tmpf37
+; t9    = tmpf38 + i*tmpf39
+;
+; # t0 = X; t1 = Z
+xTPLe: nop
+; # t2 = t0+t1
+; # t3 = t0+t0
+xTPLe_loop1: madd_subr tmpf25 var19 + var21 tmpf24 var18 + var20 tmpf27 var19 + var19 tmpf26 var18 + var18
+;
+; # t4 = t2^2
+; # t5 = t3^2
+mmulm fp2t0 tmpf25 tmpf24 fp2t1 tmpf24 tmpf25 fp2t2 tmpf24 tmpf24 fp2t3 tmpf25 tmpf25 fp2t4 tmpf27 tmpf26 fp2t5 tmpf26 tmpf27 fp2t6 tmpf26 tmpf26 fp2t7 tmpf27 tmpf27
+madd_subr tmpf29 fp2t0 + fp2t1 tmpf28 fp2t2 - fp2t3 tmpf31 fp2t4 + fp2t5 tmpf30 fp2t6 - fp2t7
+;
+; # t2 = t5-t4
+; # t6 = t0-t1
+madd_subr tmpf25 tmpf31 - tmpf29 tmpf24 tmpf30 - tmpf28 tmpf33 var19 - var21 tmpf32 var18 - var20
+;
+; # t5 = t6^2
+; # t7 = a24p*t4
+mmulm fp2t0 tmpf33 tmpf32 fp2t1 tmpf32 tmpf33 fp2t2 tmpf32 tmpf32 fp2t3 tmpf33 tmpf33 fp2t4 var15 tmpf28 fp2t5 var14 tmpf29 fp2t6 var14 tmpf28 fp2t7 var15 tmpf29
+madd_subr tmpf31 fp2t0 + fp2t1 tmpf30 fp2t2 - fp2t3 tmpf35 fp2t4 + fp2t5 tmpf34 fp2t6 - fp2t7
+;
+; # t6 = t7*t4
+; # t8 = a24m*t5
+mmulm fp2t0 tmpf35 tmpf28 fp2t1 tmpf34 tmpf29 fp2t2 tmpf34 tmpf28 fp2t3 tmpf35 tmpf29 fp2t4 var17 tmpf30 fp2t5 var16 tmpf31 fp2t6 var16 tmpf30 fp2t7 var17 tmpf31
+madd_subr tmpf33 fp2t0 + fp2t1 tmpf32 fp2t2 - fp2t3 tmpf37 fp2t4 + fp2t5 tmpf36 fp2t6 - fp2t7
+;
+; # t4 = t2-t5
+; # t9 = t7-t8
+madd_subr tmpf29 tmpf25 - tmpf31 tmpf28 tmpf24 - tmpf30 tmpf39 tmpf35 - tmpf37 tmpf38 tmpf34 - tmpf36
+;
+; # t2 = t4*t9
+; # t7 = t5*t8
+mmulm fp2t0 tmpf29 tmpf38 fp2t1 tmpf28 tmpf39 fp2t2 tmpf28 tmpf38 fp2t3 tmpf29 tmpf39 fp2t4 tmpf31 tmpf36 fp2t5 tmpf30 tmpf37 fp2t6 tmpf30 tmpf36 fp2t7 tmpf31 tmpf37
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf35 fp2t4 + fp2t5 tmpf34 fp2t6 - fp2t7
+;
+; # t4 = t7-t6
+; # t5 = t1+t1
+madd_subr tmpf29 tmpf35 - tmpf33 tmpf28 tmpf34 - tmpf32 tmpf31 var21 + var21 tmpf30 var20 + var20
+;
+; # t6 = t4-t2
+; # t7 = t4+t2
+madd_subr tmpf33 tmpf29 - tmpf25 tmpf32 tmpf28 - tmpf24 tmpf35 tmpf29 + tmpf25 tmpf34 tmpf28 + tmpf24
+;
+; # t2 = t6^2
+; # t4 = t7^2
+mmulm fp2t0 tmpf33 tmpf32 fp2t1 tmpf32 tmpf33 fp2t2 tmpf32 tmpf32 fp2t3 tmpf33 tmpf33 fp2t4 tmpf35 tmpf34 fp2t5 tmpf34 tmpf35 fp2t6 tmpf34 tmpf34 fp2t7 tmpf35 tmpf35
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; # t0 = t3*t4
+; # t1 = t5*t2
+mmulm fp2t0 tmpf27 tmpf28 fp2t1 tmpf26 tmpf29 fp2t2 tmpf26 tmpf28 fp2t3 tmpf27 tmpf29 fp2t4 tmpf31 tmpf24 fp2t5 tmpf30 tmpf25 fp2t6 tmpf30 tmpf24 fp2t7 tmpf31 tmpf25
+madd_subr var19 fp2t0 + fp2t1 var18 fp2t2 - fp2t3 var21 fp2t4 + fp2t5 var20 fp2t6 - fp2t7
+;
+bsub rd20 rd20 #1
+jumpl xTPLe_loop1 #0 rd20
+ret
+;
+; Get 3 isogenies
+; Inputs  var18, var19, var20, var21
+; Outputs var16, var17, var14, var15, var22, var23, var24, var25
+;
+; x3    = var18 + i*var19
+; z3    = var20 + i*var21
+;
+; t0    = tmpf24 + i*tmpf25
+; t5    = tmpf26 + i*tmpf27
+; t6    = tmpf28 + i*tmpf29
+; t7    = tmpf30 + i*tmpf31
+; t1    = var16 + i*var17
+; t3    = var14 + i*var15
+; t2    = var22 + i*var23
+; t4    = var24 + i*var25
+;
+; # t0 = X3+X3
+; # t1 = Z3+Z3
+get_3_isog: madd_subr tmpf25 var19 + var19 tmpf24 var18 + var18 var17 var21 + var21 var16 var20 + var20
+; 
+; # t2 = X3-Z3
+; # t3 = t1+t1
+madd_subr var23 var19 - var21 var22 var18 - var20 var15 var17 + var17 var14 var16 + var16
+;
+; # t1 = t0+t2
+; # t4 = X3+Z3
+madd_subr var17 tmpf25 + var23 var16 tmpf24 + var22 var25 var19 + var21 var24 var18 + var20
+;
+; # t0 = t3^2
+; # t5 = t1^2
+mmulm fp2t0 var15 var14 fp2t1 var14 var15 fp2t2 var14 var14 fp2t3 var15 var15 fp2t4 var17 var16 fp2t5 var16 var17 fp2t6 var16 var16 fp2t7 var17 var17
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+; 
+; # t3 = t1*t4
+; # t6 = X3*Z3
+mmulm fp2t0 var17 var24 fp2t1 var16 var25 fp2t2 var16 var24 fp2t3 var17 var25 fp2t4 var19 var20 fp2t5 var18 var21 fp2t6 var18 var20 fp2t7 var19 var21
+madd_subr var15 fp2t0 + fp2t1 var14 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+; 
+; # t1 = t5*t3
+; # t7 = t0*t6
+mmulm fp2t0 tmpf27 var14 fp2t1 tmpf26 var15 fp2t2 tmpf26 var14 fp2t3 tmpf27 var15 fp2t4 tmpf25 tmpf28 fp2t5 tmpf24 tmpf29 fp2t6 tmpf24 tmpf28 fp2t7 tmpf25 tmpf29
+madd_subr var17 fp2t0 + fp2t1 var16 fp2t2 - fp2t3 tmpf31 fp2t4 + fp2t5 tmpf30 fp2t6 - fp2t7
+;
+; # t3 = t1-t7
+madd_subr var15 var17 - tmpf31 var14 var16 - tmpf30
+;
+ret
+;
+; Eval 3 isogenies
+; Inputs  (*rd20), (*rd21), (*rd22), (*rd23), var22, var23, var24, var25
+; Outputs (*rd20), (*rd21), (*rd22), (*rd23)
+;
+; x     = (*rd20) + i*(*rd21)
+; z     = (*rd22) + i*(*rd23)
+; k1    = var22 + i*var23
+; k2    = var24 + i*var25
+;
+; t0    = tmpf16 + i*tmpf17
+; t1    = tmpf18 + i*tmpf19
+; t2    = tmpf24 + i*tmpf25
+; t3    = tmpf26 + i*tmpf27
+;
+;
+; # t0 = x+z
+; # t1 = x-z
+eval_3_isog: madd_subr tmpf17 *rd21 + *rd23 tmpf16 *rd20 + *rd22 tmpf19 *rd21 - *rd23 tmpf18 *rd20 - *rd22
+; 
+; # t2 = k1*t0
+; # t3 = k2*t1
+mmulm fp2t0 var23 tmpf16 fp2t1 var22 tmpf17 fp2t2 var22 tmpf16 fp2t3 var23 tmpf17 fp2t4 var25 tmpf18 fp2t5 var24 tmpf19 fp2t6 var24 tmpf18 fp2t7 var25 tmpf19
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+; 
+; # t0 = t3+t2
+; # t1 = t3-t2
+madd_subr tmpf17 tmpf27 + tmpf25 tmpf16 tmpf26 + tmpf24 tmpf19 tmpf27 - tmpf25 tmpf18 tmpf26 - tmpf24
+; 
+; # t2 = t0^2
+; # t3 = t1^2
+mmulm fp2t0 tmpf17 tmpf16 fp2t1 tmpf16 tmpf17 fp2t2 tmpf16 tmpf16 fp2t3 tmpf17 tmpf17 fp2t4 tmpf19 tmpf18 fp2t5 tmpf18 tmpf19 fp2t6 tmpf18 tmpf18 fp2t7 tmpf19 tmpf19
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+; 
+; # t0 = x*t2
+; # t1 = z*t3
+mmulm fp2t0 *rd21 tmpf24 fp2t1 *rd20 tmpf25 fp2t2 *rd20 tmpf24 fp2t3 *rd21 tmpf25 fp2t4 *rd23 tmpf26 fp2t5 *rd22 tmpf27 fp2t6 *rd22 tmpf26 fp2t7 *rd23 tmpf27
+madd_subr *rd21 fp2t0 + fp2t1 *rd20 fp2t2 - fp2t3 *rd23 fp2t4 + fp2t5 *rd22 fp2t6 - fp2t7
+;
+ret
+;
+; Get 2 isogenies
+; Inputs  var18, var19, var20, var21
+; Outputs var14, var15, var16, var17
+;
+; x2    = var18 + i*var19
+; z2    = var20 + i*var21
+;
+; t2    = var14 + i*var15 
+; t1    = var16 + i*var17
+; t0    = tmpf20 + i*tmpf21
+;
+; # t0 = x2^2
+; # t1 = z2^2
+get_2_isog: mmulm fp2t0 var19 var18 fp2t1 var18 var19 fp2t2 var18 var18 fp2t3 var19 var19 fp2t4 var21 var20 fp2t5 var20 var21 fp2t6 var20 var20 fp2t7 var21 var21
+madd_subr tmpf21 fp2t0 + fp2t1 tmpf20 fp2t2 - fp2t3 var17 fp2t4 + fp2t5 var16 fp2t6 - fp2t7
+;
+; # t2 = t1-t0
+madd_subr var15 var17 - tmpf21 var14 var16 - tmpf20
+;
+ret
+;
+; Eval 2 isogenies
+; Inputs  var18, var19, var20, var21, (*rd20), (*rd21), (*rd22), (*rd23)
+; Outputs (*rd20), (*rd21), (*rd22), (*rd23)
+;
+; x2    = var18 + i*var19
+; z2    = var20 + i*var21
+; xq    = (*rd20) + i*(*rd21)
+; zq    = (*rd22) + i*(*rd23)
+;
+; t0    = tmpf16 + i*tmpf17
+; t1    = tmpf18 + i*tmpf19
+; t2    = tmpf20 + i*tmpf21
+; t3    = tmpf22 + i*tmpf23
+; t4    = tmpf24 + i*tmpf25
+; t5    = tmpf26 + i*tmpf27
+;
+; t0    = (*rd20) + i*(*rd21)
+; t1    = (*rd22) + i*(*rd23)
+;
+; # t0 = x2+z2
+; # t1 = x2-z2
+eval_2_isog: madd_subr tmpf17 var19 + var21 tmpf16 var18 + var20 tmpf19 var19 - var21 tmpf18 var18 - var20
+;
+; # t2 = xq+zq
+; # t3 = xq-zq
+madd_subr tmpf21 *rd21 + *rd23 tmpf20 *rd20 + *rd22 tmpf23 *rd21 - *rd23 tmpf22 *rd20 - *rd22
+;
+; # t4 = t0*t3
+; # t5 = t1*t2
+mmulm fp2t0 tmpf17 tmpf22 fp2t1 tmpf16 tmpf23 fp2t2 tmpf16 tmpf22 fp2t3 tmpf17 tmpf23 fp2t4 tmpf19 tmpf20 fp2t5 tmpf18 tmpf21 fp2t6 tmpf18 tmpf20 fp2t7 tmpf19 tmpf21
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+;
+; # t2 = t4+t5
+; # t3 = t4-t5
+madd_subr tmpf21 tmpf25 + tmpf27 tmpf20 tmpf24 + tmpf26 tmpf23 tmpf25 - tmpf27 tmpf22 tmpf24 - tmpf26
+;
+; # t0 = xq*t2
+; # t1 = zq*t3
+mmulm fp2t0 *rd21 tmpf20 fp2t1 *rd20 tmpf21 fp2t2 *rd20 tmpf20 fp2t3 *rd21 tmpf21 fp2t4 *rd23 tmpf22 fp2t5 *rd22 tmpf23 fp2t6 *rd22 tmpf22 fp2t7 *rd23 tmpf23
+madd_subr *rd21 fp2t0 + fp2t1 *rd20 fp2t2 - fp2t3 *rd23 fp2t4 + fp2t5 *rd22 fp2t6 - fp2t7
+;
+ret
+;

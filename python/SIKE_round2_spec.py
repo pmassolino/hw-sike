@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+#
+# Implementation by Pedro Maat C. Massolino,
+# hereby denoted as "the implementer".
+#
+# To the extent possible under law, the implementer has waived all copyright
+# and related or neighboring rights to the source code in this file.
+# http://creativecommons.org/publicdomain/zero/1.0/
+
 
 import random
 

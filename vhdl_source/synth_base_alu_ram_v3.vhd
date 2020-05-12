@@ -1,34 +1,10 @@
 ----------------------------------------------------------------------------------
--- Engineer: 
--- 
--- Create Date:    
--- Design Name:    
--- Module Name:    
--- Project Name:   
--- Target Devices: Any
--- Tool versions:  
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Description: 
---
--- The circuits parameters
--- 
--- ram_address_size :
---
--- Address size of the synthesizable RAM used on the circuit.
---
--- ram_word_size :
---
--- The size of internal word on the synthesizable RAM.
---
---
--- Dependencies:
--- VHDL-93
--- IEEE.NUMERIC_STD.ALL;
--- 
--- Revision: 
--- Revision 1.0
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

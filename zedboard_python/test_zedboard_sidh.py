@@ -1,3 +1,13 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Implementation by Pedro Maat C. Massolino,
+# hereby denoted as "the implementer".
+#
+# To the extent possible under law, the implementer has waived all copyright
+# and related or neighboring rights to the source code in this file.
+# http://creativecommons.org/publicdomain/zero/1.0/
+
 import time
 import random
 import sys
@@ -33,29 +43,31 @@ sike_core_reg_prime_line_equal_one_address =                0x0E003;
 sike_core_reg_prime_address_address =                       0x0E004;
 sike_core_reg_prime_plus_one_address_address =              0x0E005;
 sike_core_reg_prime_line_address_address =                  0x0E006;
-sike_core_reg_initial_stack_address_address =               0x0E007;
-sike_core_reg_flag_address =                                0x0E008;
-sike_core_reg_scalar_address_address =                      0x0E009;
+sike_core_reg_2prime_address_address =                      0x0E007;
+sike_core_reg_initial_stack_address_address =               0x0E008;
+sike_core_reg_flag_address =                                0x0E009;
+sike_core_reg_scalar_address_address =                      0x0E00A;
 
 sike_core_mac_ram_prime_address =                           0x00000;
 sike_core_mac_ram_prime_plus_one_address =                  0x00001;
 sike_core_mac_ram_prime_line_address =                      0x00002;
-sike_core_mac_ram_const_r_address =                         0x00003;
-sike_core_mac_ram_const_r2_address =                        0x00004;
-sike_core_mac_ram_const_1_address =                         0x00005;
-sike_core_mac_ram_inv_4_mont_address =                      0x00006;
-sike_core_mac_ram_sidh_xpa_mont_address =                   0x00007;
-sike_core_mac_ram_sidh_xpai_mont_address =                  0x00008;
-sike_core_mac_ram_sidh_xqa_mont_address =                   0x00009;
-sike_core_mac_ram_sidh_xqai_mont_address =                  0x0000A;
-sike_core_mac_ram_sidh_xra_mont_address =                   0x0000B;
-sike_core_mac_ram_sidh_xrai_mont_address =                  0x0000C;
-sike_core_mac_ram_sidh_xpb_mont_address =                   0x0000D;
-sike_core_mac_ram_sidh_xpbi_mont_address =                  0x0000E;
-sike_core_mac_ram_sidh_xqb_mont_address =                   0x0000F;
-sike_core_mac_ram_sidh_xqbi_mont_address =                  0x00010;
-sike_core_mac_ram_sidh_xrb_mont_address =                   0x00011;
-sike_core_mac_ram_sidh_xrbi_mont_address =                  0x00012;
+sike_core_mac_ram_2prime_address =                          0x00003;
+sike_core_mac_ram_const_r_address =                         0x00004;
+sike_core_mac_ram_const_r2_address =                        0x00005;
+sike_core_mac_ram_const_1_address =                         0x00006;
+sike_core_mac_ram_inv_4_mont_address =                      0x00007;
+sike_core_mac_ram_sidh_xpa_mont_address =                   0x00008;
+sike_core_mac_ram_sidh_xpai_mont_address =                  0x00009;
+sike_core_mac_ram_sidh_xqa_mont_address =                   0x0000A;
+sike_core_mac_ram_sidh_xqai_mont_address =                  0x0000B;
+sike_core_mac_ram_sidh_xra_mont_address =                   0x0000C;
+sike_core_mac_ram_sidh_xrai_mont_address =                  0x0000D;
+sike_core_mac_ram_sidh_xpb_mont_address =                   0x0000E;
+sike_core_mac_ram_sidh_xpbi_mont_address =                  0x0000F;
+sike_core_mac_ram_sidh_xqb_mont_address =                   0x00010;
+sike_core_mac_ram_sidh_xqbi_mont_address =                  0x00011;
+sike_core_mac_ram_sidh_xrb_mont_address =                   0x00012;
+sike_core_mac_ram_sidh_xrbi_mont_address =                  0x00013;
 
 sike_core_base_alu_ram_sike_s_start_address =               0x000FB;
 sike_core_base_alu_ram_sike_sk_start_address =              0x0011B;
@@ -95,6 +107,117 @@ def load_program(zedboard, prom_file_name, base_word_size, base_word_size_signed
     print(program)
     print(program_written)
     return False
+
+def load_constants(zedboard, param):
+    
+    number_of_words = param[4]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    prime = param[5]
+    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
+    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
+    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
+    prime2 = param[10]
+    prime2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[10])
+    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
+    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
+    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
+    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[20])
+    
+    error_computation = False
+        
+    fp2 = sidh_fp2.sidh_fp2(prime)
+    
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
+    
+    prime_size_bits = param[6]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
+    
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
+    
+    starting_position_stack_sidh_core = param[41]
+    
+    enable_special_prime_line_arithmetic = param[9]
+    
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
+    
+    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
+    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
+    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
+    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
+    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
+    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
+    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
+    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
+    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
+    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
+    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
+    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
+    
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_line_address, prime_line_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_2prime_address, prime2_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r_address, r_mod_prime_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r2_address, r2_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_1_address, constant_1_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_inv_4_mont_address, constant_inv_4_list, number_of_words)
+    
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
+    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
+    
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_message_length_address, sike_message_length)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_shared_secret_length_address, sike_shared_secret_length)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_mask_address, oa_mask)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_mask_address, ob_mask)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_bits_address, oa_bits)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_bits_address, ob_bits)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_prime_size_bits_address, prime_size_bits)
+    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_alice_start_address
+    for i in range(0, len(alice_splits)):
+        zedboard.write_package(start_address+i, alice_splits[i])
+    for i in range(len(alice_splits), 302):
+        zedboard.write_package(start_address+i, 0)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_alice_address, alice_max_row)
+    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_bob_start_address
+    for i in range(0, len(bob_splits)):
+        zedboard.write_package(start_address+i, bob_splits[i])
+    for i in range(len(bob_splits), 302):
+        zedboard.write_package(start_address+i, 0)
+    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
+    
+    zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
+    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
+    zedboard.write_package(sike_core_reg_prime_address_address, 0)
+    zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
+    zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
+    zedboard.write_package(sike_core_reg_2prime_address_address, 3)
+    zedboard.write_package(sike_core_reg_scalar_address_address, 0)
+    zedboard.write_package(sike_core_reg_initial_stack_address_address, starting_position_stack_sidh_core)
 
 def test_single_sidh_keygen_alice(zedboard, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, oa_bits, alice_splits, alice_max_row, alice_max_int_points, debug_mode=False):
 
@@ -158,113 +281,40 @@ def test_single_sidh_keygen_alice(zedboard, fp2, base_word_size, extended_word_s
     return False
 
 def test_sidh_keygen_alice(zedboard, param, number_of_tests, debug_mode=False):
-
+    
+    load_constants(zedboard, param)
+    
     number_of_words = param[4]
     base_word_size = param[1]
     extended_word_size = param[2]
     prime = param[5]
-    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
-    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
-    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
-    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[16])
-    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
-    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
-    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
     
     error_computation = False
         
     fp2 = sidh_fp2.sidh_fp2(prime)
     
-    oa = param[10]
-    ob = param[11]
-    oa_bits = param[14]
-    ob_bits = param[15]
-    oa_mask = param[12]
-    ob_mask = param[13]
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
     
     prime_size_bits = param[6]
-    sike_message_length = param[38]
-    sike_shared_secret_length = param[39]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
     
-    alice_splits = param[32]
-    alice_max_row = param[33]
-    alice_max_int_points = param[34]
-    bob_splits = param[35]
-    bob_max_row = param[36]
-    bob_max_int_points = param[37]
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
     
-    starting_position_stack_sidh_core = param[40]
-    
-    if(param[6] == 1):
-        enable_special_prime_line_arithmetic = 1
-    else:
-        enable_special_prime_line_arithmetic = 0
-    
-    alice_gen_points_mont = param[20:26]
-    bob_gen_points_mont = param[26:32]
-    alice_gen_points = param[41:47]
-    bob_gen_points = param[47:53]
-    
-    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
-    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
-    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
-    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
-    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
-    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
-    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
-    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
-    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
-    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
-    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
-    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_line_address, prime_line_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r_address, r_mod_prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r2_address, r2_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_1_address, constant_1_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_inv_4_mont_address, constant_inv_4_list, number_of_words)
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_message_length_address, sike_message_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_shared_secret_length_address, sike_shared_secret_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_mask_address, oa_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_mask_address, ob_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_bits_address, oa_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_bits_address, ob_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_prime_size_bits_address, prime_size_bits)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_alice_start_address
-    for i in range(0, len(alice_splits)):
-        zedboard.write_package(start_address+i, alice_splits[i])
-    for i in range(len(alice_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_alice_address, alice_max_row)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_bob_start_address
-    for i in range(0, len(bob_splits)):
-        zedboard.write_package(start_address+i, bob_splits[i])
-    for i in range(len(bob_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
-    
-    zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
-    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
-    zedboard.write_package(sike_core_reg_prime_address_address, 0)
-    zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
-    zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
-    zedboard.write_package(sike_core_reg_initial_stack_address_address, starting_position_stack_sidh_core)
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
     
     # Fixed test
     tests_already_performed = 0
@@ -363,113 +413,40 @@ def test_single_sidh_keygen_bob(zedboard, fp2, base_word_size, extended_word_siz
     return False
 
 def test_sidh_keygen_bob(zedboard, param, number_of_tests, debug_mode=False):
-
+    
+    load_constants(zedboard, param)
+    
     number_of_words = param[4]
     base_word_size = param[1]
     extended_word_size = param[2]
     prime = param[5]
-    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
-    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
-    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
-    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[16])
-    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
-    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
-    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
     
     error_computation = False
         
     fp2 = sidh_fp2.sidh_fp2(prime)
     
-    oa = param[10]
-    ob = param[11]
-    oa_bits = param[14]
-    ob_bits = param[15]
-    oa_mask = param[12]
-    ob_mask = param[13]
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
     
     prime_size_bits = param[6]
-    sike_message_length = param[38]
-    sike_shared_secret_length = param[39]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
     
-    alice_splits = param[32]
-    alice_max_row = param[33]
-    alice_max_int_points = param[34]
-    bob_splits = param[35]
-    bob_max_row = param[36]
-    bob_max_int_points = param[37]
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
     
-    starting_position_stack_sidh_core = param[40]
-    
-    if(param[6] == 1):
-        enable_special_prime_line_arithmetic = 1
-    else:
-        enable_special_prime_line_arithmetic = 0
-    
-    alice_gen_points_mont = param[20:26]
-    bob_gen_points_mont = param[26:32]
-    alice_gen_points = param[41:47]
-    bob_gen_points = param[47:53]
-    
-    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
-    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
-    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
-    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
-    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
-    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
-    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
-    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
-    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
-    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
-    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
-    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_line_address, prime_line_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r_address, r_mod_prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r2_address, r2_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_1_address, constant_1_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_inv_4_mont_address, constant_inv_4_list, number_of_words)
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_message_length_address, sike_message_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_shared_secret_length_address, sike_shared_secret_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_mask_address, oa_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_mask_address, ob_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_bits_address, oa_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_bits_address, ob_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_prime_size_bits_address, prime_size_bits)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_alice_start_address
-    for i in range(0, len(alice_splits)):
-        zedboard.write_package(start_address+i, alice_splits[i])
-    for i in range(len(alice_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_alice_address, alice_max_row)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_bob_start_address
-    for i in range(0, len(bob_splits)):
-        zedboard.write_package(start_address+i, bob_splits[i])
-    for i in range(len(bob_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
-    
-    zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
-    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
-    zedboard.write_package(sike_core_reg_prime_address_address, 0)
-    zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
-    zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
-    zedboard.write_package(sike_core_reg_initial_stack_address_address, starting_position_stack_sidh_core)
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
     
     # Fixed test
     tests_already_performed = 0
@@ -562,112 +539,39 @@ def test_single_sidh_shared_secret_alice(zedboard, fp2, base_word_size, extended
 
 def test_sidh_shared_secret_alice(zedboard, param, number_of_tests, debug_mode=False):
 
+    load_constants(zedboard, param)
+    
     number_of_words = param[4]
     base_word_size = param[1]
     extended_word_size = param[2]
     prime = param[5]
-    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
-    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
-    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
-    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[16])
-    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
-    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
-    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
     
     error_computation = False
         
     fp2 = sidh_fp2.sidh_fp2(prime)
     
-    oa = param[10]
-    ob = param[11]
-    oa_bits = param[14]
-    ob_bits = param[15]
-    oa_mask = param[12]
-    ob_mask = param[13]
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
     
     prime_size_bits = param[6]
-    sike_message_length = param[38]
-    sike_shared_secret_length = param[39]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
     
-    alice_splits = param[32]
-    alice_max_row = param[33]
-    alice_max_int_points = param[34]
-    bob_splits = param[35]
-    bob_max_row = param[36]
-    bob_max_int_points = param[37]
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
     
-    starting_position_stack_sidh_core = param[40]
-    
-    if(param[6] == 1):
-        enable_special_prime_line_arithmetic = 1
-    else:
-        enable_special_prime_line_arithmetic = 0
-    
-    alice_gen_points_mont = param[20:26]
-    bob_gen_points_mont = param[26:32]
-    alice_gen_points = param[41:47]
-    bob_gen_points = param[47:53]
-    
-    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
-    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
-    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
-    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
-    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
-    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
-    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
-    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
-    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
-    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
-    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
-    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_line_address, prime_line_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r_address, r_mod_prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r2_address, r2_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_1_address, constant_1_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_inv_4_mont_address, constant_inv_4_list, number_of_words)
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_message_length_address, sike_message_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_shared_secret_length_address, sike_shared_secret_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_mask_address, oa_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_mask_address, ob_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_bits_address, oa_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_bits_address, ob_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_prime_size_bits_address, prime_size_bits)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_alice_start_address
-    for i in range(0, len(alice_splits)):
-        zedboard.write_package(start_address+i, alice_splits[i])
-    for i in range(len(alice_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_alice_address, alice_max_row)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_bob_start_address
-    for i in range(0, len(bob_splits)):
-        zedboard.write_package(start_address+i, bob_splits[i])
-    for i in range(len(bob_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
-    
-    zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
-    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
-    zedboard.write_package(sike_core_reg_prime_address_address, 0)
-    zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
-    zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
-    zedboard.write_package(sike_core_reg_initial_stack_address_address, starting_position_stack_sidh_core)
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
     
     # Fixed test
     tests_already_performed = 0
@@ -762,112 +666,39 @@ def test_single_sidh_shared_secret_bob(zedboard, fp2, base_word_size, extended_w
 
 def test_sidh_shared_secret_bob(zedboard, param, number_of_tests, debug_mode=False):
 
+    load_constants(zedboard, param)
+    
     number_of_words = param[4]
     base_word_size = param[1]
     extended_word_size = param[2]
     prime = param[5]
-    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
-    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
-    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
-    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[16])
-    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
-    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
-    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
     
     error_computation = False
         
     fp2 = sidh_fp2.sidh_fp2(prime)
     
-    oa = param[10]
-    ob = param[11]
-    oa_bits = param[14]
-    ob_bits = param[15]
-    oa_mask = param[12]
-    ob_mask = param[13]
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
     
     prime_size_bits = param[6]
-    sike_message_length = param[38]
-    sike_shared_secret_length = param[39]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
     
-    alice_splits = param[32]
-    alice_max_row = param[33]
-    alice_max_int_points = param[34]
-    bob_splits = param[35]
-    bob_max_row = param[36]
-    bob_max_int_points = param[37]
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
     
-    starting_position_stack_sidh_core = param[40]
-    
-    if(param[6] == 1):
-        enable_special_prime_line_arithmetic = 1
-    else:
-        enable_special_prime_line_arithmetic = 0
-    
-    alice_gen_points_mont = param[20:26]
-    bob_gen_points_mont = param[26:32]
-    alice_gen_points = param[41:47]
-    bob_gen_points = param[47:53]
-    
-    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
-    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
-    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
-    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
-    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
-    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
-    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
-    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
-    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
-    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
-    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
-    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_prime_line_address, prime_line_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r_address, r_mod_prime_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_r2_address, r2_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_const_1_address, constant_1_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_inv_4_mont_address, constant_inv_4_list, number_of_words)
-    
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    zedboard.write_mac_ram_operand(sike_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_message_length_address, sike_message_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_shared_secret_length_address, sike_shared_secret_length)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_mask_address, oa_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_mask_address, ob_mask)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_bits_address, oa_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_bits_address, ob_bits)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_prime_size_bits_address, prime_size_bits)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_alice_start_address
-    for i in range(0, len(alice_splits)):
-        zedboard.write_package(start_address+i, alice_splits[i])
-    for i in range(len(alice_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_alice_address, alice_max_row)
-    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_bob_start_address
-    for i in range(0, len(bob_splits)):
-        zedboard.write_package(start_address+i, bob_splits[i])
-    for i in range(len(bob_splits), 302):
-        zedboard.write_package(start_address+i, 0)
-    zedboard.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
-    
-    zedboard.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
-    zedboard.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
-    zedboard.write_package(sike_core_reg_prime_address_address, 0)
-    zedboard.write_package(sike_core_reg_prime_plus_one_address_address, 1)
-    zedboard.write_package(sike_core_reg_prime_line_address_address, 2)
-    zedboard.write_package(sike_core_reg_initial_stack_address_address, starting_position_stack_sidh_core)
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
     
     # Fixed test
     tests_already_performed = 0
@@ -915,7 +746,7 @@ def test_all_sidh_functions(zedboard, version, only_one_parameter=None):
         sike_extended_word_size = 128
         sike_fpga_constants = sike_fpga_constants_v128.sike_fpga_constants_v128
     tests_working_folder = "../hw_sidh_tests_v"+str(sike_extended_word_size)+"/"
-    if(load_program(zedboard, tests_prom_folder + "test_sike_sidh_functions_v" + str(sike_extended_word_size)+ ".dat", sike_base_word_size, 4)):
+    if(load_program(zedboard, tests_prom_folder + "test_sike_sidh_ecc_functions_v" + str(sike_extended_word_size)+ ".dat", sike_base_word_size, 4)):
         print("Program loaded correctly into SIKE core")
         test_all_sidh_keygen_alice(zedboard, sike_fpga_constants, 100, only_one_parameter)
         test_all_sidh_keygen_bob(zedboard, sike_fpga_constants, 100, only_one_parameter)
@@ -930,6 +761,6 @@ while(not zedboard.isFree()):
     time.sleep(0.01)
 zedboard.flush()
 
-test_all_sidh_functions(zedboard, sys.argv[1], 0)
+test_all_sidh_functions(zedboard, sys.argv[1])
 
 zedboard.disconnect()

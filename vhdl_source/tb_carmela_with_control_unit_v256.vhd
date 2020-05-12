@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    
--- Design Name: 
--- Module Name:    
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -37,78 +26,113 @@ Generic(
     max_operands_size : integer := 2;
     maximum_number_of_tests : integer := 0;
     
+    skip_multiplication_no_reduction_test : boolean := false;
+    skip_square_no_reduction_test : boolean := false;
+    skip_montgomery_multiplication_test : boolean := false;
+    skip_special_montgomery_multiplication_test : boolean := false;
+    skip_montgomery_squaring_test : boolean := false;
+    skip_special_montgomery_squaring_test : boolean := false;
+    skip_addition_subtraction_no_reduction_test : boolean := false;
+    skip_iterative_modular_reduction : boolean := false;
+    skip_addition_subtraction_with_reduction_test : boolean := false;
     
-    test_memory_file_multiplication_no_reduction_test_4_3 : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_4_3.dat";
+    param_8_5_number_of_words  : integer := 1;
+    param_8_5_p_line_equal_one : integer := 0;
+    param_216_137_number_of_words  : integer := 2;
+    param_216_137_p_line_equal_one : integer := 0;
+    param_250_159_number_of_words  : integer := 3;
+    param_250_159_p_line_equal_one : integer := 0;
+    param_305_192_number_of_words  : integer := 3;
+    param_305_192_p_line_equal_one : integer := 1;
+    param_372_239_number_of_words  : integer := 3;
+    param_372_239_p_line_equal_one : integer := 1;
+    param_486_301_number_of_words  : integer := 4;
+    param_486_301_p_line_equal_one : integer := 1;
+    
+    test_memory_file_multiplication_no_reduction_test_8_5 : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_8_5.dat";
     test_memory_file_multiplication_no_reduction_test_216_137 : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_216_137.dat";
     test_memory_file_multiplication_no_reduction_test_250_159 : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_250_159.dat";
     test_memory_file_multiplication_no_reduction_test_305_192 : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_305_192.dat";
     test_memory_file_multiplication_no_reduction_test_372_239 : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_372_239.dat";
     test_memory_file_multiplication_no_reduction_test_486_301 : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_486_301.dat";
     
-    test_memory_file_multiplication_no_reduction_test_240_max  : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_240_max.dat";
-    test_memory_file_multiplication_no_reduction_test_496_max  : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_496_max.dat";
-    test_memory_file_multiplication_no_reduction_test_752_max  : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_752_max.dat";
-    test_memory_file_multiplication_no_reduction_test_1008_max : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_1008_max.dat";
+    test_memory_file_multiplication_no_reduction_test_1_word_max  : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_1_word_max.dat";
+    test_memory_file_multiplication_no_reduction_test_2_words_max : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_2_words_max.dat";
+    test_memory_file_multiplication_no_reduction_test_3_words_max : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_3_words_max.dat";
+    test_memory_file_multiplication_no_reduction_test_4_words_max : string := "../hw_sidh_tests_v256/multiplication_no_reduction_test_4_words_max.dat";
     
-    test_memory_file_square_no_reduction_test_4_3 : string := "../hw_sidh_tests_v256/square_no_reduction_test_4_3.dat";
+    test_memory_file_square_no_reduction_test_8_5 : string := "../hw_sidh_tests_v256/square_no_reduction_test_8_5.dat";
     test_memory_file_square_no_reduction_test_216_137 : string := "../hw_sidh_tests_v256/square_no_reduction_test_216_137.dat";
     test_memory_file_square_no_reduction_test_250_159 : string := "../hw_sidh_tests_v256/square_no_reduction_test_250_159.dat";
     test_memory_file_square_no_reduction_test_305_192 : string := "../hw_sidh_tests_v256/square_no_reduction_test_305_192.dat";
     test_memory_file_square_no_reduction_test_372_239 : string := "../hw_sidh_tests_v256/square_no_reduction_test_372_239.dat";
     test_memory_file_square_no_reduction_test_486_301 : string := "../hw_sidh_tests_v256/square_no_reduction_test_486_301.dat";
     
-    test_memory_file_square_no_reduction_test_240_max  : string := "../hw_sidh_tests_v256/square_no_reduction_test_240_max.dat";
-    test_memory_file_square_no_reduction_test_496_max  : string := "../hw_sidh_tests_v256/square_no_reduction_test_496_max.dat";
-    test_memory_file_square_no_reduction_test_752_max  : string := "../hw_sidh_tests_v256/square_no_reduction_test_752_max.dat";
-    test_memory_file_square_no_reduction_test_1008_max : string := "../hw_sidh_tests_v256/square_no_reduction_test_1008_max.dat";
+    test_memory_file_square_no_reduction_test_1_word_max  : string := "../hw_sidh_tests_v256/square_no_reduction_test_1_word_max.dat";
+    test_memory_file_square_no_reduction_test_2_words_max : string := "../hw_sidh_tests_v256/square_no_reduction_test_2_words_max.dat";
+    test_memory_file_square_no_reduction_test_3_words_max : string := "../hw_sidh_tests_v256/square_no_reduction_test_3_words_max.dat";
+    test_memory_file_square_no_reduction_test_4_words_max : string := "../hw_sidh_tests_v256/square_no_reduction_test_4_words_max.dat";
     
-    test_memory_file_montgomery_multiplication_test_4_3 : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_4_3.dat";
+    test_memory_file_montgomery_multiplication_test_8_5 : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_8_5.dat";
     test_memory_file_montgomery_multiplication_test_216_137 : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_216_137.dat";
     test_memory_file_montgomery_multiplication_test_250_159 : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_250_159.dat";
     test_memory_file_montgomery_multiplication_test_305_192 : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_305_192.dat";
     test_memory_file_montgomery_multiplication_test_372_239 : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_372_239.dat";
     test_memory_file_montgomery_multiplication_test_486_301 : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_486_301.dat";
     
-    test_memory_file_montgomery_multiplication_test_240_max  : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_240_max.dat";
-    test_memory_file_montgomery_multiplication_test_496_max  : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_496_max.dat";
-    test_memory_file_montgomery_multiplication_test_752_max  : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_752_max.dat";
-    test_memory_file_montgomery_multiplication_test_1008_max : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_1008_max.dat";
+    test_memory_file_montgomery_multiplication_test_1_word_max  : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_1_word_max.dat";
+    test_memory_file_montgomery_multiplication_test_2_words_max : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_2_words_max.dat";
+    test_memory_file_montgomery_multiplication_test_3_words_max : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_3_words_max.dat";
+    test_memory_file_montgomery_multiplication_test_4_words_max : string := "../hw_sidh_tests_v256/montgomery_multiplication_test_4_words_max.dat";
     
-    test_memory_file_montgomery_squaring_test_4_3 : string := "../hw_sidh_tests_v256/montgomery_squaring_test_4_3.dat";
+    test_memory_file_montgomery_squaring_test_8_5 : string := "../hw_sidh_tests_v256/montgomery_squaring_test_8_5.dat";
     test_memory_file_montgomery_squaring_test_216_137 : string := "../hw_sidh_tests_v256/montgomery_squaring_test_216_137.dat";
     test_memory_file_montgomery_squaring_test_250_159 : string := "../hw_sidh_tests_v256/montgomery_squaring_test_250_159.dat";
     test_memory_file_montgomery_squaring_test_305_192 : string := "../hw_sidh_tests_v256/montgomery_squaring_test_305_192.dat";
     test_memory_file_montgomery_squaring_test_372_239 : string := "../hw_sidh_tests_v256/montgomery_squaring_test_372_239.dat";
     test_memory_file_montgomery_squaring_test_486_301 : string := "../hw_sidh_tests_v256/montgomery_squaring_test_486_301.dat";
     
-    test_memory_file_montgomery_squaring_test_240_max  : string := "../hw_sidh_tests_v256/montgomery_squaring_test_240_max.dat";
-    test_memory_file_montgomery_squaring_test_496_max  : string := "../hw_sidh_tests_v256/montgomery_squaring_test_496_max.dat";
-    test_memory_file_montgomery_squaring_test_752_max  : string := "../hw_sidh_tests_v256/montgomery_squaring_test_752_max.dat";
-    test_memory_file_montgomery_squaring_test_1008_max : string := "../hw_sidh_tests_v256/montgomery_squaring_test_1008_max.dat";
+    test_memory_file_montgomery_squaring_test_1_word_max  : string := "../hw_sidh_tests_v256/montgomery_squaring_test_1_word_max.dat";
+    test_memory_file_montgomery_squaring_test_2_words_max : string := "../hw_sidh_tests_v256/montgomery_squaring_test_2_words_max.dat";
+    test_memory_file_montgomery_squaring_test_3_words_max : string := "../hw_sidh_tests_v256/montgomery_squaring_test_3_words_max.dat";
+    test_memory_file_montgomery_squaring_test_4_words_max : string := "../hw_sidh_tests_v256/montgomery_squaring_test_4_words_max.dat";
     
-    test_memory_file_addition_subtraction_no_reduction_test_4_3 : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_4_3.dat";
+    test_memory_file_addition_subtraction_no_reduction_test_8_5 : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_8_5.dat";
     test_memory_file_addition_subtraction_no_reduction_test_216_137 : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_216_137.dat";
     test_memory_file_addition_subtraction_no_reduction_test_250_159 : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_250_159.dat";
     test_memory_file_addition_subtraction_no_reduction_test_305_192 : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_305_192.dat";
     test_memory_file_addition_subtraction_no_reduction_test_372_239 : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_372_239.dat";
     test_memory_file_addition_subtraction_no_reduction_test_486_301 : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_486_301.dat";
     
-    test_memory_file_addition_subtraction_no_reduction_test_240_max  : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_240_max.dat";
-    test_memory_file_addition_subtraction_no_reduction_test_496_max  : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_496_max.dat";
-    test_memory_file_addition_subtraction_no_reduction_test_752_max  : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_752_max.dat";
-    test_memory_file_addition_subtraction_no_reduction_test_1008_max : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_1008_max.dat";
+    test_memory_file_addition_subtraction_no_reduction_test_1_word_max  : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_1_word_max.dat";
+    test_memory_file_addition_subtraction_no_reduction_test_2_words_max : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_2_words_max.dat";
+    test_memory_file_addition_subtraction_no_reduction_test_3_words_max : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_3_words_max.dat";
+    test_memory_file_addition_subtraction_no_reduction_test_4_words_max : string := "../hw_sidh_tests_v256/addition_subtraction_no_reduction_test_4_words_max.dat";
     
-    test_memory_file_iterative_modular_reduction_test_4_3 : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_4_3.dat";
+    test_memory_file_iterative_modular_reduction_test_8_5 : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_8_5.dat";
     test_memory_file_iterative_modular_reduction_test_216_137 : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_216_137.dat";
     test_memory_file_iterative_modular_reduction_test_250_159 : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_250_159.dat";
     test_memory_file_iterative_modular_reduction_test_305_192 : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_305_192.dat";
     test_memory_file_iterative_modular_reduction_test_372_239 : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_372_239.dat";
     test_memory_file_iterative_modular_reduction_test_486_301 : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_486_301.dat";
     
-    test_memory_file_iterative_modular_reduction_test_240_max  : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_240_max.dat";
-    test_memory_file_iterative_modular_reduction_test_496_max  : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_496_max.dat";
-    test_memory_file_iterative_modular_reduction_test_752_max  : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_752_max.dat";
-    test_memory_file_iterative_modular_reduction_test_1008_max : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_1008_max.dat"
+    test_memory_file_iterative_modular_reduction_test_1_word_max  : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_1_word_max.dat";
+    test_memory_file_iterative_modular_reduction_test_2_words_max : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_2_words_max.dat";
+    test_memory_file_iterative_modular_reduction_test_3_words_max : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_3_words_max.dat";
+    test_memory_file_iterative_modular_reduction_test_4_words_max : string := "../hw_sidh_tests_v256/iterative_modular_reduction_test_4_words_max.dat";
+    
+    test_memory_file_addition_subtraction_with_reduction_test_8_5 : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_8_5.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_216_137 : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_216_137.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_250_159 : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_250_159.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_305_192 : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_305_192.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_372_239 : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_372_239.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_486_301 : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_486_301.dat";
+    
+    test_memory_file_addition_subtraction_with_reduction_test_1_word_max  : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_1_word_max.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_2_words_max  : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_2_words_max.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_3_words_max  : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_3_words_max.dat";
+    test_memory_file_addition_subtraction_with_reduction_test_4_words_max : string := "../hw_sidh_tests_v256/addition_subtraction_with_reduction_test_4_words_max.dat"
+    
 
 );
 end tb_carmela_with_control_unit_v256;
@@ -134,6 +158,7 @@ component carmela_with_control_unit_v256
         load_new_address_prime : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_prime_line : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_prime_plus_one : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
+        load_new_address_2prime : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_input_ma : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_sign_ma : in std_logic;
         load_new_address_input_mb : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
@@ -205,6 +230,7 @@ signal test_prime_line_equal_one : std_logic;
 signal test_load_new_address_prime : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
 signal test_load_new_address_prime_line : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
 signal test_load_new_address_prime_plus_one : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
+signal test_load_new_address_2prime : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
 signal test_load_new_address_input_ma : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
 signal test_load_new_sign_ma : std_logic;
 signal test_load_new_address_input_mb : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
@@ -242,6 +268,7 @@ signal test_value_b : operands_values_array((2**max_operands_size - 1) downto 0)
 signal test_value_prime : operands_values_array((2**max_operands_size - 1) downto 0);
 signal test_value_prime_line : operands_values_array((2**max_operands_size - 1) downto 0);
 signal test_value_prime_plus_one : operands_values_array((2**max_operands_size - 1) downto 0);
+signal test_value_2prime : operands_values_array((2**max_operands_size - 1) downto 0);
 signal test_value_o : operands_values_array((2*(2**max_operands_size) - 1) downto 0);
 signal test_value_o_2 : operands_values_array((2*(2**max_operands_size) - 1) downto 0);
 signal test_value_o_3 : operands_values_array((2*(2**max_operands_size) - 1) downto 0);
@@ -274,6 +301,7 @@ test : carmela_with_control_unit_v256
         load_new_address_prime => test_load_new_address_prime,
         load_new_address_prime_line => test_load_new_address_prime_line,
         load_new_address_prime_plus_one => test_load_new_address_prime_plus_one,
+        load_new_address_2prime => test_load_new_address_2prime,
         load_new_address_input_ma => test_load_new_address_input_ma,
         load_new_sign_ma => test_load_new_sign_ma,
         load_new_address_input_mb => test_load_new_address_input_mb,
@@ -447,6 +475,7 @@ begin
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
     test_load_new_address_prime_plus_one <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -513,6 +542,7 @@ begin
         test_load_new_address_prime <= X"00";
         test_load_new_address_prime_line <= X"00";
         test_load_new_address_prime_plus_one <= X"00";
+        test_load_new_address_2prime <= X"00";
         test_load_new_address_input_ma <= "00000" & "000";
         test_load_new_sign_ma <= '0';
         test_load_new_address_input_mb <= "00000" & "001";
@@ -643,6 +673,7 @@ begin
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
     test_load_new_address_prime_plus_one <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -702,6 +733,7 @@ begin
         test_load_new_address_prime <= X"00";
         test_load_new_address_prime_line <= X"00";
         test_load_new_address_prime_plus_one <= X"00";
+        test_load_new_address_2prime <= X"00";
         test_load_new_address_input_ma <= "00000" & "000";
         test_load_new_sign_ma <= '0';
         test_load_new_address_input_mb <= "00000" & "000";
@@ -824,6 +856,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
         test_value_o(j) <= (others => '0');
         true_value_o(j) <= (others => '0');
     end loop;
@@ -834,6 +867,7 @@ begin
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
     test_load_new_address_prime_plus_one <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -857,6 +891,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
     end loop;
     wait for PERIOD;
     for j in 0 to (operands_size-1) loop
@@ -874,11 +909,17 @@ begin
         read (line_n, read_operand_values);
         test_value_prime_line(j) <= read_operand_values;
     end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_2prime(j) <= read_operand_values;
+    end loop;
     wait for PERIOD;
     constants_operation_addres := std_logic_vector(to_unsigned(8, constants_operation_addres'length));
     load_operand_memory(test_value_prime, constants_operation_addres & "000", operands_size);
     load_operand_memory(test_value_prime_plus_one, constants_operation_addres & "001", operands_size);
     load_operand_memory(test_value_prime_line, constants_operation_addres & "010", operands_size);
+    load_operand_memory(test_value_2prime, constants_operation_addres & "011", operands_size);
     i := 0;
     while (i < (number_of_tests)) loop
         number_of_tests_per_iteration := -1;
@@ -924,6 +965,7 @@ begin
         test_load_new_address_prime <= "01000" & "000";
         test_load_new_address_prime_line <= "01000" & "010";
         test_load_new_address_prime_plus_one <= "01000" & "001";
+        test_load_new_address_2prime <= "01000" & "011";
         test_load_new_address_input_ma <= "00000" & "000";
         test_load_new_sign_ma <= '0';
         test_load_new_address_input_mb <= "00000" & "001";
@@ -1047,6 +1089,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
         test_value_o(j) <= (others => '0');
         true_value_o(j) <= (others => '0');
     end loop;
@@ -1057,6 +1100,7 @@ begin
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
     test_load_new_address_prime_plus_one <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -1080,6 +1124,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
     end loop;
     wait for PERIOD;
     for j in 0 to (operands_size-1) loop
@@ -1097,11 +1142,17 @@ begin
         read (line_n, read_operand_values);
         test_value_prime_line(j) <= read_operand_values;
     end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_2prime(j) <= read_operand_values;
+    end loop;
     wait for PERIOD;
     constants_operation_addres := std_logic_vector(to_unsigned(8, constants_operation_addres'length));
     load_operand_memory(test_value_prime, constants_operation_addres & "000", operands_size);
     load_operand_memory(test_value_prime_plus_one, constants_operation_addres & "001", operands_size);
     load_operand_memory(test_value_prime_line, constants_operation_addres & "010", operands_size);
+    load_operand_memory(test_value_2prime, constants_operation_addres & "011", operands_size);
     i := 0;
     while (i < (number_of_tests)) loop
         number_of_tests_per_iteration := -1;
@@ -1147,6 +1198,7 @@ begin
         test_load_new_address_prime <= "01000" & "000";
         test_load_new_address_prime_line <= "01000" & "010";
         test_load_new_address_prime_plus_one <= "01000" & "001";
+        test_load_new_address_2prime <= "01000" & "011";
         test_load_new_address_input_ma <= "00000" & "000";
         test_load_new_sign_ma <= '0';
         test_load_new_address_input_mb <= "00000" & "001";
@@ -1270,6 +1322,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
         test_value_o(j) <= (others => '0');
         true_value_o(j) <= (others => '0');
     end loop;
@@ -1280,6 +1333,7 @@ begin
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
     test_load_new_address_prime_plus_one <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -1303,6 +1357,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
     end loop;
     wait for PERIOD;
     for j in 0 to (operands_size-1) loop
@@ -1320,11 +1375,17 @@ begin
         read (line_n, read_operand_values);
         test_value_prime_line(j) <= read_operand_values;
     end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_2prime(j) <= read_operand_values;
+    end loop;
     wait for PERIOD;
     constants_operation_addres := std_logic_vector(to_unsigned(8, constants_operation_addres'length));
     load_operand_memory(test_value_prime, constants_operation_addres & "000", operands_size);
     load_operand_memory(test_value_prime_plus_one, constants_operation_addres & "001", operands_size);
     load_operand_memory(test_value_prime_line, constants_operation_addres & "010", operands_size);
+    load_operand_memory(test_value_2prime, constants_operation_addres & "011", operands_size);
     i := 0;
     while (i < (number_of_tests)) loop
         number_of_tests_per_iteration := -1;
@@ -1363,6 +1424,7 @@ begin
         test_load_new_address_prime <= "01000" & "000";
         test_load_new_address_prime_line <= "01000" & "010";
         test_load_new_address_prime_plus_one <= "01000" & "001";
+        test_load_new_address_2prime <= "01000" & "011";
         test_load_new_address_input_ma <= "00000" & "000";
         test_load_new_sign_ma <= '0';
         test_load_new_address_input_mb <= "00000" & "000";
@@ -1484,6 +1546,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
         test_value_o(j) <= (others => '0');
         true_value_o(j) <= (others => '0');
     end loop;
@@ -1494,6 +1557,7 @@ begin
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
     test_load_new_address_prime_plus_one <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -1517,6 +1581,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
     end loop;
     wait for PERIOD;
     for j in 0 to (operands_size-1) loop
@@ -1534,11 +1599,17 @@ begin
         read (line_n, read_operand_values);
         test_value_prime_line(j) <= read_operand_values;
     end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_2prime(j) <= read_operand_values;
+    end loop;
     wait for PERIOD;
     constants_operation_addres := std_logic_vector(to_unsigned(8, constants_operation_addres'length));
     load_operand_memory(test_value_prime, constants_operation_addres & "000", operands_size);
     load_operand_memory(test_value_prime_plus_one, constants_operation_addres & "001", operands_size);
     load_operand_memory(test_value_prime_line, constants_operation_addres & "010", operands_size);
+    load_operand_memory(test_value_2prime, constants_operation_addres & "011", operands_size);
     i := 0;
     while (i < (number_of_tests)) loop
         number_of_tests_per_iteration := -1;
@@ -1577,6 +1648,7 @@ begin
         test_load_new_address_prime <= "01000" & "000";
         test_load_new_address_prime_line <= "01000" & "010";
         test_load_new_address_prime_plus_one <= "01000" & "001";
+        test_load_new_address_2prime <= "01000" & "011";
         test_load_new_address_input_ma <= "00000" & "000";
         test_load_new_sign_ma <= '0';
         test_load_new_address_input_mb <= "00000" & "000";
@@ -1694,6 +1766,7 @@ begin
     test_load_new_address_prime <= "00000" & "000";
     test_load_new_address_prime_line <= "00000" & "000";
     test_load_new_address_prime_plus_one <= "00000" & "000";
+    test_load_new_address_2prime <= "00000" & "000";
     test_load_new_address_input_ma <= "00000" & base_address_a;
     test_load_new_sign_ma <= sign_a;
     test_load_new_address_input_mb <= "00000" & base_address_b;
@@ -1763,6 +1836,7 @@ begin
     test_prime_line_equal_one  <= '0';
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -1909,6 +1983,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
         test_value_o(j) <= (others => '0');
         test_value_o_2(j) <= (others => '0');
         test_value_o_3(j) <= (others => '0');
@@ -1922,6 +1997,7 @@ begin
     test_prime_line_equal_one  <= '0';
     test_load_new_address_prime <= (others => '0');
     test_load_new_address_prime_line <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
     test_load_new_address_input_ma <= (others => '0');
     test_load_new_sign_ma <= '0';
     test_load_new_address_input_mb <= (others => '0');
@@ -1945,6 +2021,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
     end loop;
     wait for PERIOD;
     for j in 0 to (operands_size-1) loop
@@ -1961,6 +2038,11 @@ begin
         readline (ram_file, line_n);
         read (line_n, read_operand_values);
         test_value_prime_line(j) <= read_operand_values;
+    end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_2prime(j) <= read_operand_values;
     end loop;
     wait for PERIOD;
     constants_operation_addres := std_logic_vector(to_unsigned(4, constants_operation_addres'length));
@@ -2005,6 +2087,7 @@ begin
         test_load_new_address_prime <= "00100" & "000";
         test_load_new_address_prime_line <= "00100" & "010";
         test_load_new_address_prime_plus_one <= "00100" & "001";
+        test_load_new_address_2prime <= "00100" & "011";
         test_load_new_address_input_ma <= "00000" & "000";
         test_load_new_sign_ma <= '1';
         test_load_new_address_input_mb <= "00000" & "000";
@@ -2067,6 +2150,254 @@ begin
     end loop;
 end test_iterative_modular_reduction;
 
+procedure test_addition_subtraction_with_reduction_single_test(
+base_address_a : in std_logic_vector(2 downto 0);
+base_address_b : in std_logic_vector(2 downto 0);
+base_address_o : in std_logic_vector(2 downto 0);
+sign_a : in std_logic;
+operands_size : in integer;
+number_of_tests_per_iteration : integer
+) is
+variable current_operation_addres : std_logic_vector((memory_address_size - 6) downto 0);
+begin
+    test_instruction_type <= "0110";
+    test_operands_size <= std_logic_vector(to_unsigned(operands_size-1, max_operands_size));
+    test_prime_line_equal_one  <= '0';
+    test_load_new_address_prime <= "00100" & "000";
+    test_load_new_address_prime_line <= "00100" & "010";
+    test_load_new_address_prime_plus_one <= "00100" & "001";
+    test_load_new_address_2prime <= "00100" & "011";
+    test_load_new_address_input_ma <= "00000" & base_address_a;
+    test_load_new_sign_ma <= sign_a;
+    test_load_new_address_input_mb <= "00000" & base_address_b;
+    test_load_new_address_output_mo <= "00000" & base_address_o;
+    test_enable_new_address_output_mo <= '1';
+    wait for PERIOD;
+    test_load_new_address_input_ma <= "00001" & base_address_a;
+    test_load_new_sign_ma <= sign_a;
+    test_load_new_address_input_mb <= "00001" & base_address_b;
+    test_load_new_address_output_mo <= "00001" & base_address_o;
+    if(number_of_tests_per_iteration >= 1) then
+        test_enable_new_address_output_mo <= '1';
+    else
+        test_enable_new_address_output_mo <= '0';
+    end if;
+    test_instruction_values_valid  <= '0';
+    wait for PERIOD;
+    test_load_new_address_input_ma <= "00010" & base_address_a;
+    test_load_new_sign_ma <= sign_a;
+    test_load_new_address_input_mb <= "00010" & base_address_b;
+    test_load_new_address_output_mo <= "00010" & base_address_o;
+    if(number_of_tests_per_iteration >= 2) then
+        test_enable_new_address_output_mo <= '1';
+    else
+        test_enable_new_address_output_mo <= '0';
+    end if;
+    wait for PERIOD;
+    test_load_new_address_input_ma <= "00011" & base_address_a;
+    test_load_new_sign_ma <= sign_a;
+    test_load_new_address_input_mb <= "00011" & base_address_b;
+    test_load_new_address_output_mo <= "00011" & base_address_o;
+    if(number_of_tests_per_iteration >= 3) then
+        test_enable_new_address_output_mo <= '1';
+    else
+        test_enable_new_address_output_mo <= '0';
+    end if;
+    wait for PERIOD;
+end test_addition_subtraction_with_reduction_single_test;
+
+procedure test_addition_subtraction_with_reduction(
+test_filename : in string;
+operands_size : in integer
+) is 
+FILE ram_file : text;
+variable line_n : line;
+variable number_of_tests : integer;
+variable read_operand_values : std_logic_vector((multiplication_factor*base_word_size - 1) downto 0);
+variable i : integer;
+variable number_of_tests_per_iteration : integer;
+variable constants_operation_addres : std_logic_vector((memory_address_size - 6) downto 0);
+variable current_operation_addres : std_logic_vector((memory_address_size - 6) downto 0);
+variable before_time, after_time : time;
+
+begin
+    for j in 0 to (2**max_operands_size-1) loop
+        test_value_a(j) <= (others => '0');
+        test_value_b(j) <= (others => '0');
+        test_value_o(j) <= (others => '0');
+        test_value_o_2(j) <= (others => '0');
+        test_value_o_3(j) <= (others => '0');
+        true_value_o(j) <= (others => '0');
+        true_value_o_2(j) <= (others => '0');
+        true_value_o_3(j) <= (others => '0');
+    end loop;
+    test_instruction_values_valid  <= '0';
+    test_instruction_type <= (others => '0');
+    test_operands_size <= (others => '0');
+    test_prime_line_equal_one  <= '0';
+    test_load_new_address_prime <= (others => '0');
+    test_load_new_address_prime_line <= (others => '0');
+    test_load_new_address_2prime <= (others => '0');
+    test_load_new_address_input_ma <= (others => '0');
+    test_load_new_sign_ma <= '0';
+    test_load_new_address_input_mb <= (others => '0');
+    test_load_new_address_output_mo <= (others => '0');
+    test_enable_new_address_output_mo <= '0';
+    test_mem_small_bus_enable <= '1';
+    test_mem_full_bus_enable <= '1';
+    test_mem_small_bus_mode <= '1';
+    test_mem_data_in_small_bus_mode <= (others => '0');
+    test_mem_enable_write_small_bus_mode <= '0';
+    test_mem_address_data_in_small_bus_mode <= (others => '0');
+    test_mem_address_data_out_small_bus_mode <= (others => '0');
+    wait for PERIOD;
+    file_open(ram_file, test_filename, READ_MODE);
+    readline (ram_file, line_n);
+    read (line_n, number_of_tests);
+    if((maximum_number_of_tests /= 0) and (maximum_number_of_tests < number_of_tests)) then
+        number_of_tests := maximum_number_of_tests;
+    end if;
+    for j in 0 to (2**max_operands_size-1) loop
+        test_value_prime(j) <= (others => '0');
+        test_value_prime_plus_one(j) <= (others => '0');
+        test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
+    end loop;
+    wait for PERIOD;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_prime(j) <= read_operand_values;
+    end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_prime_plus_one(j) <= read_operand_values;
+    end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_prime_line(j) <= read_operand_values;
+    end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_operand_values);
+        test_value_2prime(j) <= read_operand_values;
+    end loop;
+    wait for PERIOD;
+    constants_operation_addres := std_logic_vector(to_unsigned(4, constants_operation_addres'length));
+    load_operand_memory(test_value_prime, constants_operation_addres & "000", operands_size);
+    load_operand_memory(test_value_prime_plus_one, constants_operation_addres & "001", operands_size);
+    load_operand_memory(test_value_prime_line, constants_operation_addres & "010", operands_size);
+    load_operand_memory(test_value_2prime, constants_operation_addres & "011", operands_size);
+    i := 0;
+    while (i < (number_of_tests)) loop
+        number_of_tests_per_iteration := -1;
+        while ((i < (number_of_tests)) and (number_of_tests_per_iteration < 3)) loop
+            for j in 0 to (2**max_operands_size-1) loop
+                test_value_a(j) <= (others => '0');
+                test_value_b(j) <= (others => '0');
+                test_value_o(j) <= (others => '0');
+                test_value_o_2(j) <= (others => '0');
+                test_value_o_3(j) <= (others => '0');
+                true_value_o(j) <= (others => '0');
+                true_value_o_2(j) <= (others => '0');
+                true_value_o_3(j) <= (others => '0');
+            end loop;
+            wait for PERIOD;
+            for j in 0 to (operands_size-1) loop
+                readline (ram_file, line_n);
+                read (line_n, read_operand_values);
+                test_value_a(j) <= read_operand_values;
+            end loop;
+            for j in 0 to (operands_size-1) loop
+                readline (ram_file, line_n);
+                read (line_n, read_operand_values);
+                test_value_b(j) <= read_operand_values;
+            end loop;
+            for j in 0 to (operands_size-1) loop
+                readline (ram_file, line_n);
+                read (line_n, read_operand_values);
+                true_value_o(j) <= read_operand_values;
+            end loop;
+            for j in 0 to (operands_size-1) loop
+                readline (ram_file, line_n);
+                read (line_n, read_operand_values);
+                true_value_o_2(j) <= read_operand_values;
+            end loop;
+            for j in 0 to (operands_size-1) loop
+                readline (ram_file, line_n);
+                read (line_n, read_operand_values);
+                true_value_o_3(j) <= read_operand_values;
+            end loop;
+            wait for PERIOD;
+            number_of_tests_per_iteration := number_of_tests_per_iteration + 1;
+            current_operation_addres := std_logic_vector(to_unsigned(number_of_tests_per_iteration, current_operation_addres'length));
+            load_operand_memory(test_value_a, current_operation_addres & "000", operands_size);
+            load_operand_memory(test_value_b, current_operation_addres & "001", operands_size);
+            load_operand_memory(true_value_o, current_operation_addres & "101", operands_size);
+            load_operand_memory(true_value_o_2, current_operation_addres & "110", operands_size);
+            load_operand_memory(true_value_o_3, current_operation_addres & "111", operands_size);
+            i := i + 1;
+            wait for PERIOD;
+        end loop;
+        wait for PERIOD;
+        
+        test_mem_small_bus_mode <= '0';
+        wait for PERIOD;
+        before_time := now;
+        test_instruction_values_valid  <= '1';
+        test_addition_subtraction_with_reduction_single_test("000", "001", "010", '1', operands_size, number_of_tests_per_iteration);
+        wait until (test_free_flag = '1' and rising_edge(clk));
+        wait for tb_delay;
+        after_time := now;
+        if(i <= 4) then
+                report "Operands size = " & integer'image(operands_size) & " Operation time = " & integer'image((after_time - before_time)/(PERIOD)) & " cycles" severity note;
+            end if;
+        wait for PERIOD;
+        
+        test_instruction_values_valid  <= '1';
+        test_addition_subtraction_with_reduction_single_test("000", "001", "011", '0', operands_size, number_of_tests_per_iteration);
+        wait until (test_free_flag = '1' and rising_edge(clk));
+        wait for tb_delay;
+        wait for PERIOD;
+        
+        test_instruction_values_valid  <= '1';
+        test_addition_subtraction_with_reduction_single_test("001", "000", "100", '0', operands_size, number_of_tests_per_iteration);
+        wait until (test_free_flag = '1' and rising_edge(clk));
+        wait for tb_delay;
+        wait for PERIOD;
+        
+        test_mem_small_bus_mode <= '1';
+        wait for PERIOD;
+        for z in 0 to number_of_tests_per_iteration loop
+            for j in 0 to (2**max_operands_size-1) loop
+                test_value_o(j) <= (others => '0');
+                test_value_o_2(j) <= (others => '0');
+                test_value_o_3(j) <= (others => '0');
+                true_value_o(j) <= (others => '0');
+                true_value_o_2(j) <= (others => '0');
+                true_value_o_3(j) <= (others => '0');
+            end loop;
+            current_operation_addres := std_logic_vector(to_unsigned(z, current_operation_addres'length));
+            retrive_operand_memory(test_value_a, current_operation_addres & "000", operands_size);
+            retrive_operand_memory(test_value_b, current_operation_addres & "001", operands_size);
+            retrive_operand_memory(test_value_o, current_operation_addres & "010", operands_size);
+            retrive_operand_memory(test_value_o_2, current_operation_addres & "011", operands_size);
+            retrive_operand_memory(test_value_o_3, current_operation_addres & "100", operands_size);
+            retrive_operand_memory(true_value_o, current_operation_addres & "101", operands_size);
+            retrive_operand_memory(true_value_o_2, current_operation_addres & "110", operands_size);
+            retrive_operand_memory(true_value_o_3, current_operation_addres & "111", operands_size);
+            compare_operand_memory(operands_size, test_value_o, true_value_o);
+            wait for PERIOD;
+            compare_operand_memory(operands_size, test_value_o_2, true_value_o_2);
+            wait for PERIOD;
+            compare_operand_memory(operands_size, test_value_o_3, true_value_o_3);
+            wait for PERIOD;
+        end loop;
+    end loop;
+end test_addition_subtraction_with_reduction;
+
     begin  
         test_error <= '0';
         test_verification <= '0';
@@ -2088,6 +2419,7 @@ end test_iterative_modular_reduction;
         test_prime_line_equal_one  <= '0';
         test_load_new_address_prime <= (others => '0');
         test_load_new_address_prime_line <= (others => '0');
+        test_load_new_address_2prime <= (others => '0');
         test_load_new_address_input_ma <= (others => '0');
         test_load_new_sign_ma <= '0';
         test_load_new_address_input_mb <= (others => '0');
@@ -2104,172 +2436,215 @@ end test_iterative_modular_reduction;
         wait for tb_delay;
         test_rstn <= '1';
         wait for PERIOD;
-        report "Start multiplication with no reduction test." severity note;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_4_3, 1);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_216_137, 2);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_250_159, 3);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_305_192, 3);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_372_239, 3);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_486_301, 4);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_240_max, 1);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_496_max, 2);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_752_max, 3);
-        wait for PERIOD;
-        test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the multiplication with no reduction test." severity note;
-        wait for PERIOD;
-        report "Start square with no reduction test." severity note;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_4_3, 1);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_216_137, 2);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_250_159, 3);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_305_192, 3);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_372_239, 3);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_486_301, 4);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_240_max, 1);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_496_max, 2);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_752_max, 3);
-        wait for PERIOD;
-        test_square_no_reduction(test_memory_file_square_no_reduction_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the square no reduction test." severity note;
-        wait for PERIOD;
-        report "Start Montgomery multiplication test." severity note;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_4_3, 1);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_216_137, 2);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_250_159, 3);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_305_192, 3);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_372_239, 3);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_486_301, 4);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_240_max, 1);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_496_max, 2);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_752_max, 3);
-        wait for PERIOD;
-        test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the Montgomery multiplication test." severity note;
-        wait for PERIOD;
-        report "Start special Montgomery multiplication test." severity note;
-        test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_305_192, 3);
-        wait for PERIOD;
-        test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_372_239, 3);
-        wait for PERIOD;
-        test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_486_301, 4);
-        wait for PERIOD;
-        test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_496_max, 2);
-        wait for PERIOD;
-        test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_752_max, 3);
-        wait for PERIOD;
-        test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the special Montgomery multiplication test." severity note;
-        wait for PERIOD;
-        report "Start Montgomery square test." severity note;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_4_3, 1);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_216_137, 2);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_250_159, 3);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_305_192, 3);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_372_239, 3);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_486_301, 4);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_240_max, 1);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_496_max, 2);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_752_max, 3);
-        wait for PERIOD;
-        test_montgomery_squaring(test_memory_file_montgomery_squaring_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the Montgomery square test." severity note;
-        report "Start special Montgomery square test." severity note;
-        test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_305_192, 3);
-        wait for PERIOD;
-        test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_372_239, 3);
-        wait for PERIOD;
-        test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_486_301, 4);
-        wait for PERIOD;
-        test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_496_max, 2);
-        wait for PERIOD;
-        test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_752_max, 3);
-        wait for PERIOD;
-        test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the special Montgomery square test." severity note;
-        wait for PERIOD;
-        report "Start addition/subtraction no reduction test." severity note;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_4_3, 1);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_216_137, 2);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_250_159, 3);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_305_192, 3);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_372_239, 3);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_486_301, 4);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_240_max, 1);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_496_max, 2);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_752_max, 3);
-        wait for PERIOD;
-        test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the addition/subtraction no reduction test." severity note;
-        wait for PERIOD;
-        report "Start iterative modular reduction test." severity note;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_4_3, 1);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_216_137, 2);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_250_159, 3);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_305_192, 3);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_372_239, 3);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_486_301, 4);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_240_max, 1);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_496_max, 2);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_752_max, 3);
-        wait for PERIOD;
-        test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_1008_max, 4);
-        wait for PERIOD;
-        report "End of the iterative modular reduction test." severity note;
+        
+        if(not skip_multiplication_no_reduction_test) then
+            report "Start multiplication with no reduction test." severity note;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_8_5, param_8_5_number_of_words);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_216_137, param_216_137_number_of_words);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_250_159, param_250_159_number_of_words);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_1_word_max, 1);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_2_words_max, 2);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_3_words_max, 3);
+            wait for PERIOD;
+            test_multiplication_no_reduction(test_memory_file_multiplication_no_reduction_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the multiplication with no reduction test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_square_no_reduction_test) then
+            report "Start square with no reduction test." severity note;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_8_5, param_8_5_number_of_words);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_216_137, param_216_137_number_of_words);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_250_159, param_250_159_number_of_words);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_1_word_max, 1);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_2_words_max, 2);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_3_words_max, 3);
+            wait for PERIOD;
+            test_square_no_reduction(test_memory_file_square_no_reduction_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the square no reduction test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_montgomery_multiplication_test) then
+            report "Start Montgomery multiplication test." severity note;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_8_5, param_8_5_number_of_words);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_216_137, param_216_137_number_of_words);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_250_159, param_250_159_number_of_words);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_1_word_max, 1);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_2_words_max, 2);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_3_words_max, 3);
+            wait for PERIOD;
+            test_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the Montgomery multiplication test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_special_montgomery_multiplication_test) then
+            report "Start special Montgomery multiplication test." severity note;
+            test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_2_words_max, 2);
+            wait for PERIOD;
+            test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_3_words_max, 3);
+            wait for PERIOD;
+            test_special_montgomery_multiplication(test_memory_file_montgomery_multiplication_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the special Montgomery multiplication test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_montgomery_squaring_test) then
+            report "Start Montgomery square test." severity note;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_8_5, param_8_5_number_of_words);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_216_137, param_216_137_number_of_words);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_250_159, param_250_159_number_of_words);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_1_word_max, 1);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_2_words_max, 2);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_3_words_max, 3);
+            wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the Montgomery square test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_special_montgomery_squaring_test) then
+            report "Start special Montgomery square test." severity note;
+            test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_2_words_max, 2);
+            wait for PERIOD;
+            test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_3_words_max, 3);
+            wait for PERIOD;
+            test_special_montgomery_squaring(test_memory_file_montgomery_squaring_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the special Montgomery square test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_addition_subtraction_no_reduction_test) then
+            report "Start addition/subtraction no reduction test." severity note;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_8_5, param_8_5_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_216_137, param_216_137_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_250_159, param_250_159_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_1_word_max, 1);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_2_words_max, 2);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_3_words_max, 3);
+            wait for PERIOD;
+            test_addition_subtraction_no_reduction(test_memory_file_addition_subtraction_no_reduction_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the addition/subtraction no reduction test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_iterative_modular_reduction) then
+            report "Start iterative modular reduction test." severity note;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_8_5, param_8_5_number_of_words);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_216_137, param_216_137_number_of_words);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_250_159, param_250_159_number_of_words);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_1_word_max, 1);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_2_words_max, 2);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_3_words_max, 3);
+            wait for PERIOD;
+            test_iterative_modular_reduction(test_memory_file_iterative_modular_reduction_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the iterative modular reduction test." severity note;
+        end if;
+        wait for PERIOD;
+        if(not skip_addition_subtraction_with_reduction_test) then
+            report "Start addition/subtraction with reduction test." severity note;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_8_5, param_8_5_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_216_137, param_216_137_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_250_159, param_250_159_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_305_192, param_305_192_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_372_239, param_372_239_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_486_301, param_486_301_number_of_words);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_1_word_max, 1);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_2_words_max, 2);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_3_words_max, 3);
+            wait for PERIOD;
+            test_addition_subtraction_with_reduction(test_memory_file_addition_subtraction_with_reduction_test_4_words_max, 4);
+            wait for PERIOD;
+            report "End of the addition/subtraction with reduction test." severity note;
+        end if;
         wait for PERIOD;
         report "End of all tests." severity note;
         test_bench_finish <= true;

@@ -1,0 +1,1004 @@
+; This program is to test some SIDH necessary functions
+; Constants positions
+prime:0
+prime_plus_one:1
+prime_line:2
+prime2:3
+const_r:4
+const_r2:5
+const_1:6
+inv_4:7
+sidh_xpa:8
+sidh_xpai:9
+sidh_xqa:10
+sidh_xqai:11
+sidh_xra:12
+sidh_xrai:13
+sidh_xpb:14
+sidh_xpbi:15
+sidh_xqb:16
+sidh_xqbi:17
+sidh_xrb:18
+sidh_xrbi:19
+;
+; Program itself
+;
+fin                                                                ; 0
+; Test Field inversion
+; Input value to be inverted tmpf0 tmpf1
+; Output value to be inverted tmpf16 tmpf17
+test_fp_inv : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1    ;
+copym tmpf0 tmpf24                                                 ;
+copym tmpf1 tmpf25                                                 ;
+copy flag #1                                                       ;
+call fp_inv                                                        ;
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17                  ;
+mitred tmpf16 tmpf24 tmpf17 tmpf25                                 ;
+fin                                                                ;
+;
+; Test Field^2 inversion
+; Input value to be inverted tmpf0, tmpf1, tmpf2, tmpf3
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_fp2_inv : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copy flag #1                                                       ;
+call fp2_inv                                                       ; 
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19 
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
+fin                                                                ; 
+;
+; Test j invariant
+; Input value to be computed tmpf0, tmpf1, tmpf2, tmpf3
+; Output value to be inverted tmpf16, tmpf17
+test_j_invar : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3  ; 
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copy flag #1                                                       ;
+call j_invar                                                       ; 
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17                  ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25                                 ;
+fin                                                                ; 
+;
+; Test get A
+; Input value to be computed tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5
+; Output value to be inverted tmpf16, tmpf17
+test_get_A : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3 tmpf28 const_r2 tmpf4 tmpf29 const_r2 tmpf5; 
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copym tmpf4 tmpf28                                                 ; 
+copym tmpf5 tmpf29                                                 ; 
+copy flag #1                                                       ;
+call get_A                                                         ; 
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17                  ; 
+mitred tmpf16 tmpf24 tmpf17 tmpf25                                 ;
+fin                                                                ; 
+;
+; Test 2 way inversion
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7 
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23 
+test_fp2_inv_2_way : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3 tmpf28 const_r2 tmpf4 tmpf29 const_r2 tmpf5 tmpf30 const_r2 tmpf6 tmpf31 const_r2 tmpf7
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copym tmpf4 tmpf28                                                 ; 
+copym tmpf5 tmpf29                                                 ; 
+copym tmpf6 tmpf30                                                 ; 
+copym tmpf7 tmpf31                                                 ; 
+copy flag #1                                                       ;
+call fp2_inv_2_way                                                 ; 
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19 tmpf28 const_1 tmpf20 tmpf29 const_1 tmpf21 tmpf30 const_1 tmpf22 tmpf31 const_1 tmpf23
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
+mitred tmpf20 tmpf28 tmpf21 tmpf29 tmpf22 tmpf30 tmpf23 tmpf31     ;
+fin                                                                ; 
+;
+; Test ladder 3 point
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8, tmpf9
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_ladder_3_point : mmulm tmpf24 const_r2 tmpf2 tmpf25 const_r2 tmpf3 tmpf26 const_r2 tmpf4 tmpf27 const_r2 tmpf5 tmpf28 const_r2 tmpf6 tmpf29 const_r2 tmpf7 tmpf30 const_r2 tmpf8 tmpf31 const_r2 tmpf9
+copym tmpf2 tmpf24                                                 ; 
+copym tmpf3 tmpf25                                                 ; 
+copym tmpf4 tmpf26                                                 ; 
+copym tmpf5 tmpf27                                                 ; 
+copym tmpf6 tmpf28                                                 ; 
+copym tmpf7 tmpf29                                                 ; 
+copym tmpf8 tmpf30                                                 ; 
+copym tmpf9 tmpf31                                                 ; 
+copy flag #1                                                       ;
+call ladder_3_point                                                ; 
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
+fin                                                                ; 
+;
+; Test xDBLe
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_xDBLe : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3 tmpf28 const_r2 tmpf4 tmpf29 const_r2 tmpf5 tmpf30 const_r2 tmpf6 tmpf31 const_r2 tmpf7
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copym tmpf4 tmpf28                                                 ; 
+copym tmpf5 tmpf29                                                 ; 
+copym tmpf6 tmpf30                                                 ; 
+copym tmpf7 tmpf31                                                 ; 
+copy flag #1                                                       ;
+call xDBLe                                                         ; 
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
+fin                                                                ; 
+;
+; Test get 4 isogenies
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23, tmpf24, tmpf25
+test_get_4_isog : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copy flag #1                                                       ;
+call get_4_isog                                                    ; 
+copy flag #0                                                       ;
+mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19 tmpf30 const_1 tmpf20 tmpf31 const_1 tmpf21 tmpf32 const_1 tmpf22 tmpf33 const_1 tmpf23
+mmulm tmpf34 const_1 tmpf24 tmpf35 const_1 tmpf25                  ;
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+mitred tmpf20 tmpf30 tmpf21 tmpf31 tmpf22 tmpf32 tmpf23 tmpf33     ;
+mitred tmpf24 tmpf34 tmpf25 tmpf35                                 ;
+fin                                                                ; 
+;
+; Test eval 4 isogenies
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8, tmpf9
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_eval_4_isog : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3 tmpf28 const_r2 tmpf4 tmpf29 const_r2 tmpf5 tmpf30 const_r2 tmpf6 tmpf31 const_r2 tmpf7
+mmulm tmpf32 const_r2 tmpf8 tmpf33 const_r2 tmpf9                  ; 
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copym tmpf4 tmpf28                                                 ; 
+copym tmpf5 tmpf29                                                 ; 
+copym tmpf6 tmpf30                                                 ; 
+copym tmpf7 tmpf31                                                 ; 
+copym tmpf8 tmpf32                                                 ; 
+copym tmpf9 tmpf33                                                 ; 
+copy flag #1                                                       ;
+call eval_4_isog                                                   ; 
+copy flag #0                                                       ;
+mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+fin                                                                ; 
+;
+; Test xTPLe
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_xTPLe : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3 tmpf28 const_r2 tmpf4 tmpf29 const_r2 tmpf5 tmpf30 const_r2 tmpf6 tmpf31 const_r2 tmpf7
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copym tmpf4 tmpf28                                                 ; 
+copym tmpf5 tmpf29                                                 ; 
+copym tmpf6 tmpf30                                                 ; 
+copym tmpf7 tmpf31                                                 ; 
+copy flag #1                                                       ;
+call xTPLe                                                         ; 
+copy flag #0                                                       ;
+mmulm tmpf24 const_1 tmpf16 tmpf25 const_1 tmpf17 tmpf26 const_1 tmpf18 tmpf27 const_1 tmpf19
+mitred tmpf16 tmpf24 tmpf17 tmpf25 tmpf18 tmpf26 tmpf19 tmpf27     ;
+fin                                                                ; 
+;
+; Test get 3 isogenies
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23
+test_get_3_isog : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copy flag #1                                                       ;
+call get_3_isog                                                    ; 
+copy flag #0                                                       ;
+mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19 tmpf30 const_1 tmpf20 tmpf31 const_1 tmpf21 tmpf32 const_1 tmpf22 tmpf33 const_1 tmpf23
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+mitred tmpf20 tmpf30 tmpf21 tmpf31 tmpf22 tmpf32 tmpf23 tmpf33     ;
+fin                                                                ; 
+;
+; Test eval 3 isogenies
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_eval_3_isog : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3 tmpf28 const_r2 tmpf4 tmpf29 const_r2 tmpf5 tmpf30 const_r2 tmpf6 tmpf31 const_r2 tmpf7
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copym tmpf4 tmpf28                                                 ; 
+copym tmpf5 tmpf29                                                 ; 
+copym tmpf6 tmpf30                                                 ; 
+copym tmpf7 tmpf31                                                 ; 
+copy flag #1                                                       ;
+call eval_3_isog                                                   ; 
+copy flag #0                                                       ;
+mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+fin                                                                ; 
+;
+;
+; Test get 2 isogenies
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_get_2_isog : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copy flag #1                                                       ;
+call get_2_isog                                                    ; 
+copy flag #0                                                       ;
+mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+fin                                                                ; 
+;
+; Test eval 2 isogenies
+; Input value to be computed  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7
+; Output value to be inverted tmpf16, tmpf17, tmpf18, tmpf19
+test_eval_2_isog : mmulm tmpf24 const_r2 tmpf0 tmpf25 const_r2 tmpf1 tmpf26 const_r2 tmpf2 tmpf27 const_r2 tmpf3 tmpf28 const_r2 tmpf4 tmpf29 const_r2 tmpf5 tmpf30 const_r2 tmpf6 tmpf31 const_r2 tmpf7
+copym tmpf0 tmpf24                                                 ; 
+copym tmpf1 tmpf25                                                 ; 
+copym tmpf2 tmpf26                                                 ; 
+copym tmpf3 tmpf27                                                 ; 
+copym tmpf4 tmpf28                                                 ; 
+copym tmpf5 tmpf29                                                 ; 
+copym tmpf6 tmpf30                                                 ; 
+copym tmpf7 tmpf31                                                 ; 
+copy flag #1                                                       ;
+call eval_2_isog                                                   ; 
+copy flag #0                                                       ;
+mmulm tmpf26 const_1 tmpf16 tmpf27 const_1 tmpf17 tmpf28 const_1 tmpf18 tmpf29 const_1 tmpf19
+mitred tmpf16 tmpf26 tmpf17 tmpf27 tmpf18 tmpf28 tmpf19 tmpf29     ;
+fin                                                                ; 
+;
+;
+;
+; Field inversion
+; Input value to be inverted tmpf0, tmpf1
+; Output value to be inverted tmpf16, tmpf17
+fp_inv: copym tmpf24 const_r                                       ; 
+copym tmpf25 tmpf0                                                 ; 
+copym tmpf28 const_r                                               ; 
+copym tmpf29 tmpf1                                                 ; 
+copy rd3 roperands                                                 ; 
+bsmul rd3 rd3 #8                                                   ; 
+badd rd3 rd3 #7                                                    ; Position where the MSB prime is.
+copy rd4 #tmpf33                                                   ; Prime - 2, base address.(tmpf33 == m53)
+bsmul rd4 rd4 #64                                                  ; Multiply 64 to be accessible by the base alu.
+badd rd3 rd3 rd4                                                   ;
+lconstm tmpf32 #2                                                  ; 
+madd_subd tmpf33 prime - tmpf32                                    ; 
+copy rd1 roperands                                                 ; 
+badd rd1 rd1 #1                                                    ; 
+bsmul rd1 rd1 #8                                                   ; 
+bsmul rd5 rd1 #16                                                  ; rd5 has the maximum number of bits the prime could have.
+copy rd4 b417                                                      ; rd4 has the current number of bits.
+badd rd4 rd4 #16                                                   ; 
+jumpeql fp_inv_loop5 rd5 rd4                                       ; remove unnecessary 0's from the most significant part.
+fp_inv_loop4: badd rd4 rd4 #16                                     ; Only remove words multiple of 16.
+bsub rd1 rd1 #1                                                    ; It would be possible to remove until detect a bit 1, maybe in the future.
+bsub rd3 rd3 #1                                                    ; 
+jumpl fp_inv_loop4 rd4 rd5                                         ; 
+fp_inv_loop5: copy rd4 #tmpf24                                     ; tmpf24 = m44
+copy rd5 #tmpf25                                                   ; tmpf25 = m45
+copy rd6 #tmpf28                                                   ; tmpf28 = m48
+copy rd7 #tmpf29                                                   ; tmpf29 = m49
+copy rd8 #tmpf26                                                   ; tmpf26 = m46 <=> m44
+copy rd9 #tmpf27                                                   ; tmpf27 = m47 <=> m45
+copy rd10 #tmpf30                                                  ; tmpf30 = m50 <=> m48
+copy rd11 #tmpf31                                                  ; tmpf31 = m51 <=> m49
+fp_inv_loop1: copy rd2 #16                                         ; 
+copy scalar *rd3                                                   ;
+fp_inv_loop2: mmulm tmpf27 tmpf25 *rm4 tmpf26 tmpf24 *rm4 tmpf31 tmpf29 *rm6 tmpf30 tmpf28 *rm6
+bshiftl scalar scalar #1                                           ;
+mmulm tmpf25 tmpf27 *rm8 tmpf24 tmpf26 *rm8 tmpf29 tmpf31 *rm10 tmpf28 tmpf30 *rm10
+bshiftl scalar scalar #1                                           ;
+bsub rd2 rd2 #2                                                    ; 
+jumpl fp_inv_loop2 #0 rd2                                          ; 
+bsub rd3 rd3 #1                                                    ; 
+bsub rd1 rd1 #1                                                    ; 
+jumpl fp_inv_loop1 #0 rd1                                          ; 
+copym tmpf16 tmpf24                                                ; 
+copym tmpf17 tmpf28                                                ; 
+ret                                                                ; 
+;
+; Field^2 inversion
+; Input value to be inverted tmpf0 tmpf1 tmpf2 tmpf3
+; Output value to be inverted tmpf16 tmpf17 tmpf18 tmpf19
+fp2_inv: msqum tmpf25 tmpf1 tmpf24 tmpf0 tmpf29 tmpf3 tmpf28 tmpf2
+pushm tmpf3
+pushm tmpf2
+pushm tmpf1
+pushm tmpf0
+madd_subr tmpf0 tmpf25 + tmpf24 tmpf1 tmpf29 + tmpf28
+call fp_inv
+popm tmpf24               ; original tmpf0
+popm tmpf25               ; original tmpf1
+popm tmpf28               ; original tmpf2
+popm tmpf29               ; original tmpf3
+lconstm tmpf26 #0
+madd_subr tmpf27 tmpf26 - tmpf25 tmpf31 tmpf26 - tmpf29
+copym tmpf25 tmpf16
+copym tmpf29 tmpf17
+mmulm tmpf16 tmpf25 tmpf24 tmpf17 tmpf25 tmpf27 tmpf18 tmpf29 tmpf28 tmpf19 tmpf29 tmpf31
+ret
+;
+; Computes the j_invariant of a curve defined by a, c
+; a = tmpf0 + i*tmpf1
+; c = tmpf2 + i*tmpf3
+; t0 = tmpf24 + i*tmpf25
+; t1 = var4 + i*var5
+; t2 = tmpf26 + i*tmpf27
+; t3 = tmpf28 + i*tmpf29
+; t4 = tmpf30 + i*tmpf31
+;
+j_invar: pushm var4
+pushm var5
+; #t0 = A^2
+; #t1 = C^2
+mmulm fp2t0 tmpf1 tmpf0 fp2t1 tmpf0 tmpf1 fp2t2 tmpf0 tmpf0 fp2t3 tmpf1 tmpf1 fp2t4 tmpf3 tmpf2 fp2t5 tmpf2 tmpf3 fp2t6 tmpf2 tmpf2 fp2t7 tmpf3 tmpf3
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 var5 fp2t4 + fp2t5 var4 fp2t6 - fp2t7
+;
+; #t2 = t0-t1
+; #t3 = t1+t1
+madd_subr tmpf26 tmpf24 - var4 tmpf27 tmpf25 - var5 tmpf28 var4 + var4 tmpf29 var5 + var5
+;
+; #t0 = t2-t3
+madd_subr tmpf24 tmpf26 - tmpf28 tmpf25 tmpf27 - tmpf29
+;
+; #t2 = t0+t0
+; #t3 = t0-t1
+madd_subr tmpf26 tmpf24 + tmpf24 tmpf27 tmpf25 + tmpf25 tmpf28 tmpf24 - var4 tmpf29 tmpf25 - var5
+;
+; #t0 = t2+t2
+madd_subr tmpf24 tmpf26 + tmpf26 tmpf25 tmpf27 + tmpf27
+;
+; #t2 = t0^2
+; #t4 = t1^2
+mmulm fp2t0 tmpf24 tmpf25 fp2t1 tmpf25 tmpf24 fp2t2 tmpf24 tmpf24 fp2t3 tmpf25 tmpf25 fp2t4 var4 var5 fp2t5 var5 var4 fp2t6 var4 var4 fp2t7 var5 var5
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3 tmpf31 fp2t4 + fp2t5 tmpf30 fp2t6 - fp2t7
+;
+; #t1 = t0*t2
+; #t5 = t3*t4
+mmulm fp2t0 tmpf25 tmpf26 fp2t1 tmpf24 tmpf27 fp2t2 tmpf24 tmpf26 fp2t3 tmpf25 tmpf27 fp2t4 tmpf29 tmpf30 fp2t5 tmpf31 tmpf28 fp2t6 tmpf30 tmpf28 fp2t7 tmpf29 tmpf31
+madd_subr var5 fp2t0 + fp2t1 var4 fp2t2 - fp2t3 tmpf1 fp2t4 + fp2t5 tmpf0 fp2t6 - fp2t7
+;
+; #t0 = 1 / t5
+call fp2_inv
+;
+; #t2 = t1*t0
+mmulm fp2t0 tmpf16 var5 fp2t1 tmpf17 var4 fp2t2 tmpf16 var4 fp2t3 tmpf17 var5
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3
+;
+; #t0 = t2+t2
+madd_subr tmpf24 tmpf26 + tmpf26 tmpf25 tmpf27 + tmpf27
+;
+; #t1 = t0+t0
+madd_subr tmpf16 tmpf24 + tmpf24 tmpf17 tmpf25 + tmpf25
+;
+popm var5
+popm var4
+ret
+;
+; Computes the A of a curve defined by it is three points
+;   A = (XP*XQ+XP*XR+XQ*XR-1)^2 
+;       / (4*XP*XQ*XR) - XP - XQ - XR
+; Input values tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5
+; Output values tmpf16, tmpf17
+;
+; xp = tmpf0 + i*tmpf1
+; xq = tmpf2 + i*tmpf3
+; xr = tmpf4 + i*tmpf5
+; t0 = tmpf24 + i*tmpf25
+; t1 = tmpf26 + i*tmpf27
+; t2 = var4 + i*var5
+; t3 = tmpf28 + i*tmpf29
+; t4 = var6 + i*var7
+; t5 = tmpf30 + i*tmpf31
+;
+get_A: pushm var4
+pushm var5
+pushm var6
+pushm var7
+; #t0 = XP+XQ
+; #t1 = XR+XR
+madd_subr tmpf24 tmpf0 + tmpf2 tmpf25 tmpf1 + tmpf3 tmpf26 tmpf4 + tmpf4 tmpf27 tmpf5 + tmpf5
+;
+; #t2 = XP*XQ
+; #t3 = t0*XR
+mmulm fp2t0 tmpf1 tmpf2 fp2t1 tmpf0 tmpf3 fp2t2 tmpf0 tmpf2 fp2t3 tmpf1 tmpf3 fp2t4 tmpf25 tmpf4 fp2t5 tmpf24 tmpf5 fp2t6 tmpf24 tmpf4 fp2t7 tmpf25 tmpf5
+madd_subr var5 fp2t0 + fp2t1 var4 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; #t4 = t0+XR
+; #t5 = t2+t3
+madd_subr var6 tmpf24 + tmpf4 var7 tmpf25 + tmpf5 tmpf30 var4 + tmpf28 tmpf31 var5 + tmpf29
+;
+; #t0 = t5-1
+; #t3 = t2+t2
+madd_subr tmpf24 tmpf30 - const_r tmpf28 var4 + var4 tmpf29 var5 + var5
+copym tmpf25 tmpf31
+;
+; #t2 = t0^2
+; #t5 = t3*t1
+mmulm fp2t0 tmpf25 tmpf24 fp2t1 tmpf24 tmpf25 fp2t2 tmpf24 tmpf24 fp2t3 tmpf25 tmpf25 fp2t4 tmpf29 tmpf26 fp2t5 tmpf28 tmpf27 fp2t6 tmpf28 tmpf26 fp2t7 tmpf29 tmpf27
+madd_subr var5 fp2t0 + fp2t1 var4 fp2t2 - fp2t3 tmpf1 fp2t4 + fp2t5 tmpf0 fp2t6 - fp2t7
+;
+; #t0 = 1/t5
+call fp2_inv
+;
+; #t1 = t2*t0
+mmulm fp2t0 var5 tmpf16 fp2t1 var4 tmpf17 fp2t2 var4 tmpf16 fp2t3 var5 tmpf17
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3
+;
+; #t0 = t1-t4
+madd_subr tmpf16 tmpf26 - var6 tmpf17 tmpf27 - var7
+;
+popm var7
+popm var6
+popm var5
+popm var4
+ret
+;
+; Inversion of up to four values in fp2
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23
+; z1 = tmpf24 + i*tmpf25
+; z2 = tmpf26 + i*tmpf27
+; z3 = tmpf28 + i*tmpf29
+; z4 = tmpf30 + i*tmpf31
+; t1 = tmpf0 + i*tmpf1
+; t2 = tmpf2 + i*tmpf3
+fp2_inv_2_way: pushm tmpf0
+pushm tmpf1
+pushm tmpf2
+pushm tmpf3
+pushm tmpf4
+pushm tmpf5
+pushm tmpf6
+pushm tmpf7
+; #t0 = z1*z2
+; #t1 = z3*z4
+mmulm fp2t0 tmpf1 tmpf2 fp2t1 tmpf0 tmpf3 fp2t2 tmpf0 tmpf2 fp2t3 tmpf1 tmpf3 fp2t4 tmpf5 tmpf6 fp2t5 tmpf4 tmpf7 fp2t6 tmpf4 tmpf6 fp2t7 tmpf5 tmpf7
+madd_subr tmpf1 fp2t0 + fp2t1 tmpf0 fp2t2 - fp2t3 tmpf3 fp2t4 + fp2t5 tmpf2 fp2t6 - fp2t7
+;
+; #t0 = 1 / t0 
+; #t1 = 1 / t1
+call fp2_inv
+;
+popm tmpf31
+popm tmpf30
+popm tmpf29
+popm tmpf28
+popm tmpf27
+popm tmpf26
+popm tmpf25
+popm tmpf24
+copym tmpf32 tmpf18
+copym tmpf33 tmpf19
+; #o1 = t0*z2
+; #o2 = t0*z1
+mmulm fp2t0 tmpf17 tmpf26 fp2t1 tmpf16 tmpf27 fp2t2 tmpf16 tmpf26 fp2t3 tmpf17 tmpf27 fp2t4 tmpf17 tmpf24 fp2t5 tmpf16 tmpf25 fp2t6 tmpf16 tmpf24 fp2t7 tmpf17 tmpf25
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+; #o3 = t1*z4
+; #o4 = t1*z3
+mmulm fp2t0 tmpf33 tmpf30 fp2t1 tmpf32 tmpf31 fp2t2 tmpf32 tmpf30 fp2t3 tmpf33 tmpf31 fp2t4 tmpf33 tmpf28 fp2t5 tmpf32 tmpf29 fp2t6 tmpf32 tmpf28 fp2t7 tmpf33 tmpf29
+madd_subr tmpf21 fp2t0 + fp2t1 tmpf20 fp2t2 - fp2t3 tmpf23 fp2t4 + fp2t5 tmpf22 fp2t6 - fp2t7
+;
+ret
+;
+; Ladder 3 points
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8, tmpf9
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19
+;
+; exponent = tmpf0
+; exponent_bits = tmpf1
+; xp    = tmpf2 + i*tmpf3
+; xq    = tmpf4 + i*tmpf5
+; xpq   = tmpf6 + i*tmpf7
+; a     = tmpf8 + i*tmpf9
+; r1    = tmpf16 + i*tmpf17
+; z1    = tmpf18 + i*tmpf19
+; a24   = tmpf20 + i*tmpf21
+; r0    = tmpf22 + i*tmpf23
+; z0    = tmpf24 + i*tmpf25
+; r2    = tmpf26 + i*tmpf27
+; z2    = tmpf28 + i*tmpf29
+; t0    = tmpf30 + i*tmpf31
+; t1    = tmpf32 + i*tmpf33
+; t2    = tmpf34 + i*tmpf35
+; t3    = tmpf36 + i*tmpf37
+; t7    = tmpf38 + i*tmpf39
+; t8    = tmpf10 + i*tmpf11
+;
+ladder_3_point : madd_subr tmpf31 const_r + const_r
+; Compute a24
+madd_subr tmpf30 tmpf31 + tmpf8
+mmulm tmpf20 tmpf30 inv_4 tmpf21 tmpf9 inv_4
+; #r0 = XQ;  z0 = 1
+copym tmpf22 tmpf4
+copym tmpf23 tmpf5
+copym tmpf24 const_r
+lconstm tmpf25 #0
+;
+; #r1 = XP;  z1 = 1
+copym tmpf16 tmpf2
+copym tmpf17 tmpf3
+copym tmpf18 tmpf24
+copym tmpf19 tmpf25
+;
+; #r2 = XPQ; z2 = 1
+copym tmpf26 tmpf6
+copym tmpf27 tmpf7
+copym tmpf28 tmpf24
+copym tmpf29 tmpf25
+;
+; Copy address registers
+copy rd4 #tmpf26                                                  ; tmpf26 = m46
+copy rd5 #tmpf16                                                  ; tmpf16 = m36
+copy rd6 #tmpf27                                                  ; tmpf27 = m47
+copy rd7 #tmpf17                                                  ; tmpf17 = m37
+copy rd8 #tmpf28                                                  ; tmpf28 = m48
+copy rd9 #tmpf18                                                  ; tmpf18 = m38
+copy rd10 #tmpf29                                                 ; tmpf29 = m49
+copy rd11 #tmpf19                                                 ; tmpf19 = m39
+;
+; Copy exponent
+copy rd1 #tmpf0.0.0
+copy rd2 tmpf1.0.0
+ladder_3_point_loop1: copy rd3 #16
+copy scalar *rd1
+;
+; exponent == 0
+; #r0, r0i, z0, z0i, r2, r2i, z2, z2i = xDBLADD(arithmetic_parameters, r0, r0i, z0, z0i, r2, r2i, z2, z2i, r1, r1i, a24, a24i)
+; #r2 = r2*z1
+; exponent == 1
+; #r0, r0i, z0, z0i, r1, r1i, z1, z1i = xDBLADD(arithmetic_parameters, r0, r0i, z0, z0i, r1, r1i, z1, z1i, r2, r2i, a24, a24i)
+; #r1 = r1*z2
+;
+; for both exponents
+; #tmpf22, tmpf23, tmpf24, tmpf25, *rl4, *rl6, *rl8, *rl10 = xDBLADD(arithmetic_parameters, tmpf22, tmpf23, tmpf24, tmpf25, *rl4, *rl6, *rl8, *rl10, *rl5, *rl7, tmpf20, tmpf24i)
+; #*rl4 = *rl4 * *rl9
+; # t0 = r0+z0
+; # t1 = r0-z0
+ladder_3_point_loop2: madd_subr tmpf31 tmpf23 + tmpf25 tmpf30 tmpf22 + tmpf24 tmpf33 tmpf23 - tmpf25 tmpf32 tmpf22 - tmpf24
+;
+; # t2 = *rl4+*rl8
+; # t3 = *rl4-*rl8
+madd_subr tmpf35 *rl6 + *rl10 tmpf34 *rl4 + *rl8 tmpf37 *rl6 - *rl10 tmpf36 *rl4 - *rl8
+;
+; # *rl8 = t0*t3
+; # t7   = t1*t2
+mmulm fp2t0 tmpf31 tmpf36 fp2t1 tmpf30 tmpf37 fp2t2 tmpf30 tmpf36 fp2t3 tmpf31 tmpf37 fp2t4 tmpf33 tmpf34 fp2t5 tmpf32 tmpf35 fp2t6 tmpf32 tmpf34 fp2t7 tmpf33 tmpf35
+madd_subr *rl10 fp2t0 + fp2t1 *rl8 fp2t2 - fp2t3 tmpf39 fp2t4 + fp2t5 tmpf38 fp2t6 - fp2t7
+;
+; # t2 = t0^2
+; # t3 = t1^2
+mmulm fp2t0 tmpf31 tmpf30 fp2t1 tmpf30 tmpf31 fp2t2 tmpf30 tmpf30 fp2t3 tmpf31 tmpf31 fp2t4 tmpf33 tmpf32 fp2t5 tmpf32 tmpf33 fp2t6 tmpf32 tmpf32 fp2t7 tmpf33 tmpf33
+madd_subr tmpf35 fp2t0 + fp2t1 tmpf34 fp2t2 - fp2t3 tmpf37 fp2t4 + fp2t5 tmpf36 fp2t6 - fp2t7
+;
+; # t0   = t2-t3
+; # t1   = *rl8-t7
+madd_subr tmpf31 tmpf35 - tmpf37 tmpf30 tmpf34 - tmpf36 tmpf33 *rl10 - tmpf39 tmpf32 *rl8 - tmpf38
+;
+; # *rl4 = a24*t0
+; # r0   = t2*t3
+mmulm fp2t0 tmpf21 tmpf30 fp2t1 tmpf20 tmpf31 fp2t2 tmpf20 tmpf30 fp2t3 tmpf21 tmpf31 fp2t4 tmpf35 tmpf36 fp2t5 tmpf34 tmpf37 fp2t6 tmpf34 tmpf36 fp2t7 tmpf35 tmpf37
+madd_subr *rl6 fp2t0 + fp2t1 *rl4 fp2t2 - fp2t3 tmpf23 fp2t4 + fp2t5 tmpf22 fp2t6 - fp2t7
+;
+; # t2   = *rl4+t3
+; # t8   = *rl8+t7
+madd_subr tmpf35 *rl6 + tmpf37 tmpf34 *rl4 + tmpf36 tmpf11 *rl10 + tmpf39 tmpf10 *rl8 + tmpf38
+;
+; # t3   = t1^2
+; # *rl4 = t8^2
+mmulm fp2t0 tmpf33 tmpf32 fp2t1 tmpf32 tmpf33 fp2t2 tmpf32 tmpf32 fp2t3 tmpf33 tmpf33 fp2t4 tmpf11 tmpf10 fp2t5 tmpf10 tmpf11 fp2t6 tmpf10 tmpf10 fp2t7 tmpf11 tmpf11
+madd_subr tmpf37 fp2t0 + fp2t1 tmpf36 fp2t2 - fp2t3 *rl6 fp2t4 + fp2t5 *rl4 fp2t6 - fp2t7
+;
+; # z0    =   t2 * t0
+; # *rl8  = *rl5 * t3
+mmulm fp2t0 tmpf35 tmpf30 fp2t1 tmpf34 tmpf31 fp2t2 tmpf34 tmpf30 fp2t3 tmpf35 tmpf31 fp2t4 *rl7 tmpf36 fp2t5 *rl5 tmpf37 fp2t6 *rl5 tmpf36 fp2t7 *rl7 tmpf37
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 *rl10 fp2t4 + fp2t5 *rl8 fp2t6 - fp2t7
+;
+; #*rl4 = *rl4 * *rl9
+mmulm fp2t0 *rl6 *rl9 fp2t1 *rl4 *rl11 fp2t2 *rl4 *rl9 fp2t3 *rl6 *rl11
+madd_subr *rl6 fp2t0 + fp2t1 *rl4 fp2t2 - fp2t3
+;
+bshiftr scalar scalar #1
+bsub rd2 rd2 #1
+bsub rd3 rd3 #1
+jumpeq ladder_3_point_loop_finish #0 rd2
+jumpl ladder_3_point_loop2 #0 rd3
+badd rd1 rd1 #1
+jump ladder_3_point_loop1
+ladder_3_point_loop_finish: ret
+;
+; xDBLe
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19
+;
+; x     = tmpf0 + i*tmpf1
+; z     = tmpf2 + i*tmpf3
+; a24   = tmpf4 + i*tmpf5
+; c24   = tmpf6 + i*tmpf7
+; repetition = tmpf8
+; t0    = tmpf16 + i*tmpf17
+; t1    = tmpf18 + i*tmpf19
+; t2    = tmpf24 + i*tmpf25
+; t3    = tmpf26 + i*tmpf27
+; t4    = tmpf28 + i*tmpf29
+; t5    = tmpf30 + i*tmpf31
+;
+; # t0 = X; t1 = Z
+xDBLe: copym tmpf16 tmpf0
+copym tmpf17 tmpf1
+copym tmpf18 tmpf2
+copym tmpf19 tmpf3
+copy rd1 tmpf8.0.0
+; # t4 = t0-t1
+; # t5 = t0+t1
+xDBLe_loop1: madd_subr tmpf29 tmpf17 - tmpf19 tmpf28 tmpf16 - tmpf18 tmpf31 tmpf17 + tmpf19 tmpf30 tmpf16 + tmpf18
+;
+; # t2 = t4^2
+; # t3 = t5^2
+mmulm fp2t0 tmpf29 tmpf28 fp2t1 tmpf28 tmpf29 fp2t2 tmpf28 tmpf28 fp2t3 tmpf29 tmpf29 fp2t4 tmpf31 tmpf30 fp2t5 tmpf30 tmpf31 fp2t6 tmpf30 tmpf30 fp2t7 tmpf31 tmpf31
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+;
+; # t0 = t3-t2
+madd_subr tmpf17 tmpf27 - tmpf25 tmpf16 tmpf26 - tmpf24 
+;
+; # t4 = a24*t0
+; # t1 = c24*t2
+mmulm fp2t0 tmpf5 tmpf16 fp2t1 tmpf4 tmpf17 fp2t2 tmpf4 tmpf16 fp2t3 tmpf5 tmpf17 fp2t4 tmpf7 tmpf24 fp2t5 tmpf6 tmpf25 fp2t6 tmpf6 tmpf24 fp2t7 tmpf7 tmpf25
+madd_subr tmpf29 fp2t0 + fp2t1 tmpf28 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+; # t2 = t1+t4
+madd_subr tmpf25 tmpf19 + tmpf29 tmpf24 tmpf18 + tmpf28
+;
+; # t0 = t3*t1
+; # t1 = t0*t2
+mmulm fp2t0 tmpf27 tmpf18 fp2t1 tmpf26 tmpf19 fp2t2 tmpf26 tmpf18 fp2t3 tmpf27 tmpf19 fp2t4 tmpf17 tmpf24 fp2t5 tmpf16 tmpf25 fp2t6 tmpf16 tmpf24 fp2t7 tmpf17 tmpf25
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+bsub rd1 rd1 #1
+jumpl xDBLe_loop1 #0 rd1
+ret
+;
+; Get 4 isogenies
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23, tmpf24, tmpf25
+;
+; x4    = tmpf0 + i*tmpf1
+; z4    = tmpf2 + i*tmpf3
+;
+; t2    = tmpf16 + i*tmpf17
+; t3    = tmpf18 + i*tmpf19
+; t4    = tmpf20 + i*tmpf21
+; t0    = tmpf22 + i*tmpf23
+; t1    = tmpf24 + i*tmpf25
+; t5    = tmpf26 + i*tmpf27
+;
+; # t0 = x4-z4
+; # t1 = x4+z4
+get_4_isog: madd_subr tmpf23 tmpf1 - tmpf3 tmpf22 tmpf0 - tmpf2 tmpf25 tmpf1 + tmpf3 tmpf24 tmpf0 + tmpf2
+;
+; # t2 = x4^2
+; # t3 = z4^2
+mmulm fp2t0 tmpf1 tmpf0 fp2t1 tmpf0 tmpf1 fp2t2 tmpf0 tmpf0 fp2t3 tmpf1 tmpf1 fp2t4 tmpf3 tmpf2 fp2t5 tmpf2 tmpf3 fp2t6 tmpf2 tmpf2 fp2t7 tmpf3 tmpf3
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+; # t4 = t2+t2
+; # t5 = t3+t3
+madd_subr tmpf21 tmpf17 + tmpf17 tmpf20 tmpf16 + tmpf16 tmpf27 tmpf19 + tmpf19 tmpf26 tmpf18 + tmpf18
+;
+; # t2 = t4^2
+; # t3 = t5^2
+mmulm fp2t0 tmpf21 tmpf20 fp2t1 tmpf20 tmpf21 fp2t2 tmpf20 tmpf20 fp2t3 tmpf21 tmpf21 fp2t4 tmpf27 tmpf26 fp2t5 tmpf26 tmpf27 fp2t6 tmpf26 tmpf26 fp2t7 tmpf27 tmpf27
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+; # t4 = t5+t5
+madd_subr tmpf21 tmpf27 + tmpf27 tmpf20 tmpf26 + tmpf26
+;
+ret
+;
+; Eval 4 isogenies
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8, tmpf9
+; Outputs tmpf18, tmpf19, tmpf16, tmpf17
+;
+; x     = tmpf0 + i*tmpf1
+; z     = tmpf2 + i*tmpf3
+; k1    = tmpf4 + i*tmpf5
+; k2    = tmpf6 + i*tmpf7
+; k3    = tmpf8 + i*tmpf9
+;
+; t1    = tmpf16 + i*tmpf17
+; t5    = tmpf18 + i*tmpf19
+; t0    = tmpf24 + i*tmpf25
+; t2    = tmpf26 + i*tmpf27
+; t3    = tmpf28 + i*tmpf29
+; t4    = tmpf30 + i*tmpf31
+;
+; #t0 = x+z
+; #t1 = x-z
+eval_4_isog: madd_subr tmpf25 tmpf1 + tmpf3 tmpf24 tmpf0 + tmpf2 tmpf17 tmpf1 - tmpf3 tmpf16 tmpf0 - tmpf2
+;
+; #t2 = k2*t0
+; #t3 = k3*t1
+mmulm fp2t0 tmpf7 tmpf24 fp2t1 tmpf6 tmpf25 fp2t2 tmpf6 tmpf24 fp2t3 tmpf7 tmpf25 fp2t4 tmpf9 tmpf16 fp2t5 tmpf8 tmpf17 fp2t6 tmpf8 tmpf16 fp2t7 tmpf9 tmpf17
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; #t4 = t3+t2
+; #t5 = t3-t2
+madd_subr tmpf31 tmpf29 + tmpf27 tmpf30 tmpf28 + tmpf26 tmpf19 tmpf29 - tmpf27 tmpf18 tmpf28 - tmpf26
+;
+; #t2 = t4^2
+; #t3 = t0*t1
+mmulm fp2t0 tmpf30 tmpf31 fp2t1 tmpf31 tmpf30 fp2t2 tmpf30 tmpf30 fp2t3 tmpf31 tmpf31 fp2t4 tmpf25 tmpf16 fp2t5 tmpf24 tmpf17 fp2t6 tmpf24 tmpf16 fp2t7 tmpf25 tmpf17
+madd_subr tmpf27 fp2t0 + fp2t1 tmpf26 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; #t0 = t5^2
+; #t1 = k1*t3
+mmulm fp2t0 tmpf19 tmpf18 fp2t1 tmpf18 tmpf19 fp2t2 tmpf18 tmpf18 fp2t3 tmpf19 tmpf19 fp2t4 tmpf5 tmpf28 fp2t5 tmpf4 tmpf29 fp2t6 tmpf4 tmpf28 fp2t7 tmpf5 tmpf29
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf17 fp2t4 + fp2t5 tmpf16 fp2t6 - fp2t7
+;
+; #t3 = t2+t1
+; #t4 = t0-t1
+madd_subr tmpf29 tmpf27 + tmpf17 tmpf28 tmpf26 + tmpf16 tmpf31 tmpf25 - tmpf17 tmpf30 tmpf24 - tmpf16
+;
+; #t1 = t2*t3
+; #t5 = t0*t4
+mmulm fp2t0 tmpf27 tmpf28 fp2t1 tmpf26 tmpf29 fp2t2 tmpf26 tmpf28 fp2t3 tmpf27 tmpf29 fp2t4 tmpf25 tmpf30 fp2t5 tmpf24 tmpf31 fp2t6 tmpf24 tmpf30 fp2t7 tmpf25 tmpf31
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+ret
+;
+; xTPLe
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7, tmpf8
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19
+;
+; x     = tmpf0 + i*tmpf1
+; z     = tmpf2 + i*tmpf3
+; a24m  = tmpf4 + i*tmpf5
+; a24p  = tmpf6 + i*tmpf7
+; repetition = tmpf8
+; t0    = tmpf16 + i*tmpf17
+; t1    = tmpf18 + i*tmpf19
+; t2    = tmpf24 + i*tmpf25
+; t3    = tmpf26 + i*tmpf27
+; t4    = tmpf28 + i*tmpf29
+; t5    = tmpf30 + i*tmpf31
+; t6    = tmpf32 + i*tmpf33
+; t7    = tmpf34 + i*tmpf35
+; t8    = tmpf36 + i*tmpf37
+; t9    = tmpf38 + i*tmpf39
+;
+; # t0 = X; t1 = Z
+xTPLe: copym tmpf16 tmpf0
+copym tmpf17 tmpf1
+copym tmpf18 tmpf2
+copym tmpf19 tmpf3
+copy rd1 tmpf8.0.0
+; # t2 = t0+t1
+; # t3 = t0+t0
+xTPLe_loop1: madd_subr tmpf25 tmpf17 + tmpf19 tmpf24 tmpf16 + tmpf18 tmpf27 tmpf17 + tmpf17 tmpf26 tmpf16 + tmpf16
+;
+; # t4 = t2^2
+; # t5 = t3^2
+mmulm fp2t0 tmpf25 tmpf24 fp2t1 tmpf24 tmpf25 fp2t2 tmpf24 tmpf24 fp2t3 tmpf25 tmpf25 fp2t4 tmpf27 tmpf26 fp2t5 tmpf26 tmpf27 fp2t6 tmpf26 tmpf26 fp2t7 tmpf27 tmpf27
+madd_subr tmpf29 fp2t0 + fp2t1 tmpf28 fp2t2 - fp2t3 tmpf31 fp2t4 + fp2t5 tmpf30 fp2t6 - fp2t7
+;
+; # t2 = t5-t4
+; # t6 = t0-t1
+madd_subr tmpf25 tmpf31 - tmpf29 tmpf24 tmpf30 - tmpf28 tmpf33 tmpf17 - tmpf19 tmpf32 tmpf16 - tmpf18
+;
+; # t5 = t6^2
+; # t7 = a24p*t4
+mmulm fp2t0 tmpf33 tmpf32 fp2t1 tmpf32 tmpf33 fp2t2 tmpf32 tmpf32 fp2t3 tmpf33 tmpf33 fp2t4 tmpf7 tmpf28 fp2t5 tmpf6 tmpf29 fp2t6 tmpf6 tmpf28 fp2t7 tmpf7 tmpf29
+madd_subr tmpf31 fp2t0 + fp2t1 tmpf30 fp2t2 - fp2t3 tmpf35 fp2t4 + fp2t5 tmpf34 fp2t6 - fp2t7
+;
+; # t6 = t7*t4
+; # t8 = a24m*t5
+mmulm fp2t0 tmpf35 tmpf28 fp2t1 tmpf34 tmpf29 fp2t2 tmpf34 tmpf28 fp2t3 tmpf35 tmpf29 fp2t4 tmpf5 tmpf30 fp2t5 tmpf4 tmpf31 fp2t6 tmpf4 tmpf30 fp2t7 tmpf5 tmpf31
+madd_subr tmpf33 fp2t0 + fp2t1 tmpf32 fp2t2 - fp2t3 tmpf37 fp2t4 + fp2t5 tmpf36 fp2t6 - fp2t7
+;
+; # t4 = t2-t5
+; # t9 = t7-t8
+madd_subr tmpf29 tmpf25 - tmpf31 tmpf28 tmpf24 - tmpf30 tmpf39 tmpf35 - tmpf37 tmpf38 tmpf34 - tmpf36
+;
+; # t2 = t4*t9
+; # t7 = t5*t8
+mmulm fp2t0 tmpf29 tmpf38 fp2t1 tmpf28 tmpf39 fp2t2 tmpf28 tmpf38 fp2t3 tmpf29 tmpf39 fp2t4 tmpf31 tmpf36 fp2t5 tmpf30 tmpf37 fp2t6 tmpf30 tmpf36 fp2t7 tmpf31 tmpf37
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf35 fp2t4 + fp2t5 tmpf34 fp2t6 - fp2t7
+;
+; # t4 = t7-t6
+; # t5 = t1+t1
+madd_subr tmpf29 tmpf35 - tmpf33 tmpf28 tmpf34 - tmpf32 tmpf31 tmpf19 + tmpf19 tmpf30 tmpf18 + tmpf18
+;
+; # t6 = t4-t2
+; # t7 = t4+t2
+madd_subr tmpf33 tmpf29 - tmpf25 tmpf32 tmpf28 - tmpf24 tmpf35 tmpf29 + tmpf25 tmpf34 tmpf28 + tmpf24
+;
+; # t2 = t6^2
+; # t4 = t7^2
+mmulm fp2t0 tmpf33 tmpf32 fp2t1 tmpf32 tmpf33 fp2t2 tmpf32 tmpf32 fp2t3 tmpf33 tmpf33 fp2t4 tmpf35 tmpf34 fp2t5 tmpf34 tmpf35 fp2t6 tmpf34 tmpf34 fp2t7 tmpf35 tmpf35
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+;
+; # t0 = t3*t4
+; # t1 = t5*t2
+mmulm fp2t0 tmpf27 tmpf28 fp2t1 tmpf26 tmpf29 fp2t2 tmpf26 tmpf28 fp2t3 tmpf27 tmpf29 fp2t4 tmpf31 tmpf24 fp2t5 tmpf30 tmpf25 fp2t6 tmpf30 tmpf24 fp2t7 tmpf31 tmpf25
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+bsub rd1 rd1 #1
+jumpl xTPLe_loop1 #0 rd1
+ret
+;
+; Get 3 isogenies
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23
+;
+; x3    = tmpf0 + i*tmpf1
+; z3    = tmpf2 + i*tmpf3
+;
+; t0    = tmpf24 + i*tmpf25
+; t5    = tmpf26 + i*tmpf27
+; t6    = tmpf28 + i*tmpf29
+; t7    = tmpf30 + i*tmpf31
+; t1    = tmpf16 + i*tmpf17
+; t3    = tmpf18 + i*tmpf19
+; t2    = tmpf20 + i*tmpf21
+; t4    = tmpf22 + i*tmpf23
+;
+; # t0 = X3+X3
+; # t1 = Z3+Z3
+get_3_isog: madd_subr tmpf25 tmpf1 + tmpf1 tmpf24 tmpf0 + tmpf0 tmpf17 tmpf3 + tmpf3 tmpf16 tmpf2 + tmpf2
+; 
+; # t2 = X3-Z3
+; # t3 = t1+t1
+madd_subr tmpf21 tmpf1 - tmpf3 tmpf20 tmpf0 - tmpf2 tmpf19 tmpf17 + tmpf17 tmpf18 tmpf16 + tmpf16
+;
+; # t1 = t0+t2
+; # t4 = X3+Z3
+madd_subr tmpf17 tmpf25 + tmpf21 tmpf16 tmpf24 + tmpf20 tmpf23 tmpf1 + tmpf3 tmpf22 tmpf0 + tmpf2
+;
+; # t0 = t3^2
+; # t5 = t1^2
+mmulm fp2t0 tmpf19 tmpf18 fp2t1 tmpf18 tmpf19 fp2t2 tmpf18 tmpf18 fp2t3 tmpf19 tmpf19 fp2t4 tmpf17 tmpf16 fp2t5 tmpf16 tmpf17 fp2t6 tmpf16 tmpf16 fp2t7 tmpf17 tmpf17
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+; 
+; # t3 = t1*t4
+; # t6 = X3*Z3
+mmulm fp2t0 tmpf17 tmpf22 fp2t1 tmpf16 tmpf23 fp2t2 tmpf16 tmpf22 fp2t3 tmpf17 tmpf23 fp2t4 tmpf1 tmpf2 fp2t5 tmpf0 tmpf3 fp2t6 tmpf0 tmpf2 fp2t7 tmpf1 tmpf3
+madd_subr tmpf19 fp2t0 + fp2t1 tmpf18 fp2t2 - fp2t3 tmpf29 fp2t4 + fp2t5 tmpf28 fp2t6 - fp2t7
+; 
+; # t1 = t5*t3
+; # t7 = t0*t6
+mmulm fp2t0 tmpf27 tmpf18 fp2t1 tmpf26 tmpf19 fp2t2 tmpf26 tmpf18 fp2t3 tmpf27 tmpf19 fp2t4 tmpf25 tmpf28 fp2t5 tmpf24 tmpf29 fp2t6 tmpf24 tmpf28 fp2t7 tmpf25 tmpf29
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf31 fp2t4 + fp2t5 tmpf30 fp2t6 - fp2t7
+;
+; # t3 = t1-t7
+madd_subr tmpf19 tmpf17 - tmpf31 tmpf18 tmpf16 - tmpf30
+;
+ret
+;
+; Eval 3 isogenies
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19
+;
+; x     = tmpf0 + i*tmpf1
+; z     = tmpf2 + i*tmpf3
+; k1    = tmpf4 + i*tmpf5
+; k2    = tmpf6 + i*tmpf7
+;
+; t0    = tmpf16 + i*tmpf17
+; t1    = tmpf18 + i*tmpf19
+; t2    = tmpf24 + i*tmpf25
+; t3    = tmpf26 + i*tmpf27
+;
+;
+; # t0 = x+z
+; # t1 = x-z
+eval_3_isog: madd_subr tmpf17 tmpf1 + tmpf3 tmpf16 tmpf0 + tmpf2 tmpf19 tmpf1 - tmpf3 tmpf18 tmpf0 - tmpf2
+; 
+; # t2 = k1*t0
+; # t3 = k2*t1
+mmulm fp2t0 tmpf5 tmpf16 fp2t1 tmpf4 tmpf17 fp2t2 tmpf4 tmpf16 fp2t3 tmpf5 tmpf17 fp2t4 tmpf7 tmpf18 fp2t5 tmpf6 tmpf19 fp2t6 tmpf6 tmpf18 fp2t7 tmpf7 tmpf19
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+; 
+; # t0 = t3+t2
+; # t1 = t3-t2
+madd_subr tmpf17 tmpf27 + tmpf25 tmpf16 tmpf26 + tmpf24 tmpf19 tmpf27 - tmpf25 tmpf18 tmpf26 - tmpf24
+; 
+; # t2 = t0^2
+; # t3 = t1^2
+mmulm fp2t0 tmpf17 tmpf16 fp2t1 tmpf16 tmpf17 fp2t2 tmpf16 tmpf16 fp2t3 tmpf17 tmpf17 fp2t4 tmpf19 tmpf18 fp2t5 tmpf18 tmpf19 fp2t6 tmpf18 tmpf18 fp2t7 tmpf19 tmpf19
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+; 
+; # t0 = x*t2
+; # t1 = z*t3
+mmulm fp2t0 tmpf1 tmpf24 fp2t1 tmpf0 tmpf25 fp2t2 tmpf0 tmpf24 fp2t3 tmpf1 tmpf25 fp2t4 tmpf3 tmpf26 fp2t5 tmpf2 tmpf27 fp2t6 tmpf2 tmpf26 fp2t7 tmpf3 tmpf27
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+ret
+;
+; Get 2 isogenies
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19, tmpf20, tmpf21, tmpf22, tmpf23
+;
+; x2    = tmpf0 + i*tmpf1
+; z2    = tmpf2 + i*tmpf3
+;
+; t2    = tmpf16 + i*tmpf17
+; t1    = tmpf18 + i*tmpf19
+; t0    = tmpf20 + i*tmpf21
+;
+; # t0 = x2^2
+; # t1 = z2^2
+get_2_isog: mmulm fp2t0 tmpf1 tmpf0 fp2t1 tmpf0 tmpf1 fp2t2 tmpf0 tmpf0 fp2t3 tmpf1 tmpf1 fp2t4 tmpf3 tmpf2 fp2t5 tmpf2 tmpf3 fp2t6 tmpf2 tmpf2 fp2t7 tmpf3 tmpf3
+madd_subr tmpf21 fp2t0 + fp2t1 tmpf20 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+; # t2 = t1-t0
+madd_subr tmpf17 tmpf19 - tmpf21 tmpf16 tmpf18 - tmpf20
+;
+ret
+;
+; Eval 2 isogenies
+; Inputs  tmpf0, tmpf1, tmpf2, tmpf3, tmpf4, tmpf5, tmpf6, tmpf7
+; Outputs tmpf16, tmpf17, tmpf18, tmpf19
+;
+; x2    = tmpf0 + i*tmpf1
+; z2    = tmpf2 + i*tmpf3
+; xq    = tmpf4 + i*tmpf5
+; zq    = tmpf6 + i*tmpf7
+;
+; t0    = tmpf16 + i*tmpf17
+; t1    = tmpf18 + i*tmpf19
+; t2    = tmpf20 + i*tmpf21
+; t3    = tmpf22 + i*tmpf23
+; t4    = tmpf24 + i*tmpf25
+; t5    = tmpf26 + i*tmpf27
+;
+;
+; # t0 = x2+z2
+; # t1 = x2-z2
+eval_2_isog: madd_subr tmpf17 tmpf1 + tmpf3 tmpf16 tmpf0 + tmpf2 tmpf19 tmpf1 - tmpf3 tmpf18 tmpf0 - tmpf2
+;
+; # t2 = xq+zq
+; # t3 = xq-zq
+madd_subr tmpf21 tmpf5 + tmpf7 tmpf20 tmpf4 + tmpf6 tmpf23 tmpf5 - tmpf7 tmpf22 tmpf4 - tmpf6
+;
+; # t4 = t0*t3
+; # t5 = t1*t2
+mmulm fp2t0 tmpf17 tmpf22 fp2t1 tmpf16 tmpf23 fp2t2 tmpf16 tmpf22 fp2t3 tmpf17 tmpf23 fp2t4 tmpf19 tmpf20 fp2t5 tmpf18 tmpf21 fp2t6 tmpf18 tmpf20 fp2t7 tmpf19 tmpf21
+madd_subr tmpf25 fp2t0 + fp2t1 tmpf24 fp2t2 - fp2t3 tmpf27 fp2t4 + fp2t5 tmpf26 fp2t6 - fp2t7
+;
+; # t2 = t4+t5
+; # t3 = t4-t5
+madd_subr tmpf21 tmpf25 + tmpf27 tmpf20 tmpf24 + tmpf26 tmpf23 tmpf25 - tmpf27 tmpf22 tmpf24 - tmpf26
+;
+; # t0 = xq*t2
+; # t1 = zq*t3
+mmulm fp2t0 tmpf5 tmpf20 fp2t1 tmpf4 tmpf21 fp2t2 tmpf4 tmpf20 fp2t3 tmpf5 tmpf21 fp2t4 tmpf7 tmpf22 fp2t5 tmpf6 tmpf23 fp2t6 tmpf6 tmpf22 fp2t7 tmpf7 tmpf23
+madd_subr tmpf17 fp2t0 + fp2t1 tmpf16 fp2t2 - fp2t3 tmpf19 fp2t4 + fp2t5 tmpf18 fp2t6 - fp2t7
+;
+ret
+;

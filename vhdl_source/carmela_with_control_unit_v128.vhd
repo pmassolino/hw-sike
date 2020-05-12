@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 
--- Design Name: 
--- Module Name: 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -36,10 +25,11 @@ entity carmela_with_control_unit_v128 is
         instruction_values_valid : in std_logic;
         instruction_type : in std_logic_vector(3 downto 0);
         operands_size : in std_logic_vector((max_operands_size - 1) downto 0);
-        prime_line_equal_one : in std_logic;
+        prime_line_equal_one : in std_logic_vector(1 downto 0);
         load_new_address_prime : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_prime_line : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_prime_plus_one : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
+        load_new_address_2prime : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_input_ma : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_sign_ma : in std_logic;
         load_new_address_input_mb : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
@@ -105,8 +95,11 @@ signal base_address_generator_o_current_address_enable : std_logic;
 signal base_address_generator_o_current_address : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
 signal base_address_prime : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
 signal base_address_prime_line : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
+signal base_address_2prime : std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
 
 signal loading_values_mode : std_logic;
+
+signal instruction_use_prime_plus_one : std_logic;
 
 signal sign_a_values : std_logic_vector(7 downto 0);
 signal control_operation_number : std_logic_vector(7 downto 0);
@@ -182,7 +175,7 @@ component carmela_state_machine_v128
         instruction_values_valid : in std_logic;
         instruction_type : in std_logic_vector(3 downto 0);
         operands_size : in std_logic_vector(2 downto 0);
-        prime_line_equal_one : in std_logic;
+        prime_line_equal_one : in std_logic_vector(1 downto 0);
         penultimate_operation : in std_logic;
         sm_rotation_size : out std_logic_vector(1 downto 0);
         sm_circular_shift_enable : out std_logic;
@@ -252,8 +245,9 @@ mac_address_a((memory_address_size - 1) downto max_operands_size) <= base_addres
                                                          base_address_generator_a_current_address;
 mac_address_a((max_operands_size - 1) downto 0) <= sm_specific_mac_address_a;
 mac_address_b((memory_address_size - 1) downto max_operands_size) <= base_address_prime when (sel_address_b_prime = "10") else 
-                                                         base_address_prime_line when (sel_address_b_prime = "11") else 
-                                                         base_address_generator_b_current_address;
+                                                                     base_address_prime_line when (sel_address_b_prime = "11") else 
+                                                                     base_address_2prime when (sel_address_b_prime = "01") else 
+                                                                     base_address_generator_b_current_address;
 mac_address_b((max_operands_size - 1) downto 0) <= sm_specific_mac_address_b;
 mac_address_o((memory_address_size - 1) downto max_operands_size) <= base_address_generator_o_current_address;
 mac_address_o((max_operands_size - 1) downto 0) <= sm_specific_mac_address_o;
@@ -314,7 +308,7 @@ big_mac : entity work.carmela_v128(simple_multipliers)
         data_out_mem_two_b => data_out_mem_two_b
     );
 
-controller : entity work.carmela_state_machine_v128(compact_memory_based_v2)
+controller : entity work.carmela_state_machine_v128(compact_memory_based_v3)
     Port Map(
         clk => clk,
         rstn => rstn,
@@ -407,12 +401,25 @@ base_address_generator_o : base_address_circular_shift_output_v2
         current_address => base_address_generator_o_current_address
     );
 
+process(instruction_type)
+begin
+    case (instruction_type) is
+        when "0000"|"0001"|"0010"|"0011" =>
+            instruction_use_prime_plus_one <= '1';
+        when "0100"|"0101"|"0110"|"0111"|"1000"|"1001"|"1010"|"1011"|"1100"|"1101"|"1110"|"1111" =>
+            instruction_use_prime_plus_one <= '0';
+        when others =>
+            instruction_use_prime_plus_one <= 'X';
+    end case;
+end process;
+
 base_address_registers : process(clk)
 begin
     if(rising_edge(clk)) then
         if(instruction_values_valid = '1') then
             base_address_prime_line <= load_new_address_prime_line;
-            if(prime_line_equal_one = '1') then
+            base_address_2prime <= load_new_address_2prime;
+            if((prime_line_equal_one /= "00") and (instruction_use_prime_plus_one = '1')) then
                 base_address_prime <= load_new_address_prime_plus_one;
             else
                 base_address_prime <= load_new_address_prime;

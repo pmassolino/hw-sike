@@ -1,6 +1,6 @@
 proof.arithmetic(False)
-home_folder = "/home/pedro/"
-script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+if 'script_working_folder' not in globals() and 'script_working_folder' not in locals():
+    script_working_folder = "/home/pedro/hw-sidh/vhdl_project/sage/"
 load(script_working_folder+"base_tests_for_sidh_basic_procedures/all_sidh_basic_procedures.sage")
 
 def test_single_xTPLe(arithmetic_parameters, fp2, test_value_x, test_value_xi, test_value_z, test_value_zi, test_value_a24m, test_value_a24mi, test_value_a24p, test_value_a24pi, test_value_e):
@@ -18,10 +18,15 @@ def test_single_xTPLe(arithmetic_parameters, fp2, test_value_x, test_value_xi, t
     
     test_value_o1_mont, test_value_o1i_mont, test_value_o2_mont, test_value_o2i_mont = xTPLe(arithmetic_parameters, test_value_x_mont, test_value_xi_mont, test_value_z_mont, test_value_zi_mont, test_value_a24m_mont, test_value_a24mi_mont, test_value_a24p_mont, test_value_a24pi_mont, test_value_e)
     
-    test_value_o1 = remove_montgomery_domain(arithmetic_parameters, test_value_o1_mont)
+    test_value_o1  = remove_montgomery_domain(arithmetic_parameters, test_value_o1_mont)
+    test_value_o1  = iterative_reduction(arithmetic_parameters, test_value_o1)
     test_value_o1i = remove_montgomery_domain(arithmetic_parameters, test_value_o1i_mont)
-    test_value_o2 = remove_montgomery_domain(arithmetic_parameters, test_value_o2_mont)
+    test_value_o1i = iterative_reduction(arithmetic_parameters, test_value_o1i)
+    test_value_o2  = remove_montgomery_domain(arithmetic_parameters, test_value_o2_mont)
+    test_value_o2  = iterative_reduction(arithmetic_parameters, test_value_o2)
     test_value_o2i = remove_montgomery_domain(arithmetic_parameters, test_value_o2i_mont)
+    test_value_o2i = iterative_reduction(arithmetic_parameters, test_value_o2i)
+    
     test_value_final_t0 = [test_value_o1, test_value_o1i]
     test_value_final_t1 = [test_value_o2, test_value_o2i]
     
@@ -138,6 +143,8 @@ def print_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_s
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line_list = arithmetic_parameters[18]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r_mod_prime_constant = arithmetic_parameters[12]
     r_mod_prime_constant_list = arithmetic_parameters[13]
@@ -161,6 +168,7 @@ def print_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_s
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_plus_one_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_line_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime2_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, r_mod_prime_constant_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, r2_constant_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, constant_1, maximum_number_of_words)
@@ -210,10 +218,14 @@ def print_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_s
         
         test_value_o1_mont, test_value_o1i_mont, test_value_o2_mont, test_value_o2i_mont = xTPLe(arithmetic_parameters, test_value_x_mont, test_value_xi_mont, test_value_z_mont, test_value_zi_mont, test_value_a24m_mont, test_value_a24mi_mont, test_value_a24p_mont, test_value_a24pi_mont, test[6])
         
-        test_value_o1 = remove_montgomery_domain(arithmetic_parameters, test_value_o1_mont)
+        test_value_o1  = remove_montgomery_domain(arithmetic_parameters, test_value_o1_mont)
+        test_value_o1  = iterative_reduction(arithmetic_parameters, test_value_o1)
         test_value_o1i = remove_montgomery_domain(arithmetic_parameters, test_value_o1i_mont)
-        test_value_o2 = remove_montgomery_domain(arithmetic_parameters, test_value_o2_mont)
+        test_value_o1i = iterative_reduction(arithmetic_parameters, test_value_o1i)
+        test_value_o2  = remove_montgomery_domain(arithmetic_parameters, test_value_o2_mont)
+        test_value_o2  = iterative_reduction(arithmetic_parameters, test_value_o2)
         test_value_o2i = remove_montgomery_domain(arithmetic_parameters, test_value_o2i_mont)
+        test_value_o2i = iterative_reduction(arithmetic_parameters, test_value_o2i)
         
         test_value_o1_list = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1))
         test_value_o1i_list = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1i))
@@ -273,9 +285,13 @@ def print_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_s
         test_value_o1_mont, test_value_o1i_mont, test_value_o2_mont, test_value_o2i_mont = xTPLe(arithmetic_parameters, test_value_x_mont, test_value_xi_mont, test_value_z_mont, test_value_zi_mont, test_value_a24m_mont, test_value_a24mi_mont, test_value_a24p_mont, test_value_a24pi_mont, test_value_e)
         
         test_value_o1  = remove_montgomery_domain(arithmetic_parameters, test_value_o1_mont)
+        test_value_o1  = iterative_reduction(arithmetic_parameters, test_value_o1)
         test_value_o1i = remove_montgomery_domain(arithmetic_parameters, test_value_o1i_mont)
+        test_value_o1i = iterative_reduction(arithmetic_parameters, test_value_o1i)
         test_value_o2  = remove_montgomery_domain(arithmetic_parameters, test_value_o2_mont)
+        test_value_o2  = iterative_reduction(arithmetic_parameters, test_value_o2)
         test_value_o2i = remove_montgomery_domain(arithmetic_parameters, test_value_o2i_mont)
+        test_value_o2i = iterative_reduction(arithmetic_parameters, test_value_o2i)
         
         test_value_o1_list = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1))
         test_value_o1i_list = integer_to_list(extended_word_size_signed, number_of_words, int(test_value_o1i))
@@ -320,6 +336,8 @@ def load_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_si
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line = arithmetic_parameters[17]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r_mod_prime_constant = arithmetic_parameters[12]
     r_mod_prime_constant_list = arithmetic_parameters[13]
@@ -365,6 +383,14 @@ def load_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_si
         print(loaded_prime_line)
         print("Input prime line 0")
         print(prime_line)
+    loaded_prime2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime2 != prime2):
+        print("Error in xTPLe computation : " + str(current_test))
+        print("Error loading the 2*prime")
+        print("Loaded 2*prime")
+        print(loaded_prime2)
+        print("Input 2*prime")
+        print(prime2)
     loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_r_mod_prime != r_mod_prime_constant):
         print("Error in xTPLe computation : " + str(current_test))
@@ -435,10 +461,14 @@ def load_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_si
         
         computed_test_value_o1_mont, computed_test_value_o1i_mont, computed_test_value_o2_mont, computed_test_value_o2i_mont = xTPLe(arithmetic_parameters, test_value_x_mont, test_value_xi_mont, test_value_z_mont, test_value_zi_mont, test_value_a24m_mont, test_value_a24mi_mont, test_value_a24p_mont, test_value_a24pi_mont, test_value_e)
         
-        computed_test_value_o1 = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o1_mont)
+        computed_test_value_o1  = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o1_mont)
+        computed_test_value_o1  = iterative_reduction(arithmetic_parameters, computed_test_value_o1)
         computed_test_value_o1i = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o1i_mont)
-        computed_test_value_o2 = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o2_mont)
+        computed_test_value_o1i = iterative_reduction(arithmetic_parameters, computed_test_value_o1i)
+        computed_test_value_o2  = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o2_mont)
+        computed_test_value_o2  = iterative_reduction(arithmetic_parameters, computed_test_value_o2)
         computed_test_value_o2i = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o2i_mont)
+        computed_test_value_o2i = iterative_reduction(arithmetic_parameters, computed_test_value_o2i)
         
         if((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i) or (computed_test_value_o2 != loaded_test_value_o2) or (computed_test_value_o2i != loaded_test_value_o2i)):
             print("Error in xTPLe computation : " + str(current_test))
@@ -493,12 +523,15 @@ def load_VHDL_xTPLe_test(VHDL_memory_file_name, base_word_size, extended_word_si
     
     computed_test_value_o1_mont, computed_test_value_o1i_mont, computed_test_value_o2_mont, computed_test_value_o2i_mont = xTPLe(arithmetic_parameters, test_value_x_mont, test_value_xi_mont, test_value_z_mont, test_value_zi_mont, test_value_a24m_mont, test_value_a24mi_mont, test_value_a24p_mont, test_value_a24pi_mont, test_value_e)
     
-    computed_test_value_o1 = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o1_mont)
+    computed_test_value_o1  = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o1_mont)
+    computed_test_value_o1  = iterative_reduction(arithmetic_parameters, computed_test_value_o1)
     computed_test_value_o1i = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o1i_mont)
-    computed_test_value_o2 = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o2_mont)
+    computed_test_value_o1i = iterative_reduction(arithmetic_parameters, computed_test_value_o1i)
+    computed_test_value_o2  = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o2_mont)
+    computed_test_value_o2  = iterative_reduction(arithmetic_parameters, computed_test_value_o2)
     computed_test_value_o2i = remove_montgomery_domain(arithmetic_parameters, computed_test_value_o2i_mont)
+    computed_test_value_o2i = iterative_reduction(arithmetic_parameters, computed_test_value_o2i)
     
-        
     if(debug_mode or ((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i) or (computed_test_value_o2 != loaded_test_value_o2) or (computed_test_value_o2i != loaded_test_value_o2i))):
         print("Error in xTPLe computation : " + str(current_test))
         print("Loaded value x")
@@ -564,7 +597,7 @@ accumulator_word_size = (extended_word_size_signed - 1)*2+32
 primes = [2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1, 2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
 max_repetition_values = [11, 11, 11, 11, 11, 11]
 primes_file_name_end = ["8_5.dat", "216_137.dat", "250_159.dat", "305_192.dat", "372_239.dat", "486_301.dat"]
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
+tests_working_folder = script_working_folder + "../hw_sidh_tests_v256/"
 VHDL_xTPLe_file_names = [(tests_working_folder + "xTPLe_test_" + ending) for ending in primes_file_name_end]
 
 #test_all_xTPLe(base_word_size_signed, extended_word_size_signed, number_of_bits_added, accumulator_word_size, primes, max_repetition_values, 1000)

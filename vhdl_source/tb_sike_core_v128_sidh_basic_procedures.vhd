@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    
--- Design Name: 
--- Module Name:    
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -42,11 +31,11 @@ Generic(
     rd_ram_memory_size : integer := 5;
     maximum_number_of_tests : integer := 1;
     
-    skip_fp_inv_test : boolean := true;
-    skip_fp2_inv_test : boolean := true;
-    skip_j_inv_test : boolean := true;
-    skip_get_A_test : boolean := true;
-    skip_inv_2_way_test : boolean := true;
+    skip_fp_inv_test : boolean := false;
+    skip_fp2_inv_test : boolean := false;
+    skip_j_inv_test : boolean := false;
+    skip_get_A_test : boolean := false;
+    skip_inv_2_way_test : boolean := false;
     skip_ladder_3_pt_test : boolean := false;
     skip_xDBLe_test : boolean := false;
     skip_get_4_isog_test : boolean := false;
@@ -59,6 +48,19 @@ Generic(
     
     test_prom_file : string := "../assembler/test_sidh_basic_procedures_v128.dat";
     
+    param_8_5_number_of_words  : integer := 1;
+    param_8_5_p_line_equal_one : integer := 0;
+    param_216_137_number_of_words  : integer := 4;
+    param_216_137_p_line_equal_one : integer := 1;
+    param_250_159_number_of_words  : integer := 5;
+    param_250_159_p_line_equal_one : integer := 1;
+    param_305_192_number_of_words  : integer := 5;
+    param_305_192_p_line_equal_one : integer := 2;
+    param_372_239_number_of_words  : integer := 6;
+    param_372_239_p_line_equal_one : integer := 2;
+    param_486_301_number_of_words  : integer := 8;
+    param_486_301_p_line_equal_one : integer := 3;
+    
     test_program_start_fp_inv_test : integer := 1;
     test_program_number_inputs_fp_inv_test : integer := 2;
     test_program_number_outputs_fp_inv_test : integer := 2;
@@ -69,7 +71,7 @@ Generic(
     test_memory_file_fp_inv_test_372_239 : string := "../hw_sidh_tests_v128/fp_inv_test_372_239.dat";
     test_memory_file_fp_inv_test_486_301 : string := "../hw_sidh_tests_v128/fp_inv_test_486_301.dat";
     
-    test_program_start_fp2_inv_test : integer := 25;
+    test_program_start_fp2_inv_test : integer := 27;
     test_program_number_inputs_fp2_inv_test : integer := 4;
     test_program_number_outputs_fp2_inv_test : integer := 4;
     test_memory_file_fp2_inv_test_8_5 : string := "../hw_sidh_tests_v128/fp2_inv_test_8_5.dat";
@@ -79,7 +81,7 @@ Generic(
     test_memory_file_fp2_inv_test_372_239 : string := "../hw_sidh_tests_v128/fp2_inv_test_372_239.dat";
     test_memory_file_fp2_inv_test_486_301 : string := "../hw_sidh_tests_v128/fp2_inv_test_486_301.dat";
     
-    test_program_start_j_inv_test : integer := 53;
+    test_program_start_j_inv_test : integer := 55;
     test_program_number_inputs_j_inv_test : integer := 4;
     test_program_number_outputs_j_inv_test : integer := 2;
     test_memory_file_j_inv_test_8_5 : string := "../hw_sidh_tests_v128/j_inv_test_8_5.dat";
@@ -89,7 +91,7 @@ Generic(
     test_memory_file_j_inv_test_372_239 : string := "../hw_sidh_tests_v128/j_inv_test_372_239.dat";
     test_memory_file_j_inv_test_486_301 : string := "../hw_sidh_tests_v128/j_inv_test_486_301.dat";
     
-    test_program_start_get_A_test : integer := 79;
+    test_program_start_get_A_test : integer := 83;
     test_program_number_inputs_get_A_test : integer := 6;
     test_program_number_outputs_get_A_test : integer := 2;
     test_memory_file_get_A_test_8_5 : string := "../hw_sidh_tests_v128/get_A_test_8_5.dat";
@@ -99,7 +101,7 @@ Generic(
     test_memory_file_get_A_test_372_239 : string := "../hw_sidh_tests_v128/get_A_test_372_239.dat";
     test_memory_file_get_A_test_486_301 : string := "../hw_sidh_tests_v128/get_A_test_486_301.dat";
     
-    test_program_start_inv_2_way_test : integer := 107;
+    test_program_start_inv_2_way_test : integer := 113;
     test_program_number_inputs_inv_2_way_test : integer := 8;
     test_program_number_outputs_inv_2_way_test : integer := 8;
     test_memory_file_inv_2_way_test_8_5 : string := "../hw_sidh_tests_v128/inv_2_way_test_8_5.dat";
@@ -109,7 +111,7 @@ Generic(
     test_memory_file_inv_2_way_test_372_239 : string := "../hw_sidh_tests_v128/inv_2_way_test_372_239.dat";
     test_memory_file_inv_2_way_test_486_301 : string := "../hw_sidh_tests_v128/inv_2_way_test_486_301.dat";
     
-    test_program_start_ladder_3_pt_test : integer := 143;
+    test_program_start_ladder_3_pt_test : integer := 149;
     test_program_number_inputs_ladder_3_pt_test : integer := 10;
     test_program_number_outputs_ladder_3_pt_test : integer := 4;
     test_memory_file_ladder_3_pt_test_8_5_oa_bits : string := "../hw_sidh_tests_v128/ladder_3_pt_test_8_5_oa_bits.dat";
@@ -125,7 +127,7 @@ Generic(
     test_memory_file_ladder_3_pt_test_372_239_ob_bits : string := "../hw_sidh_tests_v128/ladder_3_pt_test_372_239_ob_bits.dat";
     test_memory_file_ladder_3_pt_test_486_301_ob_bits : string := "../hw_sidh_tests_v128/ladder_3_pt_test_486_301_ob_bits.dat";
     
-    test_program_start_xDBLe_test : integer := 175;
+    test_program_start_xDBLe_test : integer := 181;
     test_program_number_inputs_xDBLe_test : integer := 9;
     test_program_number_outputs_xDBLe_test : integer := 4;
     test_memory_file_xDBLe_test_8_5 : string := "../hw_sidh_tests_v128/xDBLe_test_8_5.dat";
@@ -135,7 +137,7 @@ Generic(
     test_memory_file_xDBLe_test_372_239 : string := "../hw_sidh_tests_v128/xDBLe_test_372_239.dat";
     test_memory_file_xDBLe_test_486_301 : string := "../hw_sidh_tests_v128/xDBLe_test_486_301.dat";
     
-    test_program_start_get_4_isog_test : integer := 207;
+    test_program_start_get_4_isog_test : integer := 213;
     test_program_number_inputs_get_4_isog_test : integer := 4;
     test_program_number_outputs_get_4_isog_test : integer := 10;
     test_memory_file_get_4_isog_test_8_5 : string := "../hw_sidh_tests_v128/get_4_isog_test_8_5.dat";
@@ -145,7 +147,7 @@ Generic(
     test_memory_file_get_4_isog_test_372_239 : string := "../hw_sidh_tests_v128/get_4_isog_test_372_239.dat";
     test_memory_file_get_4_isog_test_486_301 : string := "../hw_sidh_tests_v128/get_4_isog_test_486_301.dat";
     
-    test_program_start_eval_4_isog_test : integer := 249;
+    test_program_start_eval_4_isog_test : integer := 257;
     test_program_number_inputs_eval_4_isog_test : integer := 10;
     test_program_number_outputs_eval_4_isog_test : integer := 4;
     test_memory_file_eval_4_isog_test_8_5 : string := "../hw_sidh_tests_v128/eval_4_isog_test_8_5.dat";
@@ -155,7 +157,7 @@ Generic(
     test_memory_file_eval_4_isog_test_372_239 : string := "../hw_sidh_tests_v128/eval_4_isog_test_372_239.dat";
     test_memory_file_eval_4_isog_test_486_301 : string := "../hw_sidh_tests_v128/eval_4_isog_test_486_301.dat";
     
-    test_program_start_xTPLe_test : integer := 291;
+    test_program_start_xTPLe_test : integer := 299;
     test_program_number_inputs_xTPLe_test : integer := 9;
     test_program_number_outputs_xTPLe_test : integer := 4;
     test_memory_file_xTPLe_test_8_5 : string := "../hw_sidh_tests_v128/xTPLe_test_8_5.dat";
@@ -165,7 +167,7 @@ Generic(
     test_memory_file_xTPLe_test_372_239 : string := "../hw_sidh_tests_v128/xTPLe_test_372_239.dat";
     test_memory_file_xTPLe_test_486_301 : string := "../hw_sidh_tests_v128/xTPLe_test_486_301.dat";
     
-    test_program_start_get_3_isog_test : integer := 323;
+    test_program_start_get_3_isog_test : integer := 331;
     test_program_number_inputs_get_3_isog_test : integer := 4;
     test_program_number_outputs_get_3_isog_test : integer := 8;
     test_memory_file_get_3_isog_test_8_5 : string := "../hw_sidh_tests_v128/get_3_isog_test_8_5.dat";
@@ -175,7 +177,7 @@ Generic(
     test_memory_file_get_3_isog_test_372_239 : string := "../hw_sidh_tests_v128/get_3_isog_test_372_239.dat";
     test_memory_file_get_3_isog_test_486_301 : string := "../hw_sidh_tests_v128/get_3_isog_test_486_301.dat";
     
-    test_program_start_eval_3_isog_test : integer := 355;
+    test_program_start_eval_3_isog_test : integer := 363;
     test_program_number_inputs_eval_3_isog_test : integer := 8;
     test_program_number_outputs_eval_3_isog_test : integer := 4;
     test_memory_file_eval_3_isog_test_8_5 : string := "../hw_sidh_tests_v128/eval_3_isog_test_8_5.dat";
@@ -185,7 +187,7 @@ Generic(
     test_memory_file_eval_3_isog_test_372_239 : string := "../hw_sidh_tests_v128/eval_3_isog_test_372_239.dat";
     test_memory_file_eval_3_isog_test_486_301 : string := "../hw_sidh_tests_v128/eval_3_isog_test_486_301.dat";
     
-    test_program_start_get_2_isog_test : integer := 387;
+    test_program_start_get_2_isog_test : integer := 395;
     test_program_number_inputs_get_2_isog_test : integer := 4;
     test_program_number_outputs_get_2_isog_test : integer := 4;
     test_memory_file_get_2_isog_test_8_5 : string := "../hw_sidh_tests_v128/get_2_isog_test_8_5.dat";
@@ -195,7 +197,7 @@ Generic(
     test_memory_file_get_2_isog_test_372_239 : string := "../hw_sidh_tests_v128/get_2_isog_test_372_239.dat";
     test_memory_file_get_2_isog_test_486_301 : string := "../hw_sidh_tests_v128/get_2_isog_test_486_301.dat";
     
-    test_program_start_eval_2_isog_test : integer := 415;
+    test_program_start_eval_2_isog_test : integer := 423;
     test_program_number_inputs_eval_2_isog_test : integer := 8;
     test_program_number_outputs_eval_2_isog_test : integer := 4;
     test_memory_file_eval_2_isog_test_8_5 : string := "../hw_sidh_tests_v128/eval_2_isog_test_8_5.dat";
@@ -259,29 +261,31 @@ constant reg_prime_line_equal_one_address : integer        := 16#0E003#;
 constant reg_prime_address_address : integer               := 16#0E004#;
 constant reg_prime_plus_one_address_address : integer      := 16#0E005#;
 constant reg_prime_line_address_address : integer          := 16#0E006#;
-constant reg_initial_stack_address_address : integer       := 16#0E007#;
-constant reg_flag_address : integer                        := 16#0E008#;
-constant reg_scalar_address_address : integer              := 16#0E009#;
+constant reg_2prime_address_address : integer              := 16#0E007#;
+constant reg_initial_stack_address_address : integer       := 16#0E008#;
+constant reg_flag_address : integer                        := 16#0E009#;
+constant reg_scalar_address_address : integer              := 16#0E00A#;
 
 constant mac_ram_prime_address : integer                   := 16#00000#;
 constant mac_ram_prime_plus_one_address : integer          := 16#00001#;
 constant mac_ram_prime_line_address : integer              := 16#00002#;
-constant mac_ram_const_r_address : integer                 := 16#00003#;
-constant mac_ram_const_r2_address : integer                := 16#00004#;
-constant mac_ram_const_1_address : integer                 := 16#00005#;
-constant mac_ram_inv_4_mont_address : integer              := 16#00006#;
-constant mac_ram_sidh_xpa_mont_address : integer           := 16#00007#;
-constant mac_ram_sidh_xpai_mont_address : integer          := 16#00008#;
-constant mac_ram_sidh_xqa_mont_address : integer           := 16#00009#;
-constant mac_ram_sidh_xqai_mont_address : integer          := 16#0000A#;
-constant mac_ram_sidh_xra_mont_address : integer           := 16#0000B#;
-constant mac_ram_sidh_xrai_mont_address : integer          := 16#0000C#;
-constant mac_ram_sidh_xpb_mont_address : integer           := 16#0000D#;
-constant mac_ram_sidh_xpbi_mont_address : integer          := 16#0000E#;
-constant mac_ram_sidh_xqb_mont_address : integer           := 16#0000F#;
-constant mac_ram_sidh_xqbi_mont_address : integer          := 16#00010#;
-constant mac_ram_sidh_xrb_mont_address : integer           := 16#00011#;
-constant mac_ram_sidh_xrbi_mont_address : integer          := 16#00012#;
+constant mac_ram_2prime_address : integer                  := 16#00003#;
+constant mac_ram_const_r_address : integer                 := 16#00004#;
+constant mac_ram_const_r2_address : integer                := 16#00005#;
+constant mac_ram_const_1_address : integer                 := 16#00006#;
+constant mac_ram_inv_4_mont_address : integer              := 16#00007#;
+constant mac_ram_sidh_xpa_mont_address : integer           := 16#00008#;
+constant mac_ram_sidh_xpai_mont_address : integer          := 16#00009#;
+constant mac_ram_sidh_xqa_mont_address : integer           := 16#0000A#;
+constant mac_ram_sidh_xqai_mont_address : integer          := 16#0000B#;
+constant mac_ram_sidh_xra_mont_address : integer           := 16#0000C#;
+constant mac_ram_sidh_xrai_mont_address : integer          := 16#0000D#;
+constant mac_ram_sidh_xpb_mont_address : integer           := 16#0000E#;
+constant mac_ram_sidh_xpbi_mont_address : integer          := 16#0000F#;
+constant mac_ram_sidh_xqb_mont_address : integer           := 16#00010#;
+constant mac_ram_sidh_xqbi_mont_address : integer          := 16#00011#;
+constant mac_ram_sidh_xrb_mont_address : integer           := 16#00012#;
+constant mac_ram_sidh_xrbi_mont_address : integer          := 16#00013#;
 
 constant mac_ram_input_function_start_address : integer    := 16#00014#;
 constant mac_ram_output_function_start_address : integer   := 16#00024#;
@@ -318,6 +322,7 @@ signal temp_value_to_load2 : mac_ram_values_array((2**mac_max_operands_size - 1)
 signal test_value_prime : mac_ram_values_array((2**mac_max_operands_size - 1) downto 0);
 signal test_value_prime_line : mac_ram_values_array((2**mac_max_operands_size - 1) downto 0);
 signal test_value_prime_plus_one : mac_ram_values_array((2**mac_max_operands_size - 1) downto 0);
+signal test_value_2prime : mac_ram_values_array((2**mac_max_operands_size - 1) downto 0);
 signal test_value_constant_r : mac_ram_values_array((2**mac_max_operands_size - 1) downto 0);
 signal test_value_constant_r2 : mac_ram_values_array((2**mac_max_operands_size - 1) downto 0);
 signal test_value_constant_1 : mac_ram_values_array((2**mac_max_operands_size - 1) downto 0);
@@ -696,6 +701,7 @@ begin
         test_value_prime(j) <= (others => '0');
         test_value_prime_plus_one(j) <= (others => '0');
         test_value_prime_line(j) <= (others => '0');
+        test_value_2prime(j) <= (others => '0');
         test_value_constant_r(j) <= (others => '0');
         test_value_constant_r2(j) <= (others => '0');
         test_value_constant_1(j) <= (others => '0');
@@ -717,6 +723,11 @@ begin
         readline (ram_file, line_n);
         read (line_n, read_MAC_RAM_operand_values);
         test_value_prime_line(j) <= read_MAC_RAM_operand_values;
+    end loop;
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_MAC_RAM_operand_values);
+        test_value_2prime(j) <= read_MAC_RAM_operand_values;
     end loop;
     for j in 0 to (operands_size-1) loop
         readline (ram_file, line_n);
@@ -748,6 +759,8 @@ begin
     load_operand_mac_ram(test_value_prime_plus_one, current_operation_addres, operands_size);
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_prime_line_address)*(2**mac_max_operands_size)*mac_multiplication_factor + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(test_value_prime_line, current_operation_addres, operands_size);
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*mac_multiplication_factor + mac_ram_start_address, current_operation_addres'length));
+    load_operand_mac_ram(test_value_2prime, current_operation_addres, operands_size);
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_const_r_address)*(2**mac_max_operands_size)*mac_multiplication_factor + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(test_value_constant_r, current_operation_addres, operands_size);
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_const_r2_address)*(2**mac_max_operands_size)*mac_multiplication_factor + mac_ram_start_address, current_operation_addres'length));
@@ -819,6 +832,11 @@ begin
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(2, buffer_test_value_communication_base_alu_ram'length));
         wait for PERIOD;
         current_operation_addres := std_logic_vector(to_unsigned(reg_prime_line_address_address, current_operation_addres'length));
+        load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
+        wait for PERIOD;
+        buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(3, buffer_test_value_communication_base_alu_ram'length));
+        wait for PERIOD;
+        current_operation_addres := std_logic_vector(to_unsigned(reg_2prime_address_address, current_operation_addres'length));
         load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
         wait for PERIOD;
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned((2**mac_max_operands_size)*224, buffer_test_value_communication_base_alu_ram'length));
@@ -904,225 +922,225 @@ begin
     wait for PERIOD;
     if( not skip_fp_inv_test ) then
         report "Start inversion program test." severity note;
-        test_function(test_memory_file_fp_inv_test_8_5, 1, test_program_start_fp_inv_test, 0, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
+        test_function(test_memory_file_fp_inv_test_8_5, param_8_5_number_of_words, test_program_start_fp_inv_test, param_8_5_p_line_equal_one, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp_inv_test_216_137, 4, test_program_start_fp_inv_test, 1, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
+        test_function(test_memory_file_fp_inv_test_216_137, param_216_137_number_of_words, test_program_start_fp_inv_test, param_216_137_p_line_equal_one, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp_inv_test_250_159, 5, test_program_start_fp_inv_test, 1, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
+        test_function(test_memory_file_fp_inv_test_250_159, param_250_159_number_of_words, test_program_start_fp_inv_test, param_250_159_p_line_equal_one, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp_inv_test_305_192, 5, test_program_start_fp_inv_test, 1, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
+        test_function(test_memory_file_fp_inv_test_305_192, param_305_192_number_of_words, test_program_start_fp_inv_test, param_305_192_p_line_equal_one, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp_inv_test_372_239, 6, test_program_start_fp_inv_test, 1, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
+        test_function(test_memory_file_fp_inv_test_372_239, param_372_239_number_of_words, test_program_start_fp_inv_test, param_372_239_p_line_equal_one, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp_inv_test_486_301, 8, test_program_start_fp_inv_test, 1, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
+        test_function(test_memory_file_fp_inv_test_486_301, param_486_301_number_of_words, test_program_start_fp_inv_test, param_486_301_p_line_equal_one, test_program_number_inputs_fp_inv_test, test_program_number_outputs_fp_inv_test);
         wait for PERIOD;
     end if;
     if( not skip_fp2_inv_test ) then
         report "Start inversion^2 program test." severity note;
-        test_function(test_memory_file_fp2_inv_test_8_5, 1, test_program_start_fp2_inv_test, 0, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
+        test_function(test_memory_file_fp2_inv_test_8_5, param_8_5_number_of_words, test_program_start_fp2_inv_test, param_8_5_p_line_equal_one, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp2_inv_test_216_137, 4, test_program_start_fp2_inv_test, 1, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
+        test_function(test_memory_file_fp2_inv_test_216_137, param_216_137_number_of_words, test_program_start_fp2_inv_test, param_216_137_p_line_equal_one, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp2_inv_test_250_159, 5, test_program_start_fp2_inv_test, 1, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
+        test_function(test_memory_file_fp2_inv_test_250_159, param_250_159_number_of_words, test_program_start_fp2_inv_test, param_250_159_p_line_equal_one, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp2_inv_test_305_192, 5, test_program_start_fp2_inv_test, 1, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
+        test_function(test_memory_file_fp2_inv_test_305_192, param_305_192_number_of_words, test_program_start_fp2_inv_test, param_305_192_p_line_equal_one, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp2_inv_test_372_239, 6, test_program_start_fp2_inv_test, 1, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
+        test_function(test_memory_file_fp2_inv_test_372_239, param_372_239_number_of_words, test_program_start_fp2_inv_test, param_372_239_p_line_equal_one, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_fp2_inv_test_486_301, 8, test_program_start_fp2_inv_test, 1, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
+        test_function(test_memory_file_fp2_inv_test_486_301, param_486_301_number_of_words, test_program_start_fp2_inv_test, param_486_301_p_line_equal_one, test_program_number_inputs_fp2_inv_test, test_program_number_outputs_fp2_inv_test);
         wait for PERIOD;
     end if;
     if( not skip_j_inv_test ) then
         report "Start j_invariant program test." severity note;
-        test_function(test_memory_file_j_inv_test_8_5, 1, test_program_start_j_inv_test, 0, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
+        test_function(test_memory_file_j_inv_test_8_5, param_8_5_number_of_words, test_program_start_j_inv_test, param_8_5_p_line_equal_one, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_j_inv_test_216_137, 4, test_program_start_j_inv_test, 1, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
+        test_function(test_memory_file_j_inv_test_216_137, param_216_137_number_of_words, test_program_start_j_inv_test, param_216_137_p_line_equal_one, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_j_inv_test_250_159, 5, test_program_start_j_inv_test, 1, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
+        test_function(test_memory_file_j_inv_test_250_159, param_250_159_number_of_words, test_program_start_j_inv_test, param_250_159_p_line_equal_one, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_j_inv_test_305_192, 5, test_program_start_j_inv_test, 1, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
+        test_function(test_memory_file_j_inv_test_305_192, param_305_192_number_of_words, test_program_start_j_inv_test, param_305_192_p_line_equal_one, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_j_inv_test_372_239, 6, test_program_start_j_inv_test, 1, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
+        test_function(test_memory_file_j_inv_test_372_239, param_372_239_number_of_words, test_program_start_j_inv_test, param_372_239_p_line_equal_one, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
         wait for PERIOD;
-        test_function(test_memory_file_j_inv_test_486_301, 8, test_program_start_j_inv_test, 1, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
+        test_function(test_memory_file_j_inv_test_486_301, param_486_301_number_of_words, test_program_start_j_inv_test, param_486_301_p_line_equal_one, test_program_number_inputs_j_inv_test, test_program_number_outputs_j_inv_test);
         wait for PERIOD;
     end if;
     if( not skip_get_A_test ) then
         report "Start get_A program test." severity note;
-        test_function(test_memory_file_get_A_test_8_5, 1, test_program_start_get_A_test, 0, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
+        test_function(test_memory_file_get_A_test_8_5, param_8_5_number_of_words, test_program_start_get_A_test, param_8_5_p_line_equal_one, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_A_test_216_137, 4, test_program_start_get_A_test, 1, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
+        test_function(test_memory_file_get_A_test_216_137, param_216_137_number_of_words, test_program_start_get_A_test, param_216_137_p_line_equal_one, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_A_test_250_159, 5, test_program_start_get_A_test, 1, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
+        test_function(test_memory_file_get_A_test_250_159, param_250_159_number_of_words, test_program_start_get_A_test, param_250_159_p_line_equal_one, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_A_test_305_192, 5, test_program_start_get_A_test, 1, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
+        test_function(test_memory_file_get_A_test_305_192, param_305_192_number_of_words, test_program_start_get_A_test, param_305_192_p_line_equal_one, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_A_test_372_239, 6, test_program_start_get_A_test, 1, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
+        test_function(test_memory_file_get_A_test_372_239, param_372_239_number_of_words, test_program_start_get_A_test, param_372_239_p_line_equal_one, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_A_test_486_301, 8, test_program_start_get_A_test, 1, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
+        test_function(test_memory_file_get_A_test_486_301, param_486_301_number_of_words, test_program_start_get_A_test, param_486_301_p_line_equal_one, test_program_number_inputs_get_A_test, test_program_number_outputs_get_A_test);
         wait for PERIOD;
     end if;
     if( not skip_inv_2_way_test ) then
         report "Start inversion 2 way program test." severity note;
-        test_function(test_memory_file_inv_2_way_test_8_5, 1, test_program_start_inv_2_way_test, 0, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
+        test_function(test_memory_file_inv_2_way_test_8_5, param_8_5_number_of_words, test_program_start_inv_2_way_test, param_8_5_p_line_equal_one, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
         wait for PERIOD;
-        test_function(test_memory_file_inv_2_way_test_216_137, 4, test_program_start_inv_2_way_test, 1, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
+        test_function(test_memory_file_inv_2_way_test_216_137, param_216_137_number_of_words, test_program_start_inv_2_way_test, param_216_137_p_line_equal_one, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
         wait for PERIOD;
-        test_function(test_memory_file_inv_2_way_test_250_159, 5, test_program_start_inv_2_way_test, 1, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
+        test_function(test_memory_file_inv_2_way_test_250_159, param_250_159_number_of_words, test_program_start_inv_2_way_test, param_250_159_p_line_equal_one, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
         wait for PERIOD;
-        test_function(test_memory_file_inv_2_way_test_305_192, 5, test_program_start_inv_2_way_test, 1, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
+        test_function(test_memory_file_inv_2_way_test_305_192, param_305_192_number_of_words, test_program_start_inv_2_way_test, param_305_192_p_line_equal_one, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
         wait for PERIOD;
-        test_function(test_memory_file_inv_2_way_test_372_239, 6, test_program_start_inv_2_way_test, 1, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
+        test_function(test_memory_file_inv_2_way_test_372_239, param_372_239_number_of_words, test_program_start_inv_2_way_test, param_372_239_p_line_equal_one, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
         wait for PERIOD;
-        test_function(test_memory_file_inv_2_way_test_486_301, 8, test_program_start_inv_2_way_test, 1, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
+        test_function(test_memory_file_inv_2_way_test_486_301, param_486_301_number_of_words, test_program_start_inv_2_way_test, param_486_301_p_line_equal_one, test_program_number_inputs_inv_2_way_test, test_program_number_outputs_inv_2_way_test);
         wait for PERIOD;
     end if;
     if( not skip_ladder_3_pt_test ) then
         report "Start ladder 3 point program test oa bits." severity note;
-        test_function(test_memory_file_ladder_3_pt_test_8_5_oa_bits, 1, test_program_start_ladder_3_pt_test, 0, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_8_5_oa_bits, param_8_5_number_of_words, test_program_start_ladder_3_pt_test, param_8_5_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_216_137_oa_bits, 4, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_216_137_oa_bits, param_216_137_number_of_words, test_program_start_ladder_3_pt_test, param_216_137_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_250_159_oa_bits, 5, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_250_159_oa_bits, param_250_159_number_of_words, test_program_start_ladder_3_pt_test, param_250_159_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_305_192_oa_bits, 5, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_305_192_oa_bits, param_305_192_number_of_words, test_program_start_ladder_3_pt_test, param_305_192_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_372_239_oa_bits, 6, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_372_239_oa_bits, param_372_239_number_of_words, test_program_start_ladder_3_pt_test, param_372_239_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_486_301_oa_bits, 8, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_486_301_oa_bits, param_486_301_number_of_words, test_program_start_ladder_3_pt_test, param_486_301_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
         report "Start ladder 3 point program test ob bits." severity note;
-        test_function(test_memory_file_ladder_3_pt_test_8_5_ob_bits, 1, test_program_start_ladder_3_pt_test, 0, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_8_5_ob_bits, param_8_5_number_of_words, test_program_start_ladder_3_pt_test, param_8_5_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_216_137_ob_bits, 4, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_216_137_ob_bits, param_216_137_number_of_words, test_program_start_ladder_3_pt_test, param_216_137_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_250_159_ob_bits, 5, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_250_159_ob_bits, param_250_159_number_of_words, test_program_start_ladder_3_pt_test, param_250_159_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_305_192_ob_bits, 5, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_305_192_ob_bits, param_305_192_number_of_words, test_program_start_ladder_3_pt_test, param_305_192_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_372_239_ob_bits, 6, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_372_239_ob_bits, param_372_239_number_of_words, test_program_start_ladder_3_pt_test, param_372_239_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
-        test_function(test_memory_file_ladder_3_pt_test_486_301_ob_bits, 8, test_program_start_ladder_3_pt_test, 1, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
+        test_function(test_memory_file_ladder_3_pt_test_486_301_ob_bits, param_486_301_number_of_words, test_program_start_ladder_3_pt_test, param_486_301_p_line_equal_one, test_program_number_inputs_ladder_3_pt_test, test_program_number_outputs_ladder_3_pt_test);
         wait for PERIOD;
     end if;
     if( not skip_xDBLe_test ) then
         report "Start xDBLe program test." severity note;
-        test_function(test_memory_file_xDBLe_test_8_5, 1, test_program_start_xDBLe_test, 0, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
+        test_function(test_memory_file_xDBLe_test_8_5, param_8_5_number_of_words, test_program_start_xDBLe_test, param_8_5_p_line_equal_one, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xDBLe_test_216_137, 4, test_program_start_xDBLe_test, 1, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
+        test_function(test_memory_file_xDBLe_test_216_137, param_216_137_number_of_words, test_program_start_xDBLe_test, param_216_137_p_line_equal_one, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xDBLe_test_250_159, 5, test_program_start_xDBLe_test, 1, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
+        test_function(test_memory_file_xDBLe_test_250_159, param_250_159_number_of_words, test_program_start_xDBLe_test, param_250_159_p_line_equal_one, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xDBLe_test_305_192, 5, test_program_start_xDBLe_test, 1, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
+        test_function(test_memory_file_xDBLe_test_305_192, param_305_192_number_of_words, test_program_start_xDBLe_test, param_305_192_p_line_equal_one, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xDBLe_test_372_239, 6, test_program_start_xDBLe_test, 1, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
+        test_function(test_memory_file_xDBLe_test_372_239, param_372_239_number_of_words, test_program_start_xDBLe_test, param_372_239_p_line_equal_one, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xDBLe_test_486_301, 8, test_program_start_xDBLe_test, 1, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
+        test_function(test_memory_file_xDBLe_test_486_301, param_486_301_number_of_words, test_program_start_xDBLe_test, param_486_301_p_line_equal_one, test_program_number_inputs_xDBLe_test, test_program_number_outputs_xDBLe_test);
         wait for PERIOD;
     end if;
     if( not skip_get_4_isog_test ) then
         report "Start get 4 isogenies program test." severity note;
-        test_function(test_memory_file_get_4_isog_test_8_5, 1, test_program_start_get_4_isog_test, 0, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
+        test_function(test_memory_file_get_4_isog_test_8_5, param_8_5_number_of_words, test_program_start_get_4_isog_test, param_8_5_p_line_equal_one, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_4_isog_test_216_137, 4, test_program_start_get_4_isog_test, 1, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
+        test_function(test_memory_file_get_4_isog_test_216_137, param_216_137_number_of_words, test_program_start_get_4_isog_test, param_216_137_p_line_equal_one, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_4_isog_test_250_159, 5, test_program_start_get_4_isog_test, 1, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
+        test_function(test_memory_file_get_4_isog_test_250_159, param_250_159_number_of_words, test_program_start_get_4_isog_test, param_250_159_p_line_equal_one, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_4_isog_test_305_192, 5, test_program_start_get_4_isog_test, 1, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
+        test_function(test_memory_file_get_4_isog_test_305_192, param_305_192_number_of_words, test_program_start_get_4_isog_test, param_305_192_p_line_equal_one, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_4_isog_test_372_239, 6, test_program_start_get_4_isog_test, 1, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
+        test_function(test_memory_file_get_4_isog_test_372_239, param_372_239_number_of_words, test_program_start_get_4_isog_test, param_372_239_p_line_equal_one, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_4_isog_test_486_301, 8, test_program_start_get_4_isog_test, 1, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
+        test_function(test_memory_file_get_4_isog_test_486_301, param_486_301_number_of_words, test_program_start_get_4_isog_test, param_486_301_p_line_equal_one, test_program_number_inputs_get_4_isog_test, test_program_number_outputs_get_4_isog_test);
         wait for PERIOD;
     end if;
     if( not skip_eval_4_isog_test ) then
         report "Start eval 4 isogenies program test." severity note;
-        test_function(test_memory_file_eval_4_isog_test_8_5, 1, test_program_start_eval_4_isog_test, 0, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
+        test_function(test_memory_file_eval_4_isog_test_8_5, param_8_5_number_of_words, test_program_start_eval_4_isog_test, param_8_5_p_line_equal_one, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_4_isog_test_216_137, 4, test_program_start_eval_4_isog_test, 1, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
+        test_function(test_memory_file_eval_4_isog_test_216_137, param_216_137_number_of_words, test_program_start_eval_4_isog_test, param_216_137_p_line_equal_one, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_4_isog_test_250_159, 5, test_program_start_eval_4_isog_test, 1, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
+        test_function(test_memory_file_eval_4_isog_test_250_159, param_250_159_number_of_words, test_program_start_eval_4_isog_test, param_250_159_p_line_equal_one, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_4_isog_test_305_192, 5, test_program_start_eval_4_isog_test, 1, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
+        test_function(test_memory_file_eval_4_isog_test_305_192, param_305_192_number_of_words, test_program_start_eval_4_isog_test, param_305_192_p_line_equal_one, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_4_isog_test_372_239, 6, test_program_start_eval_4_isog_test, 1, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
+        test_function(test_memory_file_eval_4_isog_test_372_239, param_372_239_number_of_words, test_program_start_eval_4_isog_test, param_372_239_p_line_equal_one, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_4_isog_test_486_301, 8, test_program_start_eval_4_isog_test, 1, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
+        test_function(test_memory_file_eval_4_isog_test_486_301, param_486_301_number_of_words, test_program_start_eval_4_isog_test, param_486_301_p_line_equal_one, test_program_number_inputs_eval_4_isog_test, test_program_number_outputs_eval_4_isog_test);
         wait for PERIOD;
     end if;
     if( not skip_xTPLe_test ) then
         report "Start xTPLe program test." severity note;
-        test_function(test_memory_file_xTPLe_test_8_5, 1, test_program_start_xTPLe_test, 0, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
+        test_function(test_memory_file_xTPLe_test_8_5, param_8_5_number_of_words, test_program_start_xTPLe_test, param_8_5_p_line_equal_one, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xTPLe_test_216_137, 4, test_program_start_xTPLe_test, 1, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
+        test_function(test_memory_file_xTPLe_test_216_137, param_216_137_number_of_words, test_program_start_xTPLe_test, param_216_137_p_line_equal_one, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xTPLe_test_250_159, 5, test_program_start_xTPLe_test, 1, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
+        test_function(test_memory_file_xTPLe_test_250_159, param_250_159_number_of_words, test_program_start_xTPLe_test, param_250_159_p_line_equal_one, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xTPLe_test_305_192, 5, test_program_start_xTPLe_test, 1, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
+        test_function(test_memory_file_xTPLe_test_305_192, param_305_192_number_of_words, test_program_start_xTPLe_test, param_305_192_p_line_equal_one, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xTPLe_test_372_239, 6, test_program_start_xTPLe_test, 1, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
+        test_function(test_memory_file_xTPLe_test_372_239, param_372_239_number_of_words, test_program_start_xTPLe_test, param_305_192_p_line_equal_one, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
         wait for PERIOD;
-        test_function(test_memory_file_xTPLe_test_486_301, 8, test_program_start_xTPLe_test, 1, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
+        test_function(test_memory_file_xTPLe_test_486_301, param_486_301_number_of_words, test_program_start_xTPLe_test, param_486_301_p_line_equal_one, test_program_number_inputs_xTPLe_test, test_program_number_outputs_xTPLe_test);
         wait for PERIOD;
     end if;
     if( not skip_get_3_isog_test ) then
         report "Start Get 3 isogenies program test." severity note;
-        test_function(test_memory_file_get_3_isog_test_8_5, 1, test_program_start_get_3_isog_test, 0, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
+        test_function(test_memory_file_get_3_isog_test_8_5, param_8_5_number_of_words, test_program_start_get_3_isog_test, param_8_5_p_line_equal_one, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_3_isog_test_216_137, 4, test_program_start_get_3_isog_test, 1, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
+        test_function(test_memory_file_get_3_isog_test_216_137, param_216_137_number_of_words, test_program_start_get_3_isog_test, param_216_137_p_line_equal_one, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_3_isog_test_250_159, 5, test_program_start_get_3_isog_test, 1, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
+        test_function(test_memory_file_get_3_isog_test_250_159, param_250_159_number_of_words, test_program_start_get_3_isog_test, param_250_159_p_line_equal_one, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_3_isog_test_305_192, 5, test_program_start_get_3_isog_test, 1, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
+        test_function(test_memory_file_get_3_isog_test_305_192, param_305_192_number_of_words, test_program_start_get_3_isog_test, param_305_192_p_line_equal_one, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_3_isog_test_372_239, 6, test_program_start_get_3_isog_test, 1, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
+        test_function(test_memory_file_get_3_isog_test_372_239, param_372_239_number_of_words, test_program_start_get_3_isog_test, param_372_239_p_line_equal_one, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_3_isog_test_486_301, 8, test_program_start_get_3_isog_test, 1, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
+        test_function(test_memory_file_get_3_isog_test_486_301, param_486_301_number_of_words, test_program_start_get_3_isog_test, param_486_301_p_line_equal_one, test_program_number_inputs_get_3_isog_test, test_program_number_outputs_get_3_isog_test);
         wait for PERIOD;
     end if;
     if( not skip_eval_3_isog_test ) then
         report "Start Eval 3 isogenies program test." severity note;
-        test_function(test_memory_file_eval_3_isog_test_8_5, 1, test_program_start_eval_3_isog_test, 0, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
+        test_function(test_memory_file_eval_3_isog_test_8_5, param_8_5_number_of_words, test_program_start_eval_3_isog_test, param_8_5_p_line_equal_one, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_3_isog_test_216_137, 4, test_program_start_eval_3_isog_test, 1, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
+        test_function(test_memory_file_eval_3_isog_test_216_137, param_216_137_number_of_words, test_program_start_eval_3_isog_test, param_216_137_p_line_equal_one, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_3_isog_test_250_159, 5, test_program_start_eval_3_isog_test, 1, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
+        test_function(test_memory_file_eval_3_isog_test_250_159, param_250_159_number_of_words, test_program_start_eval_3_isog_test, param_250_159_p_line_equal_one, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_3_isog_test_305_192, 5, test_program_start_eval_3_isog_test, 1, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
+        test_function(test_memory_file_eval_3_isog_test_305_192, param_305_192_number_of_words, test_program_start_eval_3_isog_test, param_305_192_p_line_equal_one, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_3_isog_test_372_239, 6, test_program_start_eval_3_isog_test, 1, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
+        test_function(test_memory_file_eval_3_isog_test_372_239, param_372_239_number_of_words, test_program_start_eval_3_isog_test, param_372_239_p_line_equal_one, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_3_isog_test_486_301, 8, test_program_start_eval_3_isog_test, 1, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
+        test_function(test_memory_file_eval_3_isog_test_486_301, param_486_301_number_of_words, test_program_start_eval_3_isog_test, param_486_301_p_line_equal_one, test_program_number_inputs_eval_3_isog_test, test_program_number_outputs_eval_3_isog_test);
         wait for PERIOD;
     end if;
     if( not skip_get_2_isog_test ) then
         report "Start Get 2 isogenies program test." severity note;
-        test_function(test_memory_file_get_2_isog_test_8_5, 1, test_program_start_get_2_isog_test, 0, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
+        test_function(test_memory_file_get_2_isog_test_8_5, param_8_5_number_of_words, test_program_start_get_2_isog_test, param_8_5_p_line_equal_one, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_2_isog_test_216_137, 4, test_program_start_get_2_isog_test, 1, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
+        test_function(test_memory_file_get_2_isog_test_216_137, param_216_137_number_of_words, test_program_start_get_2_isog_test, param_216_137_p_line_equal_one, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_2_isog_test_250_159, 5, test_program_start_get_2_isog_test, 1, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
+        test_function(test_memory_file_get_2_isog_test_250_159, param_250_159_number_of_words, test_program_start_get_2_isog_test, param_250_159_p_line_equal_one, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_2_isog_test_305_192, 5, test_program_start_get_2_isog_test, 1, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
+        test_function(test_memory_file_get_2_isog_test_305_192, param_305_192_number_of_words, test_program_start_get_2_isog_test, param_305_192_p_line_equal_one, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_2_isog_test_372_239, 6, test_program_start_get_2_isog_test, 1, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
+        test_function(test_memory_file_get_2_isog_test_372_239, param_372_239_number_of_words, test_program_start_get_2_isog_test, param_372_239_p_line_equal_one, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_get_2_isog_test_486_301, 8, test_program_start_get_2_isog_test, 1, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
+        test_function(test_memory_file_get_2_isog_test_486_301, param_486_301_number_of_words, test_program_start_get_2_isog_test, param_486_301_p_line_equal_one, test_program_number_inputs_get_2_isog_test, test_program_number_outputs_get_2_isog_test);
         wait for PERIOD;
     end if;
     if( not skip_eval_2_isog_test ) then
         report "Start Eval 2 isogenies program test." severity note;
-        test_function(test_memory_file_eval_2_isog_test_8_5, 1, test_program_start_eval_2_isog_test, 0, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
+        test_function(test_memory_file_eval_2_isog_test_8_5, param_8_5_number_of_words, test_program_start_eval_2_isog_test, param_8_5_p_line_equal_one, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_2_isog_test_216_137, 4, test_program_start_eval_2_isog_test, 1, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
+        test_function(test_memory_file_eval_2_isog_test_216_137, param_216_137_number_of_words, test_program_start_eval_2_isog_test, param_216_137_p_line_equal_one, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_2_isog_test_250_159, 5, test_program_start_eval_2_isog_test, 1, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
+        test_function(test_memory_file_eval_2_isog_test_250_159, param_250_159_number_of_words, test_program_start_eval_2_isog_test, param_250_159_p_line_equal_one, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_2_isog_test_305_192, 5, test_program_start_eval_2_isog_test, 1, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
+        test_function(test_memory_file_eval_2_isog_test_305_192, param_305_192_number_of_words, test_program_start_eval_2_isog_test, param_305_192_p_line_equal_one, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_2_isog_test_372_239, 6, test_program_start_eval_2_isog_test, 1, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
+        test_function(test_memory_file_eval_2_isog_test_372_239, param_372_239_number_of_words, test_program_start_eval_2_isog_test, param_372_239_p_line_equal_one, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
         wait for PERIOD;
-        test_function(test_memory_file_eval_2_isog_test_486_301, 8, test_program_start_eval_2_isog_test, 1, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
+        test_function(test_memory_file_eval_2_isog_test_486_301, param_486_301_number_of_words, test_program_start_eval_2_isog_test, param_486_301_p_line_equal_one, test_program_number_inputs_eval_2_isog_test, test_program_number_outputs_eval_2_isog_test);
         wait for PERIOD;
     end if;
     test_bench_finish <= true;

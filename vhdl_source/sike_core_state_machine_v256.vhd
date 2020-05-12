@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 
--- Design Name: 
--- Module Name: 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -219,6 +208,7 @@ constant mac_unit_mmulm_operation : std_logic_vector(3 downto 0)         := "001
 constant mac_unit_msqum_operation : std_logic_vector(3 downto 0)         := "0011";
 constant mac_unit_madd_subd_operation : std_logic_vector(3 downto 0)     := "0100";
 constant mac_unit_mitred_operation : std_logic_vector(3 downto 0)        := "0101";
+constant mac_unit_madd_subr_operation : std_logic_vector(3 downto 0)     := "0110";
 
 
 signal next_reg_next_instruction_enable : std_logic;
@@ -291,90 +281,92 @@ end process;
 
 ctr_repeat_states_limit <= '1' when (to_01(ctr_repeat_states_value) = to_unsigned(0, 3)) else '0';
 
-registers_state : process(clk, rstn)
+registers_state : process(clk)
 begin
-    if(rstn = '0') then
-        actual_state <= reset;
-        reg_next_instruction_enable <= '0';
-        reg_current_instruction_enable <= '0';
-        enable_new_mac_instruction <= '0';
-        full_bus_enable <= '0';
-        full_bus_mac_ram_control <= "00";
-        full_bus_mac_ram_address_mode_a <= "00";
-        full_bus_mac_ram_address_mode_b <= "00";
-        mac_ram_stack_mode <= '0';
-        mac_ram_address_incremented_enable <= '0';
-        mac_ram_address_incremented_decreasing_mode <= '0';
-        mac_ram_address_incremented_load <= '0';
-        sidh_control_enable_write_one_a_full_bus_mode <= '0';
-        sidh_control_small_bus_enable <= '0';
-        sidh_control_small_bus_write_enable <= '0';
-        sidh_control_small_bus_buffer_enable <= '0';
-        sidh_control_small_bus_stack_mode_enable <= '0';
-        sidh_control_small_bus_burst_mode <= '0';
-        sidh_control_small_bus_address_data_in_burst_ctr_enable <= '0';
-        sidh_control_small_bus_address_data_out_burst_ctr_enable <= '0';
-        sidh_control_small_bus_address_burst_ctr_load <= '0';
-        stack_rstn <= '0';
-        stack_operation_valid <= '0';
-        stack_push_mode <= '0';
-        sidh_control_base_alu_ram_operation_mode <= '1';
-        sidh_control_base_alu_ram_alu_mode <= '0';
-        sidh_control_base_alu_ram_write_enable <= '0';
-        prom_program_counter_enable_increase <= '0';
-        prom_program_counter_enable_jump <= '0';
-        prom_program_counter_return_function <= '0';
-        check_base_alu_o_equal_zero <= '0';
-        check_base_alu_o_change_sign_b <= '0';
-        enable_base_alu_input_registers <= '0';
-        reg_constant_full_bus_base <= '0';
-        keccak_init <= '0';
-        keccak_go <= '0';
-        reg_status <= '0';
-        ctr_repeat_states_enable <= '0';
-        ctr_repeat_states_load <= '0';
-        ctr_repeat_states_load_value <= "00";
-    elsif(rising_edge(clk)) then
-        actual_state <= next_state;
-        reg_next_instruction_enable <= next_reg_next_instruction_enable;
-        reg_current_instruction_enable <= next_reg_current_instruction_enable;
-        enable_new_mac_instruction <= next_enable_new_mac_instruction;
-        full_bus_enable <= next_full_bus_enable;
-        full_bus_mac_ram_control <= next_full_bus_mac_ram_control;
-        full_bus_mac_ram_address_mode_a <= next_full_bus_mac_ram_address_mode_a;
-        full_bus_mac_ram_address_mode_b <= next_full_bus_mac_ram_address_mode_b;
-        mac_ram_stack_mode <= next_mac_ram_stack_mode;
-        mac_ram_address_incremented_enable <= next_mac_ram_address_incremented_enable;
-        mac_ram_address_incremented_decreasing_mode <= next_mac_ram_address_incremented_decreasing_mode;
-        mac_ram_address_incremented_load <= next_mac_ram_address_incremented_load;
-        sidh_control_enable_write_one_a_full_bus_mode <= next_sidh_control_enable_write_one_a_full_bus_mode;
-        sidh_control_small_bus_enable <= next_sidh_control_small_bus_enable;
-        sidh_control_small_bus_write_enable <= next_sidh_control_small_bus_write_enable;
-        sidh_control_small_bus_buffer_enable <= next_sidh_control_small_bus_buffer_enable;
-        sidh_control_small_bus_stack_mode_enable <= next_sidh_control_small_bus_stack_mode_enable;
-        sidh_control_small_bus_burst_mode <= next_sidh_control_small_bus_burst_mode;
-        sidh_control_small_bus_address_data_in_burst_ctr_enable <= next_sidh_control_small_bus_address_data_in_burst_ctr_enable;
-        sidh_control_small_bus_address_data_out_burst_ctr_enable <= next_sidh_control_small_bus_address_data_out_burst_ctr_enable;
-        sidh_control_small_bus_address_burst_ctr_load <= next_sidh_control_small_bus_address_burst_ctr_load;
-        stack_rstn <= next_stack_rstn;
-        stack_operation_valid <= next_stack_operation_valid;
-        stack_push_mode <= next_stack_push_mode;
-        sidh_control_base_alu_ram_operation_mode <= next_sidh_control_base_alu_ram_operation_mode;
-        sidh_control_base_alu_ram_alu_mode <= next_sidh_control_base_alu_ram_alu_mode;
-        sidh_control_base_alu_ram_write_enable <= next_sidh_control_base_alu_ram_write_enable;
-        prom_program_counter_enable_increase <= next_prom_program_counter_enable_increase;
-        prom_program_counter_enable_jump <= next_prom_program_counter_enable_jump;
-        prom_program_counter_return_function <= next_prom_program_counter_return_function;
-        check_base_alu_o_equal_zero <= next_check_base_alu_o_equal_zero;
-        check_base_alu_o_change_sign_b <= next_check_base_alu_o_change_sign_b;
-        enable_base_alu_input_registers <= next_enable_base_alu_input_registers;
-        reg_constant_full_bus_base <= next_reg_constant_full_bus_base;
-        keccak_init <= next_keccak_init;
-        keccak_go <= next_keccak_go;
-        reg_status <= next_reg_status;
-        ctr_repeat_states_enable <= next_ctr_repeat_states_enable;
-        ctr_repeat_states_load <= next_ctr_repeat_states_load;
-        ctr_repeat_states_load_value <= next_ctr_repeat_states_load_value;
+    if(rising_edge(clk)) then
+        if(rstn = '0') then
+            actual_state <= reset;
+            reg_next_instruction_enable <= '0';
+            reg_current_instruction_enable <= '0';
+            enable_new_mac_instruction <= '0';
+            full_bus_enable <= '0';
+            full_bus_mac_ram_control <= "00";
+            full_bus_mac_ram_address_mode_a <= "00";
+            full_bus_mac_ram_address_mode_b <= "00";
+            mac_ram_stack_mode <= '0';
+            mac_ram_address_incremented_enable <= '0';
+            mac_ram_address_incremented_decreasing_mode <= '0';
+            mac_ram_address_incremented_load <= '0';
+            sidh_control_enable_write_one_a_full_bus_mode <= '0';
+            sidh_control_small_bus_enable <= '0';
+            sidh_control_small_bus_write_enable <= '0';
+            sidh_control_small_bus_buffer_enable <= '0';
+            sidh_control_small_bus_stack_mode_enable <= '0';
+            sidh_control_small_bus_burst_mode <= '0';
+            sidh_control_small_bus_address_data_in_burst_ctr_enable <= '0';
+            sidh_control_small_bus_address_data_out_burst_ctr_enable <= '0';
+            sidh_control_small_bus_address_burst_ctr_load <= '0';
+            stack_rstn <= '0';
+            stack_operation_valid <= '0';
+            stack_push_mode <= '0';
+            sidh_control_base_alu_ram_operation_mode <= '1';
+            sidh_control_base_alu_ram_alu_mode <= '0';
+            sidh_control_base_alu_ram_write_enable <= '0';
+            prom_program_counter_enable_increase <= '0';
+            prom_program_counter_enable_jump <= '0';
+            prom_program_counter_return_function <= '0';
+            check_base_alu_o_equal_zero <= '0';
+            check_base_alu_o_change_sign_b <= '0';
+            enable_base_alu_input_registers <= '0';
+            reg_constant_full_bus_base <= '0';
+            keccak_init <= '0';
+            keccak_go <= '0';
+            reg_status <= '0';
+            ctr_repeat_states_enable <= '0';
+            ctr_repeat_states_load <= '0';
+            ctr_repeat_states_load_value <= "00";
+        else
+            actual_state <= next_state;
+            reg_next_instruction_enable <= next_reg_next_instruction_enable;
+            reg_current_instruction_enable <= next_reg_current_instruction_enable;
+            enable_new_mac_instruction <= next_enable_new_mac_instruction;
+            full_bus_enable <= next_full_bus_enable;
+            full_bus_mac_ram_control <= next_full_bus_mac_ram_control;
+            full_bus_mac_ram_address_mode_a <= next_full_bus_mac_ram_address_mode_a;
+            full_bus_mac_ram_address_mode_b <= next_full_bus_mac_ram_address_mode_b;
+            mac_ram_stack_mode <= next_mac_ram_stack_mode;
+            mac_ram_address_incremented_enable <= next_mac_ram_address_incremented_enable;
+            mac_ram_address_incremented_decreasing_mode <= next_mac_ram_address_incremented_decreasing_mode;
+            mac_ram_address_incremented_load <= next_mac_ram_address_incremented_load;
+            sidh_control_enable_write_one_a_full_bus_mode <= next_sidh_control_enable_write_one_a_full_bus_mode;
+            sidh_control_small_bus_enable <= next_sidh_control_small_bus_enable;
+            sidh_control_small_bus_write_enable <= next_sidh_control_small_bus_write_enable;
+            sidh_control_small_bus_buffer_enable <= next_sidh_control_small_bus_buffer_enable;
+            sidh_control_small_bus_stack_mode_enable <= next_sidh_control_small_bus_stack_mode_enable;
+            sidh_control_small_bus_burst_mode <= next_sidh_control_small_bus_burst_mode;
+            sidh_control_small_bus_address_data_in_burst_ctr_enable <= next_sidh_control_small_bus_address_data_in_burst_ctr_enable;
+            sidh_control_small_bus_address_data_out_burst_ctr_enable <= next_sidh_control_small_bus_address_data_out_burst_ctr_enable;
+            sidh_control_small_bus_address_burst_ctr_load <= next_sidh_control_small_bus_address_burst_ctr_load;
+            stack_rstn <= next_stack_rstn;
+            stack_operation_valid <= next_stack_operation_valid;
+            stack_push_mode <= next_stack_push_mode;
+            sidh_control_base_alu_ram_operation_mode <= next_sidh_control_base_alu_ram_operation_mode;
+            sidh_control_base_alu_ram_alu_mode <= next_sidh_control_base_alu_ram_alu_mode;
+            sidh_control_base_alu_ram_write_enable <= next_sidh_control_base_alu_ram_write_enable;
+            prom_program_counter_enable_increase <= next_prom_program_counter_enable_increase;
+            prom_program_counter_enable_jump <= next_prom_program_counter_enable_jump;
+            prom_program_counter_return_function <= next_prom_program_counter_return_function;
+            check_base_alu_o_equal_zero <= next_check_base_alu_o_equal_zero;
+            check_base_alu_o_change_sign_b <= next_check_base_alu_o_change_sign_b;
+            enable_base_alu_input_registers <= next_enable_base_alu_input_registers;
+            reg_constant_full_bus_base <= next_reg_constant_full_bus_base;
+            keccak_init <= next_keccak_init;
+            keccak_go <= next_keccak_go;
+            reg_status <= next_reg_status;
+            ctr_repeat_states_enable <= next_ctr_repeat_states_enable;
+            ctr_repeat_states_load <= next_ctr_repeat_states_load;
+            ctr_repeat_states_load_value <= next_ctr_repeat_states_load_value;
+        end if;
     end if;
 end process;
 
@@ -949,7 +941,7 @@ begin
                 case reg_next_instruction_base_alu_operation_type(3 downto 0) is
                     when mac_unit_mmuld_operation|mac_unit_msqud_operation|mac_unit_mmulm_operation|mac_unit_msqum_operation =>
                         next_state <= start_execute_8_mac_instruction_1;
-                    when mac_unit_madd_subd_operation|mac_unit_mitred_operation =>
+                    when mac_unit_madd_subd_operation|mac_unit_mitred_operation|mac_unit_madd_subr_operation =>
                         next_state <= start_execute_4_mac_instruction_1;
                     when others =>
                         next_state <= start_execute_8_mac_instruction_1;

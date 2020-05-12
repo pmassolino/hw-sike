@@ -1,8 +1,8 @@
 import binascii
 
 proof.arithmetic(False)
-home_folder = "/home/pedro/"
-script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+if 'script_working_folder' not in globals() and 'script_working_folder' not in locals():
+    script_working_folder = "/home/pedro/hw-sidh/vhdl_project/sage/"
 load(script_working_folder+"base_tests_for_sidh_basic_procedures/all_sidh_basic_procedures.sage")
 load(script_working_folder+"base_tests_for_ecc/ecc_constants.sage")
 
@@ -628,7 +628,7 @@ def scalar_multiplication_weierstrass(arithmetic_parameters, scalar, scalar_max_
             r0x = mo[0]
             r0y = mo[1]
             r0z = mo[2]
-    
+            
     o = fp_inv(arithmetic_parameters, r0z, r1z)
     
     inv_r0z  = o[0]
@@ -644,11 +644,11 @@ def scalar_multiplication_weierstrass(arithmetic_parameters, scalar, scalar_max_
     r1y = mo[3]
     r1z = 1
     
-    r0x = remove_montgomery_domain(arithmetic_parameters, r0x)
-    r0y = remove_montgomery_domain(arithmetic_parameters, r0y)
+    r0x = iterative_reduction(arithmetic_parameters, remove_montgomery_domain(arithmetic_parameters, r0x))
+    r0y = iterative_reduction(arithmetic_parameters, remove_montgomery_domain(arithmetic_parameters, r0y))
     
-    r1x = remove_montgomery_domain(arithmetic_parameters, r1x)
-    r1y = remove_montgomery_domain(arithmetic_parameters, r1y)
+    r1x = iterative_reduction(arithmetic_parameters, remove_montgomery_domain(arithmetic_parameters, r1x))
+    r1y = iterative_reduction(arithmetic_parameters, remove_montgomery_domain(arithmetic_parameters, r1y))
     
     return r0x, r0y
 
@@ -755,6 +755,8 @@ def print_scalar_multiplication_weierstrass(VHDL_memory_file_name, base_word_siz
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line_list = arithmetic_parameters[18]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r_mod_prime_constant = arithmetic_parameters[12]
     r_mod_prime_constant_list = arithmetic_parameters[13]
@@ -780,6 +782,7 @@ def print_scalar_multiplication_weierstrass(VHDL_memory_file_name, base_word_siz
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_plus_one_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_line_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime2_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, r_mod_prime_constant_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, r2_constant_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, constant_1, maximum_number_of_words)
@@ -803,6 +806,7 @@ def print_scalar_multiplication_weierstrass(VHDL_memory_file_name, base_word_siz
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, elliptic_curve_point_z_list, maximum_number_of_words)
     
     print_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, scalar_max_size, False)
+    print_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, prime_size_bits, False)
     
     # Fixed test
     tests_already_performed = 0
@@ -866,6 +870,8 @@ def load_VHDL_scalar_multiplication_weierstrass(VHDL_memory_file_name, base_word
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line = arithmetic_parameters[17]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r_mod_prime_constant = arithmetic_parameters[12]
     r_mod_prime_constant_list = arithmetic_parameters[13]
@@ -905,6 +911,14 @@ def load_VHDL_scalar_multiplication_weierstrass(VHDL_memory_file_name, base_word
         print(loaded_prime_line)
         print("Input prime line 0")
         print(prime_line)
+    loaded_prime2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime2 != prime2):
+        print("Error in scalar multiplication : " + str(current_test))
+        print("Error loading the 2*prime")
+        print("Loaded 2*prime")
+        print(loaded_prime2)
+        print("Input 2*prime")
+        print(prime2)
     loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_r_mod_prime != r_mod_prime_constant):
         print("Error in scalar multiplication : " + str(current_test))
@@ -941,10 +955,11 @@ def load_VHDL_scalar_multiplication_weierstrass(VHDL_memory_file_name, base_word
     loaded_elliptic_curve_point_z = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     
     loaded_scalar_max_size  = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, False)
+    loaded_prime_size  = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size_signed, False)
     
     while(current_test != (number_of_tests-1)):
     
-        loaded_scalar                 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+        loaded_scalar         = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
         
         loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
         loaded_test_value_o2  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
@@ -1024,7 +1039,7 @@ base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = extended_word_size*2+32
 number_of_tests = 100
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_ecc_tests_v256/"
+tests_working_folder = script_working_folder + "../hw_sike_ecc_tests_v256/"
 
 
 #number_of_bits_added = 9
@@ -1032,7 +1047,7 @@ tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_ecc_tests_v25
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32
 #number_of_tests = 100
-#tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sike_ecc_tests_v128/"
+#tests_working_folder = script_working_folder + "../hw_sike_ecc_tests_v128/"
 
 VHDL_file_names = [tests_working_folder + "scalar_multiplication_weierstrass_" + str(param[0]) + ".dat" for param in ecc_constants]
 

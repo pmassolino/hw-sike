@@ -1,6 +1,6 @@
 proof.arithmetic(False)
-home_folder = "/home/pedro/"
-script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+if 'script_working_folder' not in globals() and 'script_working_folder' not in locals():
+    script_working_folder = "/home/pedro/hw-sidh/vhdl_project/sage/"
 load(script_working_folder+"base_tests_for_mac_unit.sage")
 
 def signed_integer_to_string(a, size=272):

@@ -1,3 +1,32 @@
+Simple assembler for the SIDH core
+
+
+Project Carmela
+
+- MAC with 8 stages pipeline for multiplication.
+- Small accumulator, mainly applied with non modular additions/subtractions
+- Compressor for special additions
+
+General ISA
+
+Possible positions 256
+
+- (mo <= ma*mb mod p) 8 Parallel FIPS Multiplications Montgomery for 4 sizes (256, 512, 768, 1024)
+- (mo <= ma*ma mod p) 8 Parallel FIPS Square Montgomery for 4 sizes (256, 512, 768, 1024)
+- (mo <= ma*mb) 8 Parallel Comba Multiplications for 4 sizes (256, 512, 768, 1024)
+- (mo <= ma*mb) 8 Parallel Square Multiplications for 4 sizes (256, 512, 768, 1024)
+- (mo <= mb+/-ma) 4 Parallel Addition/Subtraction direct for 4 sizes (256, 512, 768, 1024)
+- (mo <= mb+/-ma mod p) 4 Parallel Iterative modular reduction 4 sizes (256, 512, 768, 1024)
+
+Size defined by operands size register
+
+ISA Description
+
+16 memories of 16 bits => 256 bits
+1k instructions.
+Maybe will be necessary 2k at least.
+
+
 Register 
 Dir 0  - Direct access
 ---- ---- Value between 0 to 255
@@ -542,9 +571,10 @@ S - External Write
 |0E004|        Prime address         |
 |0E005|        Prime+1 address       |
 |0E006|        Prime' address        |
-|0E007|        Initial stack address |
-|0E008|        Flag address          |
-|0E009|        Scalar init address   |
+|0E007|        2Prime address        |
+|0E008|        Initial stack address |
+|0E009|        Flag address          |
+|0E00A|        Scalar init address   |
 |     |                              |
 |0EFFF|        Reserved              |
 |____________________________________|

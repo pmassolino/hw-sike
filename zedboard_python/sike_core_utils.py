@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # Obtained from
 # https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm
 #
@@ -9,6 +12,15 @@ def xgcd(a, b):
         y0, y1 = y1, y0 - q * y1
         x0, x1 = x1, x0 - q * x1
     return b, x0, y0
+
+#
+# Implementation by Pedro Maat C. Massolino,
+# hereby denoted as "the implementer".
+#
+# To the extent possible under law, the implementer has waived all copyright
+# and related or neighboring rights to the source code in this file.
+# http://creativecommons.org/publicdomain/zero/1.0/
+#
 
 def load_list_value_VHDL_MAC_memory_as_integer(file, base_word_size, base_word_size_signed_number_words, number_of_words, signed_integer):
     positive_word = 2**(base_word_size)
@@ -120,7 +132,7 @@ def remove_montgomery_domain(arithmetic_parameters, a, debug=False):
     return o
 
 def generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime = 0):
-    arithmetic_parameters = [0]*24
+    arithmetic_parameters = [0]*26
     if(prime == 0):
     # No prime has been chosen, generate one on the fly
         prime = random_prime(2**prime_size_bits, True, 2**(prime_size_bits-1))
@@ -163,5 +175,7 @@ def generate_arithmetic_parameters(base_word_size, extended_word_size, prime_siz
     arithmetic_parameters[21] = 2**(extended_word_size)                                                    # Internal word division
     arithmetic_parameters[22] = (2**(extended_word_size))-1                                                # Internal word modulus
     arithmetic_parameters[23] = (2**(accumulator_word_size))-1                                             # Accumulator word modulus
+    arithmetic_parameters[24] = 2*prime                                                                    # Prime 2*n (integer representation)
+    arithmetic_parameters[25] = integer_to_list(extended_word_size, number_of_words, 2*prime)              # Prime 2*n (list representation)
     
     return arithmetic_parameters

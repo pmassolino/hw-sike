@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    
--- Design Name: 
--- Module Name:    
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -40,7 +29,6 @@ Generic(
     base_alu_ram_memory_size : integer := 10;
     base_alu_rotation_level : integer := 4;
     maximum_number_of_tests : integer := 1;
-    
     
     test_prom_file : string := "../assembler/test_ecc_scalar_multiplication_v256.dat";
     
@@ -105,24 +93,27 @@ constant reg_prime_line_equal_one_address : integer            := 16#0E003#;
 constant reg_prime_address_address : integer                   := 16#0E004#;
 constant reg_prime_plus_one_address_address : integer          := 16#0E005#;
 constant reg_prime_line_address_address : integer              := 16#0E006#;
-constant reg_initial_stack_address_address : integer           := 16#0E007#;
-constant reg_flag_address : integer                            := 16#0E008#;
-constant reg_scalar_address_address : integer                  := 16#0E009#;
+constant reg_2prime_address_address : integer                  := 16#0E007#;
+constant reg_initial_stack_address_address : integer           := 16#0E008#;
+constant reg_flag_address : integer                            := 16#0E009#;
+constant reg_scalar_address_address : integer                  := 16#0E00A#;
 
 constant mac_ram_prime_address : integer                       := 16#00000#;
 constant mac_ram_prime_plus_one_address : integer              := 16#00001#;
 constant mac_ram_prime_line_address : integer                  := 16#00002#;
-constant mac_ram_const_r_address : integer                     := 16#00003#;
-constant mac_ram_const_r2_address : integer                    := 16#00004#;
-constant mac_ram_const_1_address : integer                     := 16#00005#;
-constant mac_ram_ecc_const_a_mont_address : integer            := 16#00006#;
-constant mac_ram_ecc_const_a2_mont_address : integer           := 16#00007#;
-constant mac_ram_ecc_const_b3_mont_address : integer           := 16#00008#;
+constant mac_ram_2prime_address : integer                      := 16#00003#;
+constant mac_ram_const_r_address : integer                     := 16#00004#;
+constant mac_ram_const_r2_address : integer                    := 16#00005#;
+constant mac_ram_const_1_address : integer                     := 16#00006#;
+constant mac_ram_ecc_const_a_mont_address : integer            := 16#00018#;
+constant mac_ram_ecc_const_a2_mont_address : integer           := 16#00019#;
+constant mac_ram_ecc_const_b3_mont_address : integer           := 16#0001A#;
 
 constant mac_ram_input_function_start_address : integer        := 16#00014#;
 constant mac_ram_output_function_start_address : integer       := 16#00024#;
 
-constant base_ram_ecc_scalar_max_size_address : integer        := 16#000FB#;
+constant base_ram_ecc_scalar_max_size_address : integer        := 16#000FA#;
+constant base_ram_prime_size_bits_address : integer            := 16#001A1#;
 
 type tests_prom is array(natural range <>) of std_logic_vector((prom_instruction_size - 1) downto 0);
 type tests_base_ula_ram is array(natural range <>) of std_logic_vector((mac_base_word_size - 1) downto 0);
@@ -584,6 +575,16 @@ begin
         temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
     end loop;
     wait for PERIOD;
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
+    load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
+    wait for PERIOD;
+    
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_MAC_RAM_operand_values);
+        temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
+    end loop;
+    wait for PERIOD;
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_const_r_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
@@ -664,6 +665,13 @@ begin
     current_operation_addres := std_logic_vector(to_unsigned(base_ram_ecc_scalar_max_size_address + base_alu_ram_start_address, current_operation_addres'length));
     load_value_device_base_alu_internal_registers(temp_base_ram_constant, current_operation_addres);
     
+    readline (ram_file, line_n);
+    read (line_n, read_BASE_RAM_operand_values);
+    temp_base_ram_constant <= read_BASE_RAM_operand_values;
+    wait for PERIOD;
+    current_operation_addres := std_logic_vector(to_unsigned(base_ram_prime_size_bits_address + base_alu_ram_start_address, current_operation_addres'length));
+    load_value_device_base_alu_internal_registers(temp_base_ram_constant, current_operation_addres);
+    
     i := 0;
     while (i < (number_of_tests)) loop
         
@@ -740,6 +748,11 @@ begin
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(2, buffer_test_value_communication_base_alu_ram'length));
         wait for PERIOD;
         current_operation_addres := std_logic_vector(to_unsigned(reg_prime_line_address_address, current_operation_addres'length));
+        load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
+        wait for PERIOD;
+        buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(3, buffer_test_value_communication_base_alu_ram'length));
+        wait for PERIOD;
+        current_operation_addres := std_logic_vector(to_unsigned(reg_2prime_address_address, current_operation_addres'length));
         load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
         wait for PERIOD;
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned((2**mac_max_operands_size)*224, buffer_test_value_communication_base_alu_ram'length));
@@ -831,7 +844,7 @@ begin
     wait for PERIOD;
     test_scalar_multiplication(test_memory_file_ecc_scalar_multiplication_NIST_P384, 2, 0);
     wait for PERIOD;
-    test_scalar_multiplication(test_memory_file_ecc_scalar_multiplication_NIST_P521, 3, 0);
+    test_scalar_multiplication(test_memory_file_ecc_scalar_multiplication_NIST_P521, 3, 1);
     wait for PERIOD;
     test_bench_finish <= true;
     wait;

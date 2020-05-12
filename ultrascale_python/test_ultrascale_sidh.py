@@ -1,2280 +1,94 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Implementation by Pedro Maat C. Massolino,
+# hereby denoted as "the implementer".
+#
+# To the extent possible under law, the implementer has waived all copyright
+# and related or neighboring rights to the source code in this file.
+# http://creativecommons.org/publicdomain/zero/1.0/
+
 import time
+import random
+import sys
 
 from ultrascale_sidh import *
-from sidh_constants import *
+import sike_core_utils
+import SIDH_round2_spec
+import sidh_fp2
+import sike_fpga_constants_v128
+import sike_fpga_constants_v256
+
 
 tests_prom_folder = "../assembler/"
 
-enable_loading_verification_of_values = True
+program_start_address_test_sike_kem_keygen = 1
+program_start_address_test_sike_kem_enc = 3
+program_start_address_test_sike_kem_dec = 5
+program_start_address_test_sidh_keygen_alice = 7
+program_start_address_test_sidh_keygen_bob = 9
+program_start_address_test_sidh_shared_secret_alice = 11
+program_start_address_test_sidh_shared_secret_bob = 13
 
-starting_position_stack_sidh_core = 224
-program_start_address_test_ketgen_alice = 1
-program_start_address_test_shared_secret_alice = 5
-program_start_address_test_ketgen_bob = 3
-program_start_address_test_shared_secret_bob = 7
+sike_core_mac_ram_start_address =                           0x00000;
+sike_core_mac_ram_last_address =                            0x07FFF;
+sike_core_base_alu_ram_start_address =                      0x0C000;
+sike_core_base_alu_ram_last_address =                       0x0C3FF;
+sike_core_keccak_core_start_address =                       0x0D000;
+sike_core_keccak_core_last_address =                        0x0D007;
+sike_core_reg_program_counter_address =                     0x0E000;
+sike_core_reg_status_address =                              0x0E001;
+sike_core_reg_operands_size_address =                       0x0E002;
+sike_core_reg_prime_line_equal_one_address =                0x0E003;
+sike_core_reg_prime_address_address =                       0x0E004;
+sike_core_reg_prime_plus_one_address_address =              0x0E005;
+sike_core_reg_prime_line_address_address =                  0x0E006;
+sike_core_reg_2prime_address_address =                      0x0E007;
+sike_core_reg_initial_stack_address_address =               0x0E008;
+sike_core_reg_flag_address =                                0x0E009;
+sike_core_reg_scalar_address_address =                      0x0E00A;
 
-def load_list_value_VHDL_MAC_memory_as_integer(file, base_word_size, base_word_size_signed_number_words, number_of_words, signed_integer):
-    positive_word = 2**(base_word_size)
-    maximum_positive_value = positive_word//2 - 1
-    word_full_of_ones = 2**base_word_size - 1
-    positive_full_word = 2**((base_word_size)*base_word_size_signed_number_words)
-    final_value = 0
-    value = 0
-    multiplication_factor = 1
-    for i in range (0, number_of_words - 1):
-        for j in range(base_word_size_signed_number_words):
-            value = int(file.read(base_word_size), base=2) + value*positive_word
-        file.read(1) # throw away the \n
-        final_value += value*multiplication_factor
-        multiplication_factor = multiplication_factor*positive_full_word
-        value = 0
-    value_read = int(file.read(base_word_size), base=2)
-    if((value_read > maximum_positive_value) and signed_integer):
-        value_read = -((value_read ^ word_full_of_ones) + 1)
-    value = int(file.read(base_word_size), base=2) + value_read*positive_word
-    for j in range(2, base_word_size_signed_number_words):
-        value = int(file.read(base_word_size), base=2) + value*positive_word
-    file.read(1) # throw away the \n
-    final_value += value*multiplication_factor
-    return final_value
-    
-def load_list_convert_format_VHDL_BASE_memory(file, base_word_size, number_of_words, signed_integer):
-    positive_word = 2**(base_word_size)
-    word_full_of_ones = positive_word - 1
-    maximum_positive_value = positive_word//2 - 1
-    list_o = [0 for i in range(number_of_words)]
-    for i in range (0, number_of_words):
-        value_read = int(file.read(base_word_size), base=2)
-        file.read(1) # throw away the \n
-        if((value_read > maximum_positive_value) and signed_integer):
-            value_read = -((value_read ^ word_full_of_ones) + 1)
-        list_o[i] = value_read
-    return list_o
-    
-def load_value_convert_format_VHDL_BASE_memory(file, base_word_size, signed_integer):
-    positive_word = 2**(base_word_size)
-    word_full_of_ones = positive_word - 1
-    maximum_positive_value = positive_word//2 - 1
-    value_o = int(file.read(base_word_size), base=2)
-    file.read(1) # throw away the \n
-    if((value_o > maximum_positive_value) and signed_integer):
-            value_o = -((value_o ^ word_full_of_ones) + 1)
-    return value_o
+sike_core_mac_ram_prime_address =                           0x00000;
+sike_core_mac_ram_prime_plus_one_address =                  0x00001;
+sike_core_mac_ram_prime_line_address =                      0x00002;
+sike_core_mac_ram_2prime_address =                          0x00003;
+sike_core_mac_ram_const_r_address =                         0x00004;
+sike_core_mac_ram_const_r2_address =                        0x00005;
+sike_core_mac_ram_const_1_address =                         0x00006;
+sike_core_mac_ram_inv_4_mont_address =                      0x00007;
+sike_core_mac_ram_sidh_xpa_mont_address =                   0x00008;
+sike_core_mac_ram_sidh_xpai_mont_address =                  0x00009;
+sike_core_mac_ram_sidh_xqa_mont_address =                   0x0000A;
+sike_core_mac_ram_sidh_xqai_mont_address =                  0x0000B;
+sike_core_mac_ram_sidh_xra_mont_address =                   0x0000C;
+sike_core_mac_ram_sidh_xrai_mont_address =                  0x0000D;
+sike_core_mac_ram_sidh_xpb_mont_address =                   0x0000E;
+sike_core_mac_ram_sidh_xpbi_mont_address =                  0x0000F;
+sike_core_mac_ram_sidh_xqb_mont_address =                   0x00010;
+sike_core_mac_ram_sidh_xqbi_mont_address =                  0x00011;
+sike_core_mac_ram_sidh_xrb_mont_address =                   0x00012;
+sike_core_mac_ram_sidh_xrbi_mont_address =                  0x00013;
 
-def integer_to_list(word_size, list_size, a):
-    list_a = [0 for i in range(list_size)]
-    word_modulus = 2**(word_size)
-    word_full_of_ones = word_modulus - 1
-    j = a
-    for i in range(0, list_size - 1):
-        list_a[i] = (j)&(word_full_of_ones)
-        j = j//word_modulus
-    list_a[-1] = (j)&(word_full_of_ones)
-    if(j < 0):
-        list_a[-1] = -((list_a[-1] ^ word_full_of_ones) + 1)
-    return list_a
+sike_core_base_alu_ram_sike_s_start_address =               0x000FB;
+sike_core_base_alu_ram_sike_sk_start_address =              0x0011B;
+sike_core_base_alu_ram_sike_m_start_address =               0x0013B;
+sike_core_base_alu_ram_sike_ss_start_address =              0x0015B;
+sike_core_base_alu_ram_sike_c1_start_address =              0x0017B;
+sike_core_base_alu_ram_sike_message_length_address =        0x0019B;
+sike_core_base_alu_ram_sike_shared_secret_length_address =  0x0019C;
+sike_core_base_alu_ram_oa_mask_address =                    0x0019D;
+sike_core_base_alu_ram_ob_mask_address =                    0x0019E;
+sike_core_base_alu_ram_oa_bits_address =                    0x0019F;
+sike_core_base_alu_ram_ob_bits_address =                    0x001A0;
+sike_core_base_alu_ram_prime_size_bits_address =            0x001A1;
+sike_core_base_alu_ram_splits_alice_start_address =         0x001A2;
+sike_core_base_alu_ram_max_row_alice_address =              0x002D0;
+sike_core_base_alu_ram_splits_bob_start_address =           0x002D1;
+sike_core_base_alu_ram_max_row_bob_address =                0x003FF;
 
-def list_to_integer(word_size, list_size, list_a):
-    a = 0
-    word_modulus = 2**(word_size)
-    for i in range(list_size-1, -1, -1):
-        a = a*word_modulus
-        a = a + list_a[i]
-    return a
-    
-def signed_to_hex(a, word_size):
-    b = a
-    word_modulus = 2**(word_size)
-    word_full_of_ones = word_modulus - 1
-    if(b < 0):
-        b  = -((b ^ word_full_of_ones) + 1)
-    return ("{0:0"+str(word_size//4)+"x}").format(b)
-    
-def load_VHDL_keygen_alice_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime, number_of_tests = 0, debug_mode=False):
-    VHDL_memory_file = open(VHDL_memory_file_name, 'r')
-    VHDL_memory_file.seek(0, 2)
-    VHDL_file_size = VHDL_memory_file.tell()
-    VHDL_memory_file.seek(0)
-    
-    number_of_bits = (((prime_size_bits+number_of_bits_added) + ((extended_word_size)-1))//(extended_word_size))*(extended_word_size)
-    number_of_words = number_of_bits//(extended_word_size) 
-    base_word_size_signed_number_words = (((extended_word_size) + ((base_word_size)-1))//(base_word_size))
-    maximum_number_of_words = number_of_words
-    
-    VHDL_word_size = base_word_size_signed_number_words*base_word_size
-    
-    current_test = 0
-    total_number_of_tests_file = int(VHDL_memory_file.readline())
-    loaded_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    if(loaded_prime != prime):
-        print("Error in keygen Alice fast computation : " + str(current_test))
-        print("Error loading the prime")
-        print("Loaded prime")
-        print(loaded_prime)
-        print("Input prime")
-        print(prime)
-    loaded_prime_plus_one = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_prime_line = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_1 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_inv_4 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_oa_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_ob_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_prime_size_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    if(loaded_prime_size_bits != prime_size_bits):
-        print("Error in keygen Alice fast computation : " + str(current_test))
-        print("Error loading prime size in bits")
-        print("Loaded prime size in bits")
-        print(loaded_prime_size_bits)
-        print("Input prime size in bits")
-        print(prime_size_bits)
-    
-    if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
-        number_of_tests = total_number_of_tests_file
+sike_core_mac_ram_input_function_start_address =            0x00014;
+sike_core_mac_ram_output_function_start_address =           0x00024;
 
-    loaded_splits_alice   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_splits_bob     = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_max_row_alice  = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_max_row_bob    = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-        
-    test_value_xpa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xra_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime)
-    loaded_prime_plus_one_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_plus_one)
-    loaded_prime_line_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_line)
-    loaded_r_mod_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r_mod_prime)
-    loaded_r2_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r2)
-    loaded_constant_1_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_1)
-    loaded_constant_inv_4_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_inv_4)
-    
-    test_value_xpa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpa_mont)
-    test_value_xpai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpai_mont)
-    test_value_xqa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqa_mont)
-    test_value_xqai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqai_mont)
-    test_value_xra_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xra_mont)
-    test_value_xrai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrai_mont)
-    test_value_xpb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpb_mont)
-    test_value_xpbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpbi_mont)
-    test_value_xqb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqb_mont)
-    test_value_xqbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqbi_mont)
-    test_value_xrb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrb_mont)
-    test_value_xrbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrbi_mont)
-    
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_address, loaded_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, loaded_prime_plus_one_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_line_address, loaded_prime_line_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r_address, loaded_r_mod_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r2_address, loaded_r2_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_1_address, loaded_constant_1_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, loaded_constant_inv_4_list, number_of_words)
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_address, number_of_words)
-        if(value_to_verify != loaded_prime_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, number_of_words)
-        if(value_to_verify != loaded_prime_plus_one_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: prime plus one')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_plus_one_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_line_address, number_of_words)
-        if(value_to_verify != loaded_prime_line_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: prime line')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_line_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r_address, number_of_words)
-        if(value_to_verify != loaded_r_mod_prime_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: R mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r_mod_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r2_address, number_of_words)
-        if(value_to_verify != loaded_r2_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: R^2 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r2_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_1_address, number_of_words)
-        if(value_to_verify != loaded_constant_1_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: constant 1')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_1_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, number_of_words)
-        if(value_to_verify != loaded_constant_inv_4_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: 4^-1 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_inv_4_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpa_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XPA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpai_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XPAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqa_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XQA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqai_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XQAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address, number_of_words)
-        if(value_to_verify != test_value_xra_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XRA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xra_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrai_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XRAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpb_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XPB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpbi_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XPBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqb_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XQB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqbi_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XQBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrb_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XRB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrbi_mont_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: XRBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrbi_mont_list)
-    
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address, loaded_oa_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address, loaded_ob_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address, loaded_prime_size_bits)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_alice[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address, loaded_max_row_alice)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_bob[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address, loaded_max_row_bob)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address)
-        if(value_to_verify != loaded_oa_bits):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: oa bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_oa_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address)
-        if(value_to_verify != loaded_ob_bits):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: ob bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_ob_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address)
-        if(value_to_verify != loaded_prime_size_bits):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: prime number of bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_size_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address)
-        if(value_to_verify != loaded_max_row_alice):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: Max row for Alice strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_alice)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address)
-        if(value_to_verify != loaded_max_row_bob):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: Max row for Bob strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_bob)
-        start_address_a = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-        start_address_b = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-        read_loaded_splits_alice = [0]*302
-        read_loaded_splits_bob = [0]*302
-        for i in range(302):
-            read_loaded_splits_alice[i] = ultrascale.read_package(start_address_a+i)
-            read_loaded_splits_bob[i] = ultrascale.read_package(start_address_b+i)
-        if(read_loaded_splits_alice != loaded_splits_alice):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: Alice strategy')
-            print('Loaded value')
-            print(read_loaded_splits_alice)
-            print('Input value')
-            print(loaded_splits_alice)
-        if(read_loaded_splits_bob != loaded_splits_bob):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: Bob strategy')
-            print('Loaded value')
-            print(read_loaded_splits_bob)
-            print('Input value')
-            print(loaded_splits_bob)
-    
-    while(current_test != (number_of_tests-1)):
-        print("Current test : " + str(current_test))
-        loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o2  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o2i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o3  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o3i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-        
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, loaded_sk_list, number_of_words)
-        
-        if(enable_loading_verification_of_values):
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-            if(value_to_verify != loaded_sk_list):
-                print("Error in keygen Alice fast computation : " + str(current_test))
-                print('Error loading: Secret key')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(loaded_sk_list)
-        
-        ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-        ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-        ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_ketgen_alice)
-        
-        time.sleep(0.01)
-        
-        while(not ultrascale.isFree()):
-            time.sleep(0.01)
-        
-        computed_test_value_o1_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-        computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-        computed_test_value_o2_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 2, number_of_words)
-        computed_test_value_o2i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 3, number_of_words)
-        computed_test_value_o3_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 4, number_of_words)
-        computed_test_value_o3i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 5, number_of_words)
-        
-        computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-        computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-        computed_test_value_o2  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2_list)
-        computed_test_value_o2i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2i_list)
-        computed_test_value_o3  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3_list)
-        computed_test_value_o3i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3i_list)
-        
-        if((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i) or (computed_test_value_o2 != loaded_test_value_o2) or (computed_test_value_o2i != loaded_test_value_o2i) or (computed_test_value_o3 != loaded_test_value_o3) or (computed_test_value_o3i != loaded_test_value_o3i)):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print("Loaded sk")
-            print(loaded_sk)
-            print("Loaded value o1")
-            print(loaded_test_value_o1)
-            print(loaded_test_value_o1i)
-            print("Computed value o1")
-            print(computed_test_value_o1)
-            print(computed_test_value_o1i)
-            print("Loaded value o2")
-            print(loaded_test_value_o2)
-            print(loaded_test_value_o2i)
-            print("Computed value o2")
-            print(computed_test_value_o2)
-            print(computed_test_value_o2i)
-            print("Loaded value o3")
-            print(loaded_test_value_o3)
-            print(loaded_test_value_o3i)
-            print("Computed value o3")
-            print(computed_test_value_o3)
-            print(computed_test_value_o3i)
-        current_test += 1
-        
-    print("Current test : " + str(current_test))
-    loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o2  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o2i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o3  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o3i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-    loaded_test_value_o1_list  = integer_to_list(extended_word_size, maximum_number_of_words, loaded_test_value_o1)
-    loaded_test_value_o1i_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_test_value_o1i)
-    loaded_test_value_o2_list  = integer_to_list(extended_word_size, maximum_number_of_words, loaded_test_value_o2)
-    loaded_test_value_o2i_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_test_value_o2i)
-    loaded_test_value_o3_list  = integer_to_list(extended_word_size, maximum_number_of_words, loaded_test_value_o3)
-    loaded_test_value_o3i_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_test_value_o3i)
-        
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, loaded_sk_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-        if(value_to_verify != loaded_sk_list):
-            print("Error in keygen Alice fast computation : " + str(current_test))
-            print('Error loading: Secret key')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_sk_list)
-    
-    ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-    ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-    ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_ketgen_alice)
-    
-    while(not ultrascale.isFree()):
-        time.sleep(0.01)
-        
-    computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-    computed_test_value_o2_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 2, number_of_words)
-    computed_test_value_o2i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 3, number_of_words)
-    computed_test_value_o3_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 4, number_of_words)
-    computed_test_value_o3i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 5, number_of_words)
-    
-    computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-    computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-    computed_test_value_o2  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2_list)
-    computed_test_value_o2i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2i_list)
-    computed_test_value_o3  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3_list)
-    computed_test_value_o3i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3i_list)
-        
-    if(debug_mode or ((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i) or (computed_test_value_o2 != loaded_test_value_o2) or (computed_test_value_o2i != loaded_test_value_o2i) or (computed_test_value_o3 != loaded_test_value_o3) or (computed_test_value_o3i != loaded_test_value_o3i))):
-        print("Error in keygen Alice fast computation : " + str(current_test))
-        print("Loaded sk")
-        print(loaded_sk)
-        print("Loaded value o1")
-        print(loaded_test_value_o1)
-        print(loaded_test_value_o1i)
-        print("Computed value o1")
-        print(computed_test_value_o1)
-        print(computed_test_value_o1i)
-        print("Loaded value o2")
-        print(loaded_test_value_o2)
-        print(loaded_test_value_o2i)
-        print("Computed value o2")
-        print(computed_test_value_o2)
-        print(computed_test_value_o2i)
-        print("Loaded value o3")
-        print(loaded_test_value_o3)
-        print(loaded_test_value_o3i)
-        print("Computed value o3")
-        print(computed_test_value_o3)
-        print(computed_test_value_o3i)
-    
-    VHDL_memory_file.close()
-
-def load_all_keygen_alice_fast(ultrascale, base_word_size, extended_word_size, number_of_bits_added, tests_working_folder):
-    error_computation = False
-    for param in sidh_constants:
-        print("Loading Alice key generation " +  param[0])
-        prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-        prime_size_bits = int(prime).bit_length()
-        VHDL_memory_file_name = tests_working_folder + "keygen_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
-        error_computation = load_VHDL_keygen_alice_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime)
-        if error_computation:
-            break;
-    
-def load_VHDL_shared_secret_alice_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime, number_of_tests = 0, debug_mode=False):
-    VHDL_memory_file = open(VHDL_memory_file_name, 'r')
-    VHDL_memory_file.seek(0, 2)
-    VHDL_file_size = VHDL_memory_file.tell()
-    VHDL_memory_file.seek(0)
-    
-    number_of_bits = (((prime_size_bits+number_of_bits_added) + ((extended_word_size)-1))//(extended_word_size))*(extended_word_size)
-    number_of_words = number_of_bits//(extended_word_size) 
-    base_word_size_signed_number_words = (((extended_word_size) + ((base_word_size)-1))//(base_word_size))
-    maximum_number_of_words = number_of_words
-    
-    VHDL_word_size = base_word_size_signed_number_words*base_word_size
-    
-    current_test = 0
-    total_number_of_tests_file = int(VHDL_memory_file.readline())
-    loaded_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    if(loaded_prime != prime):
-        print("Error in shared secret Alice fast computation : " + str(current_test))
-        print("Error loading the prime")
-        print("Loaded prime")
-        print(loaded_prime)
-        print("Input prime")
-        print(prime)
-    loaded_prime_plus_one = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_prime_line = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_1 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_inv_4 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_oa_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_ob_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_prime_size_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    if(loaded_prime_size_bits != prime_size_bits):
-        print("Error in shared secret Alice fast computation : " + str(current_test))
-        print("Error loading prime size in bits")
-        print("Loaded prime size in bits")
-        print(loaded_prime_size_bits)
-        print("Input prime size in bits")
-        print(prime_size_bits)
-    
-    if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
-        number_of_tests = total_number_of_tests_file
-    
-    loaded_splits_alice   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_splits_bob     = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_max_row_alice  = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_max_row_bob    = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    
-    test_value_xpa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xra_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime)
-    loaded_prime_plus_one_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_plus_one)
-    loaded_prime_line_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_line)
-    loaded_r_mod_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r_mod_prime)
-    loaded_r2_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r2)
-    loaded_constant_1_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_1)
-    loaded_constant_inv_4_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_inv_4)
-    
-    test_value_xpa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpa_mont)
-    test_value_xpai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpai_mont)
-    test_value_xqa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqa_mont)
-    test_value_xqai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqai_mont)
-    test_value_xra_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xra_mont)
-    test_value_xrai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrai_mont)
-    test_value_xpb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpb_mont)
-    test_value_xpbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpbi_mont)
-    test_value_xqb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqb_mont)
-    test_value_xqbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqbi_mont)
-    test_value_xrb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrb_mont)
-    test_value_xrbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrbi_mont)
-    
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_address, loaded_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, loaded_prime_plus_one_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_line_address, loaded_prime_line_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r_address, loaded_r_mod_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r2_address, loaded_r2_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_1_address, loaded_constant_1_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, loaded_constant_inv_4_list, number_of_words)
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_address, number_of_words)
-        if(value_to_verify != loaded_prime_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, number_of_words)
-        if(value_to_verify != loaded_prime_plus_one_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: prime plus one')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_plus_one_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_line_address, number_of_words)
-        if(value_to_verify != loaded_prime_line_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: prime line')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_line_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r_address, number_of_words)
-        if(value_to_verify != loaded_r_mod_prime_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: R mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r_mod_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r2_address, number_of_words)
-        if(value_to_verify != loaded_r2_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: R^2 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r2_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_1_address, number_of_words)
-        if(value_to_verify != loaded_constant_1_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: constant 1')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_1_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, number_of_words)
-        if(value_to_verify != loaded_constant_inv_4_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: 4^-1 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_inv_4_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpa_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XPA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpai_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XPAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqa_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XQA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqai_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XQAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address, number_of_words)
-        if(value_to_verify != test_value_xra_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XRA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xra_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrai_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XRAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpb_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XPB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpbi_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XPBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqb_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XQB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqbi_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XQBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrb_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XRB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrbi_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: XRBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrbi_mont_list)
-    
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address, loaded_oa_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address, loaded_ob_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address, loaded_prime_size_bits)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_alice[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address, loaded_max_row_alice)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_bob[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address, loaded_max_row_bob)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address)
-        if(value_to_verify != loaded_oa_bits):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: oa bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_oa_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address)
-        if(value_to_verify != loaded_ob_bits):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: ob bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_ob_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address)
-        if(value_to_verify != loaded_prime_size_bits):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: prime number of bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_size_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address)
-        if(value_to_verify != loaded_max_row_alice):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Max row for Alice strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_alice)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address)
-        if(value_to_verify != loaded_max_row_bob):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Max row for Bob strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_bob)
-        start_address_a = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-        start_address_b = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-        read_loaded_splits_alice = [0]*302
-        read_loaded_splits_bob = [0]*302
-        for i in range(302):
-            read_loaded_splits_alice[i] = ultrascale.read_package(start_address_a+i)
-            read_loaded_splits_bob[i] = ultrascale.read_package(start_address_b+i)
-        if(read_loaded_splits_alice != loaded_splits_alice):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Alice strategy')
-            print('Loaded value')
-            print(read_loaded_splits_alice)
-            print('Input value')
-            print(loaded_splits_alice)
-        if(read_loaded_splits_bob != loaded_splits_bob):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Bob strategy')
-            print('Loaded value')
-            print(read_loaded_splits_bob)
-            print('Input value')
-            print(loaded_splits_bob)
-        
-    while(current_test != (number_of_tests-1)):
-        print("Current test : " + str(current_test))
-        test_value_bob_phiPX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiPXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiQX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiQXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiRX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_bob_phiRXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        test_value_bob_phiPX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiPX_mont)
-        test_value_bob_phiPXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiPXi_mont)
-        test_value_bob_phiQX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiQX_mont)
-        test_value_bob_phiQXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiQXi_mont)
-        test_value_bob_phiRX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiRX_mont)
-        test_value_bob_phiRXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiRXi_mont)
-
-        loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-        
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, test_value_bob_phiPX_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, test_value_bob_phiPXi_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, test_value_bob_phiQX_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, test_value_bob_phiQXi_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, test_value_bob_phiRX_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, test_value_bob_phiRXi_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, loaded_sk_list, number_of_words)
-        
-        if(enable_loading_verification_of_values):
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-            if(value_to_verify != test_value_bob_phiPX_mont_list):
-                print("Error in shared secret Alice fast computation : " + str(current_test))
-                print('Error loading: Bob phiPX')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_bob_phiPX_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, number_of_words)
-            if(value_to_verify != test_value_bob_phiPXi_mont_list):
-                print("Error in shared secret Alice fast computation : " + str(current_test))
-                print('Error loading: Bob phiPXi')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_bob_phiPXi_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, number_of_words)
-            if(value_to_verify != test_value_bob_phiQX_mont_list):
-                print("Error in shared secret Alice fast computation : " + str(current_test))
-                print('Error loading: Bob phiQX')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_bob_phiQX_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, number_of_words)
-            if(value_to_verify != test_value_bob_phiQXi_mont_list):
-                print("Error in shared secret Alice fast computation : " + str(current_test))
-                print('Error loading: Bob phiQXi')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_bob_phiQXi_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, number_of_words)
-            if(value_to_verify != test_value_bob_phiRX_mont_list):
-                print("Error in shared secret Alice fast computation : " + str(current_test))
-                print('Error loading: Bob phiRX')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_bob_phiRX_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, number_of_words)
-            if(value_to_verify != test_value_bob_phiRXi_mont_list):
-                print("Error in shared secret Alice fast computation : " + str(current_test))
-                print('Error loading: Bob phiRXi')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_bob_phiRXi_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, number_of_words)
-            if(value_to_verify != loaded_sk_list):
-                print("Error in shared secret Alice fast computation : " + str(current_test))
-                print('Error loading: Secret key')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(loaded_sk_list)
-        
-        ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-        ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-        ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_shared_secret_alice)
-        
-        while(not ultrascale.isFree()):
-            time.sleep(0.01)
-        
-        computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-        computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-        
-        computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-        computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-        
-        if((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i)):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print("Loaded sk")
-            print(loaded_sk)
-            print("Loaded bob phiPX")
-            print(test_value_bob_phiPX_mont)
-            print(test_value_bob_phiPXi_mont)
-            print("Loaded bob phiQX")
-            print(test_value_bob_phiQX_mont)
-            print(test_value_bob_phiQXi_mont)
-            print("Loaded bob phiRX")
-            print(test_value_bob_phiRX_mont)
-            print(test_value_bob_phiRXi_mont)
-            print("Loaded value o1")
-            print(loaded_test_value_o1)
-            print(loaded_test_value_o1i)
-            print("Computed value o1")
-            print(computed_test_value_o1)
-            print(computed_test_value_o1i)
-        current_test += 1
-    
-    print("Current test : " + str(current_test))
-    test_value_bob_phiPX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiPXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiQX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiQXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiRX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_bob_phiRXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    test_value_bob_phiPX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiPX_mont)
-    test_value_bob_phiPXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiPXi_mont)
-    test_value_bob_phiQX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiQX_mont)
-    test_value_bob_phiQXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiQXi_mont)
-    test_value_bob_phiRX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiRX_mont)
-    test_value_bob_phiRXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_bob_phiRXi_mont)
-
-    loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, test_value_bob_phiPX_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, test_value_bob_phiPXi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, test_value_bob_phiQX_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, test_value_bob_phiQXi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, test_value_bob_phiRX_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, test_value_bob_phiRXi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, loaded_sk_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-        if(value_to_verify != test_value_bob_phiPX_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Bob phiPX')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_bob_phiPX_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, number_of_words)
-        if(value_to_verify != test_value_bob_phiPXi_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Bob phiPXi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_bob_phiPXi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, number_of_words)
-        if(value_to_verify != test_value_bob_phiQX_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Bob phiQX')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_bob_phiQX_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, number_of_words)
-        if(value_to_verify != test_value_bob_phiQXi_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Bob phiQXi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_bob_phiQXi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, number_of_words)
-        if(value_to_verify != test_value_bob_phiRX_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Bob phiRX')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_bob_phiRX_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, number_of_words)
-        if(value_to_verify != test_value_bob_phiRXi_mont_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Bob phiRXi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_bob_phiRXi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, number_of_words)
-        if(value_to_verify != loaded_sk_list):
-            print("Error in shared secret Alice fast computation : " + str(current_test))
-            print('Error loading: Secret key')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_sk_list)
-    
-    ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-    ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-    ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_shared_secret_alice)
-    
-    while(not ultrascale.isFree()):
-        time.sleep(0.01)
-    
-    computed_test_value_o1_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-    
-    computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-    computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-    
-    if(debug_mode or ((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i))):
-        print("Error in shared secret Alice fast computation : " + str(current_test))
-        print("Loaded sk")
-        print(loaded_sk)
-        print("Loaded bob phiPX")
-        print(test_value_bob_phiPX_mont)
-        print(test_value_bob_phiPXi_mont)
-        print("Loaded bob phiQX")
-        print(test_value_bob_phiQX_mont)
-        print(test_value_bob_phiQXi_mont)
-        print("Loaded bob phiRX")
-        print(test_value_bob_phiRX_mont)
-        print(test_value_bob_phiRXi_mont)
-        print("Loaded value o1")
-        print(loaded_test_value_o1)
-        print(loaded_test_value_o1i)
-        print("Computed value o1")
-        print(computed_test_value_o1)
-        print(computed_test_value_o1i)
-    
-    VHDL_memory_file.close()
-
-def load_all_shared_secret_alice_fast(ultrascale, base_word_size, extended_word_size, number_of_bits_added, tests_working_folder):
-    error_computation = False
-    for param in sidh_constants:
-        print("Loading Alice shared secret " +  param[0])
-        prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-        prime_size_bits = int(prime).bit_length()
-        VHDL_memory_file_name = tests_working_folder + "shared_secret_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
-        error_computation = load_VHDL_shared_secret_alice_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime)
-        if error_computation:
-            break;
-
-def load_VHDL_keygen_bob_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime, number_of_tests = 0, debug_mode=False):
-    VHDL_memory_file = open(VHDL_memory_file_name, 'r')
-    VHDL_memory_file.seek(0, 2)
-    VHDL_file_size = VHDL_memory_file.tell()
-    VHDL_memory_file.seek(0)
-    
-    number_of_bits = (((prime_size_bits+number_of_bits_added) + ((extended_word_size)-1))//(extended_word_size))*(extended_word_size)
-    number_of_words = number_of_bits//(extended_word_size) 
-    base_word_size_signed_number_words = (((extended_word_size) + ((base_word_size)-1))//(base_word_size))
-    maximum_number_of_words = number_of_words
-    
-    VHDL_word_size = base_word_size_signed_number_words*base_word_size
-    
-    current_test = 0
-    total_number_of_tests_file = int(VHDL_memory_file.readline())
-    loaded_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    if(loaded_prime != prime):
-        print("Error in keygen Bob fast computation : " + str(current_test))
-        print("Error loading the prime")
-        print("Loaded prime")
-        print(loaded_prime)
-        print("Input prime")
-        print(prime)
-    loaded_prime_plus_one = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_prime_line = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_1 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_inv_4 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_oa_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_ob_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_prime_size_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    if(loaded_prime_size_bits != prime_size_bits):
-        print("Error in keygen Bob fast computation : " + str(current_test))
-        print("Error loading prime size in bits")
-        print("Loaded prime size in bits")
-        print(loaded_prime_size_bits)
-        print("Input prime size in bits")
-        print(prime_size_bits)
-    
-    if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
-        number_of_tests = total_number_of_tests_file
-
-    loaded_splits_alice   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_splits_bob     = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_max_row_alice  = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_max_row_bob    = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-        
-    test_value_xpa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xra_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-    
-    loaded_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime)
-    loaded_prime_plus_one_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_plus_one)
-    loaded_prime_line_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_line)
-    loaded_r_mod_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r_mod_prime)
-    loaded_r2_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r2)
-    loaded_constant_1_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_1)
-    loaded_constant_inv_4_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_inv_4)
-    
-    test_value_xpa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpa_mont)
-    test_value_xpai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpai_mont)
-    test_value_xqa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqa_mont)
-    test_value_xqai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqai_mont)
-    test_value_xra_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xra_mont)
-    test_value_xrai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrai_mont)
-    test_value_xpb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpb_mont)
-    test_value_xpbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpbi_mont)
-    test_value_xqb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqb_mont)
-    test_value_xqbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqbi_mont)
-    test_value_xrb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrb_mont)
-    test_value_xrbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrbi_mont)
-    
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_address, loaded_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, loaded_prime_plus_one_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_line_address, loaded_prime_line_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r_address, loaded_r_mod_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r2_address, loaded_r2_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_1_address, loaded_constant_1_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, loaded_constant_inv_4_list, number_of_words)
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_address, number_of_words)
-        if(value_to_verify != loaded_prime_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, number_of_words)
-        if(value_to_verify != loaded_prime_plus_one_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: prime plus one')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_plus_one_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_line_address, number_of_words)
-        if(value_to_verify != loaded_prime_line_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: prime line')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_line_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r_address, number_of_words)
-        if(value_to_verify != loaded_r_mod_prime_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: R mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r_mod_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r2_address, number_of_words)
-        if(value_to_verify != loaded_r2_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: R^2 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r2_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_1_address, number_of_words)
-        if(value_to_verify != loaded_constant_1_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: constant 1')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_1_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, number_of_words)
-        if(value_to_verify != loaded_constant_inv_4_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: 4^-1 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_inv_4_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpa_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XPA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpai_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XPAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqa_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XQA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqai_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XQAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address, number_of_words)
-        if(value_to_verify != test_value_xra_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XRA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xra_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrai_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XRAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpb_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XPB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpbi_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XPBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqb_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XQB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqbi_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XQBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrb_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XRB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrbi_mont_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: XRBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrbi_mont_list)
-    
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address, loaded_oa_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address, loaded_ob_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address, loaded_prime_size_bits)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_alice[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address, loaded_max_row_alice)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_bob[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address, loaded_max_row_bob)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address)
-        if(value_to_verify != loaded_oa_bits):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: oa bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_oa_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address)
-        if(value_to_verify != loaded_ob_bits):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: ob bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_ob_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address)
-        if(value_to_verify != loaded_prime_size_bits):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: prime number of bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_size_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address)
-        if(value_to_verify != loaded_max_row_alice):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: Max row for Alice strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_alice)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address)
-        if(value_to_verify != loaded_max_row_bob):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: Max row for Bob strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_bob)
-        start_address_a = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-        start_address_b = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-        read_loaded_splits_alice = [0]*302
-        read_loaded_splits_bob = [0]*302
-        for i in range(302):
-            read_loaded_splits_alice[i] = ultrascale.read_package(start_address_a+i)
-            read_loaded_splits_bob[i] = ultrascale.read_package(start_address_b+i)
-        if(read_loaded_splits_alice != loaded_splits_alice):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: Alice strategy')
-            print('Loaded value')
-            print(read_loaded_splits_alice)
-            print('Input value')
-            print(loaded_splits_alice)
-        if(read_loaded_splits_bob != loaded_splits_bob):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: Bob strategy')
-            print('Loaded value')
-            print(read_loaded_splits_bob)
-            print('Input value')
-            print(loaded_splits_bob)
-    
-    while(current_test != (number_of_tests-1)):
-        print("Current test : " + str(current_test))
-        loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o2  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o2i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o3  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o3i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-        
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, loaded_sk_list, number_of_words)
-        
-        if(enable_loading_verification_of_values):
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-            if(value_to_verify != loaded_sk_list):
-                print("Error in keygen Bob fast computation : " + str(current_test))
-                print('Error loading: Secret key')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(loaded_sk_list)
-        
-        ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-        ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-        ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_ketgen_bob)
-        
-        while(not ultrascale.isFree()):
-            time.sleep(0.01)
-        
-        computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-        computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-        computed_test_value_o2_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 2, number_of_words)
-        computed_test_value_o2i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 3, number_of_words)
-        computed_test_value_o3_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 4, number_of_words)
-        computed_test_value_o3i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 5, number_of_words)
-        
-        computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-        computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-        computed_test_value_o2  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2_list)
-        computed_test_value_o2i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2i_list)
-        computed_test_value_o3  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3_list)
-        computed_test_value_o3i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3i_list)
-        
-        if((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i) or (computed_test_value_o2 != loaded_test_value_o2) or (computed_test_value_o2i != loaded_test_value_o2i) or (computed_test_value_o3 != loaded_test_value_o3) or (computed_test_value_o3i != loaded_test_value_o3i)):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print("Loaded sk")
-            print(loaded_sk)
-            print("Loaded value o1")
-            print(loaded_test_value_o1)
-            print(loaded_test_value_o1i)
-            print("Computed value o1")
-            print(computed_test_value_o1)
-            print(computed_test_value_o1i)
-            print("Loaded value o2")
-            print(loaded_test_value_o2)
-            print(loaded_test_value_o2i)
-            print("Computed value o2")
-            print(computed_test_value_o2)
-            print(computed_test_value_o2i)
-            print("Computed value o3")
-            print(computed_test_value_o3)
-            print(computed_test_value_o3i)
-        current_test += 1
-    
-    print("Current test : " + str(current_test))
-    loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o2  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o2i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o3  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o3i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, loaded_sk_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-        if(value_to_verify != loaded_sk_list):
-            print("Error in keygen Bob fast computation : " + str(current_test))
-            print('Error loading: Secret key')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_sk_list)
-    
-    ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-    ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-    ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_ketgen_bob)
-    
-    while(not ultrascale.isFree()):
-        time.sleep(0.01)
-    
-    computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-    computed_test_value_o2_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 2, number_of_words)
-    computed_test_value_o2i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 3, number_of_words)
-    computed_test_value_o3_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 4, number_of_words)
-    computed_test_value_o3i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 5, number_of_words)
-    
-    computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-    computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-    computed_test_value_o2  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2_list)
-    computed_test_value_o2i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o2i_list)
-    computed_test_value_o3  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3_list)
-    computed_test_value_o3i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o3i_list)
-        
-    
-    if(debug_mode or ((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i) or (computed_test_value_o2 != loaded_test_value_o2) or (computed_test_value_o2i != loaded_test_value_o2i) or (computed_test_value_o3 != loaded_test_value_o3) or (computed_test_value_o3i != loaded_test_value_o3i))):
-        print("Error in keygen Bob fast computation : " + str(current_test))
-        print("Loaded sk")
-        print(loaded_sk)
-        print("Loaded value o1")
-        print(loaded_test_value_o1)
-        print(loaded_test_value_o1i)
-        print("Computed value o1")
-        print(computed_test_value_o1)
-        print(computed_test_value_o1i)
-        print("Loaded value o2")
-        print(loaded_test_value_o2)
-        print(loaded_test_value_o2i)
-        print("Computed value o2")
-        print(computed_test_value_o2)
-        print(computed_test_value_o2i)
-        print("Computed value o3")
-        print(computed_test_value_o3)
-        print(computed_test_value_o3i)
-    
-    VHDL_memory_file.close()
-    
-def load_all_keygen_bob_fast(ultrascale, base_word_size, extended_word_size, number_of_bits_added, tests_working_folder):
-    error_computation = False
-    for param in sidh_constants:
-        print("Loading Bob key generation " +  param[0])
-        prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-        prime_size_bits = int(prime).bit_length()
-        VHDL_memory_file_name = tests_working_folder + "keygen_bob_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
-        error_computation = load_VHDL_keygen_bob_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime)
-        if error_computation:
-            break;
-            
-def load_VHDL_shared_secret_bob_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime, number_of_tests = 0, debug_mode=False):
-    VHDL_memory_file = open(VHDL_memory_file_name, 'r')
-    VHDL_memory_file.seek(0, 2)
-    VHDL_file_size = VHDL_memory_file.tell()
-    VHDL_memory_file.seek(0)
-    
-    number_of_bits = (((prime_size_bits+number_of_bits_added) + ((extended_word_size)-1))//(extended_word_size))*(extended_word_size)
-    number_of_words = number_of_bits//(extended_word_size) 
-    base_word_size_signed_number_words = (((extended_word_size) + ((base_word_size)-1))//(base_word_size))
-    maximum_number_of_words = number_of_words
-    
-    VHDL_word_size = base_word_size_signed_number_words*base_word_size
-    
-    current_test = 0
-    total_number_of_tests_file = int(VHDL_memory_file.readline())
-    loaded_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    if(loaded_prime != prime):
-        print("Error in shared secret bob fast computation : " + str(current_test))
-        print("Error loading the prime")
-        print("Loaded prime")
-        print(loaded_prime)
-        print("Input prime")
-        print(prime)
-    loaded_prime_plus_one = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_prime_line = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_r2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_1 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_constant_inv_4 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_oa_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_ob_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_prime_size_bits = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    if(loaded_prime_size_bits != prime_size_bits):
-        print("Error in shared secret bob fast computation : " + str(current_test))
-        print("Error loading prime size in bits")
-        print("Loaded prime size in bits")
-        print(loaded_prime_size_bits)
-        print("Input prime size in bits")
-        print(prime_size_bits)
-    
-    if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
-        number_of_tests = total_number_of_tests_file
-    
-    loaded_splits_alice   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_splits_bob   = load_list_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, 302, False)
-    loaded_max_row_alice  = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    loaded_max_row_bob  = load_value_convert_format_VHDL_BASE_memory(VHDL_memory_file, base_word_size, False)
-    
-    test_value_xpa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqa_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xra_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrai_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xpbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xqbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrb_mont   = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_xrbi_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    
-    loaded_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime)
-    loaded_prime_plus_one_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_plus_one)
-    loaded_prime_line_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_prime_line)
-    loaded_r_mod_prime_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r_mod_prime)
-    loaded_r2_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_r2)
-    loaded_constant_1_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_1)
-    loaded_constant_inv_4_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_constant_inv_4)
-    
-    test_value_xpa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpa_mont)
-    test_value_xpai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpai_mont)
-    test_value_xqa_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqa_mont)
-    test_value_xqai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqai_mont)
-    test_value_xra_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xra_mont)
-    test_value_xrai_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrai_mont)
-    test_value_xpb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpb_mont)
-    test_value_xpbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xpbi_mont)
-    test_value_xqb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqb_mont)
-    test_value_xqbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xqbi_mont)
-    test_value_xrb_mont_list   = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrb_mont)
-    test_value_xrbi_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_xrbi_mont)
-    
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_address, loaded_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, loaded_prime_plus_one_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_prime_line_address, loaded_prime_line_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r_address, loaded_r_mod_prime_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_r2_address, loaded_r2_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_const_1_address, loaded_constant_1_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, loaded_constant_inv_4_list, number_of_words)
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_address, number_of_words)
-        if(value_to_verify != loaded_prime_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_plus_one_address, number_of_words)
-        if(value_to_verify != loaded_prime_plus_one_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: prime plus one')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_plus_one_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_prime_line_address, number_of_words)
-        if(value_to_verify != loaded_prime_line_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: prime line')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_line_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r_address, number_of_words)
-        if(value_to_verify != loaded_r_mod_prime_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: R mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r_mod_prime_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_r2_address, number_of_words)
-        if(value_to_verify != loaded_r2_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: R^2 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_r2_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_const_1_address, number_of_words)
-        if(value_to_verify != loaded_constant_1_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: constant 1')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_1_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_inv_4_mont_address, number_of_words)
-        if(value_to_verify != loaded_constant_inv_4_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: 4^-1 mod prime')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_constant_inv_4_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpa_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XPA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpai_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XPAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqa_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqa_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XQA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqa_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqai_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XQAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xra_mont_address, number_of_words)
-        if(value_to_verify != test_value_xra_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XRA')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xra_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrai_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrai_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XRAi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrai_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpb_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XPB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xpbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xpbi_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XPBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xpbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqb_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XQB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xqbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xqbi_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XQBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xqbi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrb_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrb_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XRB')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrb_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_sidh_xrbi_mont_address, number_of_words)
-        if(value_to_verify != test_value_xrbi_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: XRBi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_xrbi_mont_list)
-    
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address, loaded_oa_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address, loaded_ob_bits)
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address, loaded_prime_size_bits)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_alice[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address, loaded_max_row_alice)
-    start_address = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-    for i in range(302):
-        ultrascale.write_package(start_address+i, loaded_splits_bob[i])
-    ultrascale.write_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address, loaded_max_row_bob)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_oa_bits_address)
-        if(value_to_verify != loaded_oa_bits):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: oa bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_oa_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_ob_bits_address)
-        if(value_to_verify != loaded_ob_bits):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: ob bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_ob_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_prime_size_bits_address)
-        if(value_to_verify != loaded_prime_size_bits):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: prime number of bits')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_prime_size_bits)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_alice_address)
-        if(value_to_verify != loaded_max_row_alice):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Max row for Alice strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_alice)
-        value_to_verify = ultrascale.read_package(sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_max_row_bob_address)
-        if(value_to_verify != loaded_max_row_bob):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Max row for Bob strategy')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_max_row_bob)
-        start_address_a = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_alice_start_address
-        start_address_b = sidh_core_base_alu_ram_start_address + sidh_core_base_alu_ram_splits_bob_start_address
-        read_loaded_splits_alice = [0]*302
-        read_loaded_splits_bob = [0]*302
-        for i in range(302):
-            read_loaded_splits_alice[i] = ultrascale.read_package(start_address_a+i)
-            read_loaded_splits_bob[i] = ultrascale.read_package(start_address_b+i)
-        if(read_loaded_splits_alice != loaded_splits_alice):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Alice strategy')
-            print('Loaded value')
-            print(read_loaded_splits_alice)
-            print('Input value')
-            print(loaded_splits_alice)
-        if(read_loaded_splits_bob != loaded_splits_bob):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Bob strategy')
-            print('Loaded value')
-            print(read_loaded_splits_bob)
-            print('Input value')
-            print(loaded_splits_bob)
-    
-    while(current_test != (number_of_tests-1)):
-        print("Current test : " + str(current_test))
-        test_value_alice_phiPX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_alice_phiPXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_alice_phiQX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_alice_phiQXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_alice_phiRX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        test_value_alice_phiRXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-        
-        test_value_alice_phiPX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiPX_mont)
-        test_value_alice_phiPXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiPXi_mont)
-        test_value_alice_phiQX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiQX_mont)
-        test_value_alice_phiQXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiQXi_mont)
-        test_value_alice_phiRX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiRX_mont)
-        test_value_alice_phiRXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiRXi_mont)
-    
-        loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-    
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, test_value_alice_phiPX_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, test_value_alice_phiPXi_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, test_value_alice_phiQX_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, test_value_alice_phiQXi_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, test_value_alice_phiRX_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, test_value_alice_phiRXi_mont_list, number_of_words)
-        ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, loaded_sk_list, number_of_words)
-        
-        if(enable_loading_verification_of_values):
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-            if(value_to_verify != test_value_alice_phiPX_mont_list):
-                print("Error in shared secret Bob fast computation : " + str(current_test))
-                print('Error loading: Alice phiPX')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_alice_phiPX_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, number_of_words)
-            if(value_to_verify != test_value_alice_phiPXi_mont_list):
-                print("Error in shared secret Bob fast computation : " + str(current_test))
-                print('Error loading: Alice phiPXi')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_alice_phiPXi_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, number_of_words)
-            if(value_to_verify != test_value_alice_phiQX_mont_list):
-                print("Error in shared secret Bob fast computation : " + str(current_test))
-                print('Error loading: Alice phiQX')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_alice_phiQX_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, number_of_words)
-            if(value_to_verify != test_value_alice_phiQXi_mont_list):
-                print("Error in shared secret Bob fast computation : " + str(current_test))
-                print('Error loading: Alice phiQXi')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_alice_phiQXi_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, number_of_words)
-            if(value_to_verify != test_value_alice_phiRX_mont_list):
-                print("Error in shared secret Bob fast computation : " + str(current_test))
-                print('Error loading: Alice phiRX')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_alice_phiRX_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, number_of_words)
-            if(value_to_verify != test_value_alice_phiRXi_mont_list):
-                print("Error in shared secret Bob fast computation : " + str(current_test))
-                print('Error loading: Alice phiRXi')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(test_value_alice_phiRXi_mont_list)
-            value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, number_of_words)
-            if(value_to_verify != loaded_sk_list):
-                print("Error in shared secret Bob fast computation : " + str(current_test))
-                print('Error loading: Secret key')
-                print('Loaded value')
-                print(value_to_verify)
-                print('Input value')
-                print(loaded_sk_list)
-        
-        ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-        ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-        ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-        ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-        ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_shared_secret_bob)
-        
-        while(not ultrascale.isFree()):
-            time.sleep(0.1)
-        
-        computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-        computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-        
-        computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-        computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-        
-        if((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i)):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print("Loaded sk")
-            print(loaded_sk)
-            print("Loaded alice phiPX")
-            print(test_value_alice_phiPX_mont)
-            print(test_value_alice_phiPXi_mont)
-            print("Loaded alice phiQX")
-            print(test_value_alice_phiQX_mont)
-            print(test_value_alice_phiQXi_mont)
-            print("Loaded alice phiRX")
-            print(test_value_alice_phiRX_mont)
-            print(test_value_alice_phiRXi_mont)
-            print("Loaded value o1")
-            print(loaded_test_value_o1)
-            print(loaded_test_value_o1i)
-            print("Computed value o1")
-            print(computed_test_value_o1)
-            print(computed_test_value_o1i)
-        current_test += 1
-    
-    print("Current test : " + str(current_test))
-    test_value_alice_phiPX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_alice_phiPXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_alice_phiQX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_alice_phiQXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_alice_phiRX_mont  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    test_value_alice_phiRXi_mont = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_sk             = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    loaded_test_value_o1  = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    loaded_test_value_o1i = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size, base_word_size_signed_number_words, maximum_number_of_words, False)
-    
-    test_value_alice_phiPX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiPX_mont)
-    test_value_alice_phiPXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiPXi_mont)
-    test_value_alice_phiQX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiQX_mont)
-    test_value_alice_phiQXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiQXi_mont)
-    test_value_alice_phiRX_mont_list  = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiRX_mont)
-    test_value_alice_phiRXi_mont_list = integer_to_list(extended_word_size, maximum_number_of_words, test_value_alice_phiRXi_mont)
-    
-    loaded_sk_list = integer_to_list(extended_word_size, maximum_number_of_words, loaded_sk)
-    
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, test_value_alice_phiPX_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, test_value_alice_phiPXi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, test_value_alice_phiQX_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, test_value_alice_phiQXi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, test_value_alice_phiRX_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, test_value_alice_phiRXi_mont_list, number_of_words)
-    ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, loaded_sk_list, number_of_words)
-    
-    if(enable_loading_verification_of_values):
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 0, number_of_words)
-        if(value_to_verify != test_value_alice_phiPX_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Alice phiPX')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_alice_phiPX_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 1, number_of_words)
-        if(value_to_verify != test_value_alice_phiPXi_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Alice phiPXi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_alice_phiPXi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 2, number_of_words)
-        if(value_to_verify != test_value_alice_phiQX_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Alice phiQX')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_alice_phiQX_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 3, number_of_words)
-        if(value_to_verify != test_value_alice_phiQXi_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Alice phiQXi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_alice_phiQXi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 4, number_of_words)
-        if(value_to_verify != test_value_alice_phiRX_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Alice phiRX')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_alice_phiRX_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 5, number_of_words)
-        if(value_to_verify != test_value_alice_phiRXi_mont_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Alice phiRXi')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(test_value_alice_phiRXi_mont_list)
-        value_to_verify = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address + 6, number_of_words)
-        if(value_to_verify != loaded_sk_list):
-            print("Error in shared secret Bob fast computation : " + str(current_test))
-            print('Error loading: Secret key')
-            print('Loaded value')
-            print(value_to_verify)
-            print('Input value')
-            print(loaded_sk_list)
-    
-    ultrascale.write_package(sidh_core_reg_operands_size_address, number_of_words - 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_equal_one_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_address_address, 0)
-    ultrascale.write_package(sidh_core_reg_prime_plus_one_address_address, 1)
-    ultrascale.write_package(sidh_core_reg_prime_line_address_address, 2)
-    ultrascale.write_package(sidh_core_reg_initial_stack_address_address, 4*starting_position_stack_sidh_core)
-    ultrascale.write_package(sidh_core_reg_program_counter_address, program_start_address_test_shared_secret_bob)
-    
-    while(not ultrascale.isFree()):
-        time.sleep(0.1)
-    
-    computed_test_value_o1_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 0, number_of_words)
-    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_output_function_start_address + 1, number_of_words)
-    
-    computed_test_value_o1  = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1_list)
-    computed_test_value_o1i = list_to_integer(extended_word_size, maximum_number_of_words, computed_test_value_o1i_list)
-    
-    if(debug_mode or ((computed_test_value_o1 != loaded_test_value_o1) or (computed_test_value_o1i != loaded_test_value_o1i))):
-        print("Error in shared secret Bob fast computation : " + str(current_test))
-        print("Loaded sk")
-        print(loaded_sk)
-        print("Loaded alice phiPX")
-        print(test_value_alice_phiPX_mont)
-        print(test_value_alice_phiPXi_mont)
-        print("Loaded alice phiQX")
-        print(test_value_alice_phiQX_mont)
-        print(test_value_alice_phiQXi_mont)
-        print("Loaded alice phiRX")
-        print(test_value_alice_phiRX_mont)
-        print(test_value_alice_phiRXi_mont)
-        print("Loaded value o1")
-        print(loaded_test_value_o1)
-        print(loaded_test_value_o1i)
-        print("Computed value o1")
-        print(computed_test_value_o1)
-        print(computed_test_value_o1i)
-    
-    VHDL_memory_file.close()
-
-def load_all_shared_secret_bob_fast(ultrascale, base_word_size, extended_word_size, number_of_bits_added, tests_working_folder):
-    error_computation = False
-    for param in sidh_constants:
-        print("Loading Bob shared secret " +  param[0])
-        prime = (param[1])*((param[2])**((param[4])))*((param[3])**((param[5])))-1
-        prime_size_bits = int(prime).bit_length()
-        VHDL_memory_file_name = tests_working_folder + "shared_secret_bob_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat"
-        error_computation = load_VHDL_shared_secret_bob_fast_test(ultrascale, VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, prime)
-        if error_computation:
-            break;
-    
 def load_program(ultrascale, prom_file_name, base_word_size, base_word_size_signed_number_words):
     prom_file = open(prom_file_name, 'r')
     program = []
@@ -2282,58 +96,671 @@ def load_program(ultrascale, prom_file_name, base_word_size, base_word_size_sign
     prom_file_size = prom_file.tell()
     prom_file.seek(0)
     while (prom_file.tell() != prom_file_size):
-        program += [load_list_value_VHDL_MAC_memory_as_integer(prom_file, base_word_size, base_word_size_signed_number_words, 1, False)]
-    print("Loading program into SIDH core")
+        program += [sike_core_utils.load_list_value_VHDL_MAC_memory_as_integer(prom_file, base_word_size, base_word_size_signed_number_words, 1, False)]
+    print("Loading program into SIKE core:" + str(prom_file_name))
     ultrascale.write_program_prom(0, program)
-    print("Reading program uploaded into SIDH core")
+    print("Reading program uploaded into SIKE core")
     program_written = ultrascale.read_program_prom(0, len(program))
-    print("Verifying program uploaded into SIDH core")
+    print("Verifying program uploaded into SIKE core")
     if(program_written == program):
         return True
     print(program)
     print(program_written)
     return False
 
-def test_all_sidh_functions(ultrascale, sidh_extended_word_size):
-    sidh_base_word_size = 16
-    sidh_extended_word_size = 256
-    sidh_base_word_size_signed_number_words = (((sidh_extended_word_size) + ((sidh_base_word_size)-1))//(sidh_base_word_size))
-    number_of_bits_added = 8
-    tests_working_folder = "../hw_sidh_tests_v"+str(sidh_extended_word_size+1)+"/"
-    if(load_program(ultrascale, tests_prom_folder + "test_sidh_functions_v" + str(sidh_extended_word_size+1)+ ".dat", sidh_base_word_size, 4)):
-        print("Program loaded correctly into SIDH core")
-        load_all_keygen_alice_fast(ultrascale, sidh_base_word_size, sidh_extended_word_size, number_of_bits_added, tests_working_folder)
-        load_all_shared_secret_alice_fast(ultrascale, sidh_base_word_size, sidh_extended_word_size, number_of_bits_added, tests_working_folder)
-        load_all_keygen_bob_fast(ultrascale, sidh_base_word_size, sidh_extended_word_size, number_of_bits_added, tests_working_folder)
-        load_all_shared_secret_bob_fast(ultrascale, sidh_base_word_size, sidh_extended_word_size, number_of_bits_added, tests_working_folder)
+def load_constants(ultrascale, param):
+    
+    number_of_words = param[4]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    prime = param[5]
+    prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[5])
+    prime_plus_one_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[7])
+    prime_line_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[8])
+    prime2 = param[10]
+    prime2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[10])
+    r_mod_prime_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[17])
+    r2_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[18])
+    constant_1_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[19])
+    constant_inv_4_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, param[20])
+    
+    error_computation = False
+        
+    fp2 = sidh_fp2.sidh_fp2(prime)
+    
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
+    
+    prime_size_bits = param[6]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
+    
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
+    
+    starting_position_stack_sidh_core = param[41]
+    
+    enable_special_prime_line_arithmetic = param[9]
+    
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
+    
+    test_value_xpa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[0])
+    test_value_xpai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[1])
+    test_value_xqa_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[2])
+    test_value_xqai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[3])
+    test_value_xra_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[4])
+    test_value_xrai_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, alice_gen_points_mont[5])
+    test_value_xpb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[0])
+    test_value_xpbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[1])
+    test_value_xqb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[2])
+    test_value_xqbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[3])
+    test_value_xrb_mont_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[4])
+    test_value_xrbi_mont_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, bob_gen_points_mont[5])
+    
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_prime_address, prime_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_prime_plus_one_address, prime_plus_one_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_prime_line_address, prime_line_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_2prime_address, prime2_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_const_r_address, r_mod_prime_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_const_r2_address, r2_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_const_1_address, constant_1_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_inv_4_mont_address, constant_inv_4_list, number_of_words)
+    
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xpa_mont_address,  test_value_xpa_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xpai_mont_address, test_value_xpai_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xqa_mont_address,  test_value_xqa_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xqai_mont_address, test_value_xqai_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xra_mont_address,  test_value_xra_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xrai_mont_address, test_value_xrai_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xpb_mont_address,  test_value_xpb_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xpbi_mont_address, test_value_xpbi_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xqb_mont_address,  test_value_xqb_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xqbi_mont_address, test_value_xqbi_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xrb_mont_address,  test_value_xrb_mont_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_sidh_xrbi_mont_address, test_value_xrbi_mont_list, number_of_words)
+    
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_message_length_address, sike_message_length)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_sike_shared_secret_length_address, sike_shared_secret_length)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_mask_address, oa_mask)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_mask_address, ob_mask)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_oa_bits_address, oa_bits)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_ob_bits_address, ob_bits)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_prime_size_bits_address, prime_size_bits)
+    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_alice_start_address
+    for i in range(0, len(alice_splits)):
+        ultrascale.write_package(start_address+i, alice_splits[i])
+    for i in range(len(alice_splits), 302):
+        ultrascale.write_package(start_address+i, 0)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_alice_address, alice_max_row)
+    start_address = sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_splits_bob_start_address
+    for i in range(0, len(bob_splits)):
+        ultrascale.write_package(start_address+i, bob_splits[i])
+    for i in range(len(bob_splits), 302):
+        ultrascale.write_package(start_address+i, 0)
+    ultrascale.write_package(sike_core_base_alu_ram_start_address + sike_core_base_alu_ram_max_row_bob_address, bob_max_row)
+    
+    ultrascale.write_package(sike_core_reg_operands_size_address, number_of_words - 1)
+    ultrascale.write_package(sike_core_reg_prime_line_equal_one_address, enable_special_prime_line_arithmetic)
+    ultrascale.write_package(sike_core_reg_prime_address_address, 0)
+    ultrascale.write_package(sike_core_reg_prime_plus_one_address_address, 1)
+    ultrascale.write_package(sike_core_reg_prime_line_address_address, 2)
+    ultrascale.write_package(sike_core_reg_2prime_address_address, 3)
+    ultrascale.write_package(sike_core_reg_scalar_address_address, 0)
+    ultrascale.write_package(sike_core_reg_initial_stack_address_address, starting_position_stack_sidh_core)
+
+def test_single_sidh_keygen_alice(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, oa_bits, alice_splits, alice_max_row, alice_max_int_points, debug_mode=False):
+
+    sk_alice_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, sk_alice)
+    
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 0, sk_alice_list, number_of_words)
+    
+    ultrascale.write_package(sike_core_reg_program_counter_address, program_start_address_test_sidh_keygen_alice)
+    
+    true_pk_alice = SIDH_round2_spec.ephemeral_key_generation_alice(fp2, alice_gen_points, bob_gen_points, sk_alice, alice_splits, alice_max_row, alice_max_int_points, oa_bits)
+    
+    true_value_o1  = true_pk_alice[0].polynomial()[0]
+    true_value_o1i = true_pk_alice[0].polynomial()[1]
+    true_value_o2  = true_pk_alice[1].polynomial()[0]
+    true_value_o2i = true_pk_alice[1].polynomial()[1]
+    true_value_o3  = true_pk_alice[2].polynomial()[0]
+    true_value_o3i = true_pk_alice[2].polynomial()[1]
+    
+    #time.sleep(0.1)
+    
+    while(not ultrascale.isFree()):
+        time.sleep(0.1)
+    
+    computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 0, number_of_words)
+    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 1, number_of_words)
+    computed_test_value_o2_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 2, number_of_words)
+    computed_test_value_o2i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 3, number_of_words)
+    computed_test_value_o3_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 4, number_of_words)
+    computed_test_value_o3i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 5, number_of_words)
+    
+    computed_test_value_o1  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1_list)
+    computed_test_value_o1i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1i_list)
+    computed_test_value_o2  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o2_list)
+    computed_test_value_o2i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o2i_list)
+    computed_test_value_o3  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o3_list)
+    computed_test_value_o3i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o3i_list)
+    
+    if((debug_mode) or ((computed_test_value_o1 != true_value_o1) or (computed_test_value_o1i != true_value_o1i) or (computed_test_value_o2 != true_value_o2) or (computed_test_value_o2i != true_value_o2i) or (computed_test_value_o3 != true_value_o3) or (computed_test_value_o3i != true_value_o3i))):
+        print("Error in SIDH Alice key generation ")
+        print("SIDH secret key alice")
+        print(sk_alice)
+        print("Computed SIDH PK 0")
+        print(computed_test_value_o1)
+        print(computed_test_value_o1i)
+        print("True SIDH PK 0")
+        print(true_value_o1)
+        print(true_value_o1i)
+        print("Computed SIDH PK 1")
+        print(computed_test_value_o2)
+        print(computed_test_value_o2i)
+        print("True SIDH PK 1")
+        print(true_value_o2)
+        print(true_value_o2i)
+        print("Computed SIDH PK 2")
+        print(computed_test_value_o3)
+        print(computed_test_value_o3i)
+        print("True SIDH PK 2")
+        print(true_value_o3)
+        print(true_value_o3i)
+        return True
+    return False
+
+def test_sidh_keygen_alice(ultrascale, param, number_of_tests, debug_mode=False):
+    
+    load_constants(ultrascale, param)
+    
+    number_of_words = param[4]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    prime = param[5]
+    
+    error_computation = False
+        
+    fp2 = sidh_fp2.sidh_fp2(prime)
+    
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
+    
+    prime_size_bits = param[6]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
+    
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
+    
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
+    
+    # Fixed test
+    tests_already_performed = 0
+    fixed_tests = [0, oa-1]
+    for test in fixed_tests:
+        sk_alice = test
+        error_computation = test_single_sidh_keygen_alice(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, oa_bits, alice_splits, alice_max_row, alice_max_int_points, debug_mode)
+        tests_already_performed += 1
+        if(error_computation):
+            break
+    
+    # Random tests
+    if(not error_computation):
+        for i in range(tests_already_performed, number_of_tests):
+            if(((i %(1000)) == 0)):
+                print(i)
+            sk_alice = random.randint(0, oa-1)
+            error_computation = test_single_sidh_keygen_alice(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, oa_bits, alice_splits, alice_max_row, alice_max_int_points, debug_mode)
+        
+            if(error_computation):
+                break
+    
+    return error_computation
+
+def test_all_sidh_keygen_alice(ultrascale, sike_fpga_constants, number_of_tests, only_one_parameter=None):
+    error_computation = False
+    if(only_one_parameter != None):
+        all_testing_parameters = sike_fpga_constants[only_one_parameter:only_one_parameter+1]
+    else:
+        all_testing_parameters = sike_fpga_constants
+    for param in all_testing_parameters:
+        print("Testing SIDH key generation Alice " +  param[0])
+        error_computation = test_sidh_keygen_alice(ultrascale, param, number_of_tests, debug_mode=False)
+        if(error_computation):
+            break
+
+def test_single_sidh_keygen_bob(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_bob, ob_bits, bob_splits, bob_max_row, bob_max_int_points, debug_mode=False):
+
+    sk_bob_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, sk_bob)
+    
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 0, sk_bob_list, number_of_words)
+    
+    ultrascale.write_package(sike_core_reg_program_counter_address, program_start_address_test_sidh_keygen_bob)
+    
+    true_pk_bob = SIDH_round2_spec.ephemeral_key_generation_bob(fp2, alice_gen_points, bob_gen_points, sk_bob, bob_splits, bob_max_row, bob_max_int_points, ob_bits)
+    
+    true_value_o1  = true_pk_bob[0].polynomial()[0]
+    true_value_o1i = true_pk_bob[0].polynomial()[1]
+    true_value_o2  = true_pk_bob[1].polynomial()[0]
+    true_value_o2i = true_pk_bob[1].polynomial()[1]
+    true_value_o3  = true_pk_bob[2].polynomial()[0]
+    true_value_o3i = true_pk_bob[2].polynomial()[1]
+    
+    #time.sleep(0.1)
+    
+    while(not ultrascale.isFree()):
+        time.sleep(0.1)
+    
+    computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 0, number_of_words)
+    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 1, number_of_words)
+    computed_test_value_o2_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 2, number_of_words)
+    computed_test_value_o2i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 3, number_of_words)
+    computed_test_value_o3_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 4, number_of_words)
+    computed_test_value_o3i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 5, number_of_words)
+    
+    computed_test_value_o1  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1_list)
+    computed_test_value_o1i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1i_list)
+    computed_test_value_o2  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o2_list)
+    computed_test_value_o2i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o2i_list)
+    computed_test_value_o3  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o3_list)
+    computed_test_value_o3i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o3i_list)
+    
+    if((debug_mode) or ((computed_test_value_o1 != true_value_o1) or (computed_test_value_o1i != true_value_o1i) or (computed_test_value_o2 != true_value_o2) or (computed_test_value_o2i != true_value_o2i) or (computed_test_value_o3 != true_value_o3) or (computed_test_value_o3i != true_value_o3i))):
+        print("Error in SIDH Bob key generation ")
+        print("SIDH secret key bob")
+        print(sk_bob)
+        print("Computed SIDH PK 0")
+        print(computed_test_value_o1)
+        print(computed_test_value_o1i)
+        print("True SIDH PK 0")
+        print(true_value_o1)
+        print(true_value_o1i)
+        print("Computed SIDH PK 1")
+        print(computed_test_value_o2)
+        print(computed_test_value_o2i)
+        print("True SIDH PK 1")
+        print(true_value_o2)
+        print(true_value_o2i)
+        print("Computed SIDH PK 2")
+        print(computed_test_value_o3)
+        print(computed_test_value_o3i)
+        print("True SIDH PK 2")
+        print(true_value_o3)
+        print(true_value_o3i)
+        return True
+    return False
+
+def test_sidh_keygen_bob(ultrascale, param, number_of_tests, debug_mode=False):
+    
+    load_constants(ultrascale, param)
+    
+    number_of_words = param[4]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    prime = param[5]
+    
+    error_computation = False
+        
+    fp2 = sidh_fp2.sidh_fp2(prime)
+    
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
+    
+    prime_size_bits = param[6]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
+    
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
+    
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
+    
+    # Fixed test
+    tests_already_performed = 0
+    fixed_tests = [0, ob-1]
+    for test in fixed_tests:
+        sk_bob = test
+        error_computation = test_single_sidh_keygen_bob(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_bob, ob_bits, bob_splits, bob_max_row, bob_max_int_points, debug_mode)
+        tests_already_performed += 1
+        if(error_computation):
+            break
+    
+    # Random tests
+    if(not error_computation):
+        for i in range(tests_already_performed, number_of_tests):
+            if(((i %(1000)) == 0)):
+                print(i)
+            sk_bob = random.randint(0, ob-1)
+            error_computation = test_single_sidh_keygen_bob(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_bob, ob_bits, bob_splits, bob_max_row, bob_max_int_points, debug_mode)
+        
+            if(error_computation):
+                break
+    
+    return error_computation
+
+def test_all_sidh_keygen_bob(ultrascale, sike_fpga_constants, number_of_tests, only_one_parameter=None):
+    error_computation = False
+    if(only_one_parameter != None):
+        all_testing_parameters = sike_fpga_constants[only_one_parameter:only_one_parameter+1]
+    else:
+        all_testing_parameters = sike_fpga_constants
+    for param in all_testing_parameters:
+        print("Testing SIDH key generation Bob " +  param[0])
+        error_computation = test_sidh_keygen_bob(ultrascale, param, number_of_tests, debug_mode=False)
+        if(error_computation):
+            break
+
+def test_single_sidh_shared_secret_alice(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, sk_bob, oa_bits, ob_bits, alice_splits, alice_max_row, alice_max_int_points, bob_splits, bob_max_row, bob_max_int_points, debug_mode=False):
+
+    pk_bob = SIDH_round2_spec.ephemeral_key_generation_bob(fp2, alice_gen_points, bob_gen_points, sk_bob, bob_splits, bob_max_row, bob_max_int_points, ob_bits)
+    
+    pk_bob_phipx_list   = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_bob[0].polynomial()[0])
+    pk_bob_phipxi_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_bob[0].polynomial()[1])
+    pk_bob_phiqx_list   = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_bob[1].polynomial()[0])
+    pk_bob_phiqxi_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_bob[1].polynomial()[1])
+    pk_bob_phirx_list   = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_bob[2].polynomial()[0])
+    pk_bob_phirxi_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_bob[2].polynomial()[1])
+
+    sk_alice_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, sk_alice)
+    
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 0, pk_bob_phipx_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 1, pk_bob_phipxi_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 2, pk_bob_phiqx_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 3, pk_bob_phiqxi_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 4, pk_bob_phirx_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 5, pk_bob_phirxi_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 6, sk_alice_list, number_of_words)
+    
+    ultrascale.write_package(sike_core_reg_program_counter_address, program_start_address_test_sidh_shared_secret_alice)
+    
+    true_j_invariant = SIDH_round2_spec.ephemeral_shared_secret_alice(fp2, pk_bob, sk_alice, alice_splits, alice_max_row, alice_max_int_points, oa_bits)
+    
+    true_value_o1  = true_j_invariant.polynomial()[0]
+    true_value_o1i = true_j_invariant.polynomial()[1]
+    
+    #time.sleep(0.1)
+    
+    while(not ultrascale.isFree()):
+        time.sleep(0.1)
+    
+    computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 0, number_of_words)
+    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 1, number_of_words)
+    
+    computed_test_value_o1  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1_list)
+    computed_test_value_o1i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1i_list)
+    
+    if((debug_mode) or ((computed_test_value_o1 != true_value_o1) or (computed_test_value_o1i != true_value_o1i))):
+        print("Error in SIDH Alice shared secret ")
+        print("SIDH secret key bob")
+        print(sk_bob)
+        print("SIDH secret key alice")
+        print(sk_alice)
+        print("Computed SIDH j invariant")
+        print(computed_test_value_o1)
+        print(computed_test_value_o1i)
+        print("True SIDH j invariant")
+        print(true_value_o1)
+        print(true_value_o1i)
+        return True
+    return False
+
+def test_sidh_shared_secret_alice(ultrascale, param, number_of_tests, debug_mode=False):
+
+    load_constants(ultrascale, param)
+    
+    number_of_words = param[4]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    prime = param[5]
+    
+    error_computation = False
+        
+    fp2 = sidh_fp2.sidh_fp2(prime)
+    
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
+    
+    prime_size_bits = param[6]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
+    
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
+    
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
+    
+    # Fixed test
+    tests_already_performed = 0
+    fixed_tests = [[0, 0], [0, ob-1], [0, oa-1], [oa-1, ob-1]]
+    for test in fixed_tests:
+        sk_bob = test[0]
+        sk_alice = test[1]
+        error_computation = test_single_sidh_shared_secret_alice(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, sk_bob, oa_bits, ob_bits, alice_splits, alice_max_row, alice_max_int_points, bob_splits, bob_max_row, bob_max_int_points, debug_mode)
+        tests_already_performed += 1
+        if(error_computation):
+            break
+    
+    # Random tests
+    if(not error_computation):
+        for i in range(tests_already_performed, number_of_tests):
+            if(((i %(1000)) == 0)):
+                print(i)
+            sk_bob = random.randint(0, ob-1)
+            sk_alice = random.randint(0, oa-1)
+            error_computation = test_single_sidh_shared_secret_alice(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, sk_bob, oa_bits, ob_bits, alice_splits, alice_max_row, alice_max_int_points, bob_splits, bob_max_row, bob_max_int_points, debug_mode)
+        
+            if(error_computation):
+                break
+    
+    return error_computation
+
+def test_all_sidh_shared_secret_alice(ultrascale, sike_fpga_constants, number_of_tests, only_one_parameter=None):
+    error_computation = False
+    if(only_one_parameter != None):
+        all_testing_parameters = sike_fpga_constants[only_one_parameter:only_one_parameter+1]
+    else:
+        all_testing_parameters = sike_fpga_constants
+    for param in all_testing_parameters:
+        print("Testing SIDH shared secret Alice " +  param[0])
+        error_computation = test_sidh_shared_secret_alice(ultrascale, param, number_of_tests, debug_mode=False)
+        if(error_computation):
+            break
+
+def test_single_sidh_shared_secret_bob(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, sk_bob, oa_bits, ob_bits, alice_splits, alice_max_row, alice_max_int_points, bob_splits, bob_max_row, bob_max_int_points, debug_mode=False):
+
+    pk_alice = SIDH_round2_spec.ephemeral_key_generation_alice(fp2, alice_gen_points, bob_gen_points, sk_alice, alice_splits, alice_max_row, alice_max_int_points, oa_bits)
+    
+    pk_alice_phipx_list   = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_alice[0].polynomial()[0])
+    pk_alice_phipxi_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_alice[0].polynomial()[1])
+    pk_alice_phiqx_list   = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_alice[1].polynomial()[0])
+    pk_alice_phiqxi_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_alice[1].polynomial()[1])
+    pk_alice_phirx_list   = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_alice[2].polynomial()[0])
+    pk_alice_phirxi_list  = sike_core_utils.integer_to_list(extended_word_size, number_of_words, pk_alice[2].polynomial()[1])
+
+    sk_bob_list = sike_core_utils.integer_to_list(extended_word_size, number_of_words, sk_bob)
+    
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 0, pk_alice_phipx_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 1, pk_alice_phipxi_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 2, pk_alice_phiqx_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 3, pk_alice_phiqxi_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 4, pk_alice_phirx_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 5, pk_alice_phirxi_list, number_of_words)
+    ultrascale.write_mac_ram_operand(sike_core_mac_ram_input_function_start_address + 6, sk_bob_list, number_of_words)
+    
+    ultrascale.write_package(sike_core_reg_program_counter_address, program_start_address_test_sidh_shared_secret_bob)
+    
+    true_j_invariant = SIDH_round2_spec.ephemeral_shared_secret_bob(fp2, pk_alice, sk_bob, bob_splits, bob_max_row, bob_max_int_points, ob_bits)
+    
+    true_value_o1  = true_j_invariant.polynomial()[0]
+    true_value_o1i = true_j_invariant.polynomial()[1]
+    
+    #time.sleep(0.1)
+    
+    while(not ultrascale.isFree()):
+        time.sleep(0.1)
+    
+    computed_test_value_o1_list  = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 0, number_of_words)
+    computed_test_value_o1i_list = ultrascale.read_mac_ram_operand(sike_core_mac_ram_start_address + sike_core_mac_ram_output_function_start_address + 1, number_of_words)
+    
+    computed_test_value_o1  = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1_list)
+    computed_test_value_o1i = sike_core_utils.list_to_integer(extended_word_size, number_of_words, computed_test_value_o1i_list)
+    
+    if((debug_mode) or ((computed_test_value_o1 != true_value_o1) or (computed_test_value_o1i != true_value_o1i))):
+        print("Error in SIDH Bob shared secret ")
+        print("SIDH secret key alice")
+        print(sk_alice)
+        print("SIDH secret key bob")
+        print(sk_bob)
+        print("Computed SIDH j invariant")
+        print(computed_test_value_o1)
+        print(computed_test_value_o1i)
+        print("True SIDH j invariant")
+        print(true_value_o1)
+        print(true_value_o1i)
+        return True
+    return False
+
+def test_sidh_shared_secret_bob(ultrascale, param, number_of_tests, debug_mode=False):
+
+    load_constants(ultrascale, param)
+    
+    number_of_words = param[4]
+    base_word_size = param[1]
+    extended_word_size = param[2]
+    prime = param[5]
+    
+    error_computation = False
+        
+    fp2 = sidh_fp2.sidh_fp2(prime)
+    
+    oa = param[11]
+    ob = param[12]
+    oa_bits = param[15]
+    ob_bits = param[16]
+    oa_mask = param[13]
+    ob_mask = param[14]
+    
+    prime_size_bits = param[6]
+    sike_message_length = param[39]
+    sike_shared_secret_length = param[40]
+    
+    alice_splits = param[33]
+    alice_max_row = param[34]
+    alice_max_int_points = param[35]
+    bob_splits = param[36]
+    bob_max_row = param[37]
+    bob_max_int_points = param[38]
+    
+    alice_gen_points_mont = param[21:27]
+    bob_gen_points_mont = param[27:33]
+    alice_gen_points = param[42:48]
+    bob_gen_points = param[48:54]
+    
+    # Fixed test
+    tests_already_performed = 0
+    fixed_tests = [[0, 0], [0, ob-1], [0, oa-1], [oa-1, ob-1]]
+    for test in fixed_tests:
+        sk_bob = test[0]
+        sk_alice = test[1]
+        error_computation = test_single_sidh_shared_secret_bob(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, sk_bob, oa_bits, ob_bits, alice_splits, alice_max_row, alice_max_int_points, bob_splits, bob_max_row, bob_max_int_points, debug_mode)
+        tests_already_performed += 1
+        if(error_computation):
+            break
+    
+    # Random tests
+    if(not error_computation):
+        for i in range(tests_already_performed, number_of_tests):
+            if(((i %(1000)) == 0)):
+                print(i)
+            sk_bob = random.randint(0, ob-1)
+            sk_alice = random.randint(0, oa-1)
+            error_computation = test_single_sidh_shared_secret_bob(ultrascale, fp2, base_word_size, extended_word_size, number_of_words, alice_gen_points, bob_gen_points, sk_alice, sk_bob, oa_bits, ob_bits, alice_splits, alice_max_row, alice_max_int_points, bob_splits, bob_max_row, bob_max_int_points, debug_mode)
+        
+            if(error_computation):
+                break
+    
+    return error_computation
+
+def test_all_sidh_shared_secret_bob(ultrascale, sike_fpga_constants, number_of_tests, only_one_parameter=None):
+    error_computation = False
+    if(only_one_parameter != None):
+        all_testing_parameters = sike_fpga_constants[only_one_parameter:only_one_parameter+1]
+    else:
+        all_testing_parameters = sike_fpga_constants
+    for param in all_testing_parameters:
+        print("Testing SIDH shared secret Bob " +  param[0])
+        error_computation = test_sidh_shared_secret_bob(ultrascale, param, number_of_tests, debug_mode=False)
+        if(error_computation):
+            break
+
+def test_all_sidh_functions(ultrascale, version, only_one_parameter=None):
+    sike_base_word_size = 16
+    if(version == '256'):
+        sike_extended_word_size = 256
+        sike_fpga_constants = sike_fpga_constants_v256.sike_fpga_constants_v256
+    elif(version == '128'):
+        sike_extended_word_size = 128
+        sike_fpga_constants = sike_fpga_constants_v128.sike_fpga_constants_v128
+    tests_working_folder = "../hw_sidh_tests_v"+str(sike_extended_word_size)+"/"
+    if(load_program(ultrascale, tests_prom_folder + "test_sike_sidh_ecc_functions_v" + str(sike_extended_word_size)+ ".dat", sike_base_word_size, 4)):
+        print("Program loaded correctly into SIKE core")
+        test_all_sidh_keygen_alice(ultrascale, sike_fpga_constants, 100, only_one_parameter)
+        test_all_sidh_keygen_bob(ultrascale, sike_fpga_constants, 100, only_one_parameter)
+        test_all_sidh_shared_secret_alice(ultrascale, sike_fpga_constants, 100, only_one_parameter)
+        test_all_sidh_shared_secret_bob(ultrascale, sike_fpga_constants, 100, only_one_parameter)
     else:
         print('Program loading failed')
 
-ultrascale = Ultrascale('COM9')
+ultrascale = Ultrascale('COM9', sys.argv[1])
 #ultrascale.read_initial_message(34)
 while(not ultrascale.isFree()):
     time.sleep(0.01)
 ultrascale.flush()
 
-test_all_sidh_functions(ultrascale, 256)
+test_all_sidh_functions(ultrascale, sys.argv[1])
 
-
-
-#print('Is it Free? ' + str(ultrascale.isFree()))
-#prime = (2**(271))*3**(301)-1
-#prime_list = integer_to_list(sidh_extended_word_size, 4, prime)
-#ultrascale.write_mac_ram_operand(sidh_core_mac_ram_input_function_start_address, prime_list, 4)
-#read_value = ultrascale.read_mac_ram_operand(sidh_core_mac_ram_input_function_start_address, 4)
-#print(prime_list[0])
-#print(read_value[0])
-#print("-----------")
-#print(prime_list[1])
-#print(read_value[1])
-#print("-----------")
-#print(prime_list[2])
-#print(read_value[2])
-#print("-----------")
-#print(prime_list[3])
-#print(read_value[3])
-#print("-----------")
 ultrascale.disconnect()

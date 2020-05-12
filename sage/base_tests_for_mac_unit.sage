@@ -1,3 +1,6 @@
+if 'script_working_folder' not in globals() and 'script_working_folder' not in locals():
+    script_working_folder = "/home/pedro/hw-sidh/vhdl_project/sage/"
+
 def print_list_convert_format_VHDL_BASE_memory(file, base_word_size, list_a, final_size, signed_integer):
     positive_word = 2**(base_word_size)
     word_full_of_ones = positive_word - 1
@@ -281,6 +284,1183 @@ def addition_subtraction_no_reduction(internal_word_division, internal_word_modu
     o[7] = acc&(internal_word_modulus)
     if(acc < 0):
         o[7] = -((o[7] ^^ internal_word_modulus) + 1)
+    return o
+
+def addition_subtraction_with_reduction(internal_word_division, internal_word_modulus, internal_acc_modulus, operands_size, prime2, a, b, sign_a, debug=False):
+    acc = 0
+    o = [0]*(operands_size)
+    C = 0
+    C_S = 0
+    S = 0
+    
+    if(debug):
+        print("Debug mode active")
+        print("(sign) a")
+        if(sign_a == '1'):
+            print("(-) " + str(a))
+        else:
+            print("(+) " + str(a))
+        print("b")
+        print(b)
+    
+    # Operand size 1
+    if(operands_size == 1):
+        if(sign_a == 1):
+            C_S = acc + b[0] + a[0]
+        else:
+            C_S = acc + b[0] - a[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[0] = -((o[0] ^^ internal_word_modulus) + 1)
+            s = 0
+        else:
+            s = 1
+        
+        C_S = acc - s*prime2[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[0] = -((o[0] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        C_S = acc + s*prime2[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[0] = -((o[0] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        C_S = acc + s*prime2[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[0] = -((o[0] ^^ internal_word_modulus) + 1)
+        
+        return o
+        
+    # Operand size 2
+    elif(operands_size == 2):
+        if(sign_a == 1):
+            C_S = acc + b[0] + a[0]
+        else:
+            C_S = acc + b[0] - a[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[1] + a[1]
+        else:
+            C_S = acc + b[1] - a[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[1] = -((o[1] ^^ internal_word_modulus) + 1)
+            s = 0
+        else:
+            s = 1
+        
+        acc = 0
+        C_S = acc - s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[1] = -((o[1] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[1] = -((o[1] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[1] = -((o[1] ^^ internal_word_modulus) + 1)
+        
+        return o
+    
+    # Operand size 3
+    elif(operands_size == 3):
+        if(sign_a == 1):
+            C_S = acc + b[0] + a[0]
+        else:
+            C_S = acc + b[0] - a[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[1] + a[1]
+        else:
+            C_S = acc + b[1] - a[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[2] + a[2]
+        else:
+            C_S = acc + b[2] - a[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+            s = 0
+        else:
+            s = 1
+        
+        acc = 0
+        C_S = acc - s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[2] = -((o[2] ^^ internal_word_modulus) + 1)
+        
+        return o
+    
+    # Operand size 4
+    elif(operands_size == 4):
+        if(sign_a == 1):
+            C_S = acc + b[0] + a[0]
+        else:
+            C_S = acc + b[0] - a[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[1] + a[1]
+        else:
+            C_S = acc + b[1] - a[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[2] + a[2]
+        else:
+            C_S = acc + b[2] - a[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[3] + a[3]
+        else:
+            C_S = acc + b[3] - a[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            s = 0
+        else:
+            s = 1
+        
+        acc = 0
+        C_S = acc - s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[3] = -((o[3] ^^ internal_word_modulus) + 1)
+        
+        return o
+
+    # Operand size 5
+    elif(operands_size == 5):
+        if(sign_a == 1):
+            C_S = acc + b[0] + a[0]
+        else:
+            C_S = acc + b[0] - a[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[1] + a[1]
+        else:
+            C_S = acc + b[1] - a[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[2] + a[2]
+        else:
+            C_S = acc + b[2] - a[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[3] + a[3]
+        else:
+            C_S = acc + b[3] - a[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[4] + a[4]
+        else:
+            C_S = acc + b[4] - a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+            s = 0
+        else:
+            s = 1
+        
+        acc = 0
+        C_S = acc - s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[4] = -((o[4] ^^ internal_word_modulus) + 1)
+        
+        return o
+
+    # Operand size 6
+    elif(operands_size == 6):
+        if(sign_a == 1):
+            C_S = acc + b[0] + a[0]
+        else:
+            C_S = acc + b[0] - a[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[1] + a[1]
+        else:
+            C_S = acc + b[1] - a[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[2] + a[2]
+        else:
+            C_S = acc + b[2] - a[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[3] + a[3]
+        else:
+            C_S = acc + b[3] - a[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[4] + a[4]
+        else:
+            C_S = acc + b[4] - a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[5] + a[5]
+        else:
+            C_S = acc + b[5] - a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            s = 0
+        else:
+            s = 1
+        
+        acc = 0
+        C_S = acc - s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[5] + o[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[5] + o[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[5] + o[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[5] = -((o[5] ^^ internal_word_modulus) + 1)
+        
+        return o
+
+    # Operand size 7
+    elif(operands_size == 7):
+        if(sign_a == 1):
+            C_S = acc + b[0] + a[0]
+        else:
+            C_S = acc + b[0] - a[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[1] + a[1]
+        else:
+            C_S = acc + b[1] - a[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[2] + a[2]
+        else:
+            C_S = acc + b[2] - a[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[3] + a[3]
+        else:
+            C_S = acc + b[3] - a[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[4] + a[4]
+        else:
+            C_S = acc + b[4] - a[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[5] + a[5]
+        else:
+            C_S = acc + b[5] - a[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        if(sign_a == 1):
+            C_S = acc + b[6] + a[6]
+        else:
+            C_S = acc + b[6] - a[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+            s = 0
+        else:
+            s = 1
+        
+        acc = 0
+        C_S = acc - s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[5] + o[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc - s*prime2[6] + o[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[5] + o[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[6] + o[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+            s = 1
+        else:
+            s = 0
+        
+        acc = 0
+        C_S = acc + s*prime2[0] + o[0]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[0] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[1] + o[1]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[1] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[2] + o[2]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[2] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[3] + o[3]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[3] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[4] + o[4]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[4] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[5] + o[5]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[5] = acc&(internal_word_modulus)
+        acc = acc//(internal_word_division)
+        C_S = acc + s*prime2[6] + o[6]
+        acc = C_S&(internal_acc_modulus)
+        if(C_S < 0):
+            acc = -((acc ^^ internal_acc_modulus) + 1)
+        o[6] = acc&(internal_word_modulus)
+        if((acc < 0)):
+            o[6] = -((o[6] ^^ internal_word_modulus) + 1)
+        
+        return o
+
+    # Operand size 8
+    if(sign_a == 1):
+        C_S = acc + b[0] + a[0]
+    else:
+        C_S = acc + b[0] - a[0]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[0] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    if(sign_a == 1):
+        C_S = acc + b[1] + a[1]
+    else:
+        C_S = acc + b[1] - a[1]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[1] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    if(sign_a == 1):
+        C_S = acc + b[2] + a[2]
+    else:
+        C_S = acc + b[2] - a[2]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[2] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    if(sign_a == 1):
+        C_S = acc + b[3] + a[3]
+    else:
+        C_S = acc + b[3] - a[3]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[3] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    if(sign_a == 1):
+        C_S = acc + b[4] + a[4]
+    else:
+        C_S = acc + b[4] - a[4]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[4] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    if(sign_a == 1):
+        C_S = acc + b[5] + a[5]
+    else:
+        C_S = acc + b[5] - a[5]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[5] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    if(sign_a == 1):
+        C_S = acc + b[6] + a[6]
+    else:
+        C_S = acc + b[6] - a[6]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[6] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    if(sign_a == 1):
+        C_S = acc + b[7] + a[7]
+    else:
+        C_S = acc + b[7] - a[7]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[7] = acc&(internal_word_modulus)
+    if((acc < 0)):
+        o[7] = -((o[7] ^^ internal_word_modulus) + 1)
+        s = 0
+    else:
+        s = 1
+    
+    acc = 0
+    C_S = acc - s*prime2[0] + o[0]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[0] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc - s*prime2[1] + o[1]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[1] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc - s*prime2[2] + o[2]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[2] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc - s*prime2[3] + o[3]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[3] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc - s*prime2[4] + o[4]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[4] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc - s*prime2[5] + o[5]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[5] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc - s*prime2[6] + o[6]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[6] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc - s*prime2[7] + o[7]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[7] = acc&(internal_word_modulus)
+    if((acc < 0)):
+        o[7] = -((o[7] ^^ internal_word_modulus) + 1)
+        s = 1
+    else:
+        s = 0
+    
+    acc = 0
+    C_S = acc + s*prime2[0] + o[0]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[0] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[1] + o[1]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[1] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[2] + o[2]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[2] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[3] + o[3]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[3] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[4] + o[4]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[4] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[5] + o[5]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[5] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[6] + o[6]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[6] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[7] + o[7]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[7] = acc&(internal_word_modulus)
+    if((acc < 0)):
+        o[7] = -((o[7] ^^ internal_word_modulus) + 1)
+        s = 1
+    else:
+        s = 0
+    
+    acc = 0
+    C_S = acc + s*prime2[0] + o[0]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[0] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[1] + o[1]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[1] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[2] + o[2]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[2] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[3] + o[3]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[3] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[4] + o[4]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[4] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[5] + o[5]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[5] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[6] + o[6]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[6] = acc&(internal_word_modulus)
+    acc = acc//(internal_word_division)
+    C_S = acc + s*prime2[7] + o[7]
+    acc = C_S&(internal_acc_modulus)
+    if(C_S < 0):
+        acc = -((acc ^^ internal_acc_modulus) + 1)
+    o[7] = acc&(internal_word_modulus)
+    if((acc < 0)):
+        o[7] = -((o[7] ^^ internal_word_modulus) + 1)
+    
     return o
     
 def iterative_modular_reduction(internal_word_division, internal_word_modulus, internal_acc_modulus, operands_size, prime, a, debug=False):
@@ -9929,7 +11109,7 @@ def montgomery_multiplication_with_prime_line_0(internal_word_division, internal
         return o
 
 def generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime = 0):
-    arithmetic_parameters = [0]*24
+    arithmetic_parameters = [0]*26
     if(prime == 0):
     # No prime has been chosen, generate one on the fly
         prime = random_prime(2**prime_size_bits, True, 2**(prime_size_bits-1))
@@ -9972,6 +11152,8 @@ def generate_arithmetic_parameters(base_word_size, extended_word_size, prime_siz
     arithmetic_parameters[21] = 2**(extended_word_size)                                                    # Internal word division
     arithmetic_parameters[22] = (2**(extended_word_size))-1                                                # Internal word modulus
     arithmetic_parameters[23] = (2**(accumulator_word_size))-1                                             # Accumulator word modulus
+    arithmetic_parameters[24] = 2*prime                                                                    # Prime 2*n (integer representation)
+    arithmetic_parameters[25] = integer_to_list(extended_word_size, number_of_words, 2*prime)              # Prime 2*n (list representation)
     
     return arithmetic_parameters
 
@@ -10067,6 +11249,8 @@ def print_VHDL_montgomery_multiplication_test(VHDL_memory_file_name, base_word_s
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line_list = arithmetic_parameters[18]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r2_constant_list = arithmetic_parameters[15]
     accumulator_word_modulus = arithmetic_parameters[23]
@@ -10079,6 +11263,7 @@ def print_VHDL_montgomery_multiplication_test(VHDL_memory_file_name, base_word_s
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_plus_one_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_line_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime2_list, maximum_number_of_words)
     
     # Maximum tests
     max_value = prime
@@ -10133,6 +11318,8 @@ def load_VHDL_montgomery_multiplication_test(VHDL_memory_file_name, base_word_si
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line = arithmetic_parameters[17]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r2_constant_list = arithmetic_parameters[15]
     r_inverse = arithmetic_parameters[16]
@@ -10166,7 +11353,15 @@ def load_VHDL_montgomery_multiplication_test(VHDL_memory_file_name, base_word_si
         print(loaded_prime_line)
         print("Input prime line 0")
         print(prime_line)
-        
+    loaded_prime2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime2 != prime2):
+        print("Error in multiplication with Montgomery reduction at test number : " + str(current_test))
+        print("Error loading the 2*prime")
+        print("Loaded 2*prime")
+        print(loaded_prime2)
+        print("Input 2*prime")
+        print(prime2)
+    
     if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
         number_of_tests = total_number_of_tests_file
 
@@ -10286,7 +11481,6 @@ def test_montgomery_squaring(base_word_size, extended_word_size, prime_size_bits
         
     return error_computation
 
-
 def print_VHDL_montgomery_squaring_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_tests):
     
     VHDL_memory_file = open(VHDL_memory_file_name, 'w')
@@ -10305,6 +11499,8 @@ def print_VHDL_montgomery_squaring_test(VHDL_memory_file_name, base_word_size, e
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line_list = arithmetic_parameters[18]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r2_constant_list = arithmetic_parameters[15]
     accumulator_word_modulus = arithmetic_parameters[23]
@@ -10317,7 +11513,8 @@ def print_VHDL_montgomery_squaring_test(VHDL_memory_file_name, base_word_size, e
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_plus_one_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_line_list, maximum_number_of_words)
-    
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime2_list, maximum_number_of_words)
+        
     # Maximum tests
     max_value = prime
     min_value = -prime
@@ -10364,6 +11561,8 @@ def load_VHDL_montgomery_squaring_test(VHDL_memory_file_name, base_word_size, ex
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line = arithmetic_parameters[17]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r2_constant_list = arithmetic_parameters[15]
     r_inverse = arithmetic_parameters[16]
@@ -10397,6 +11596,13 @@ def load_VHDL_montgomery_squaring_test(VHDL_memory_file_name, base_word_size, ex
         print(loaded_prime_line)
         print("Input prime line 0")
         print(prime_line)
+    loaded_prime2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime2 != prime2):
+        print("Error loading the prime")
+        print("Loaded 2*prime")
+        print(loaded_prime2)
+        print("Input prime")
+        print(prime2)
         
     if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
         number_of_tests = total_number_of_tests_file
@@ -11080,6 +12286,345 @@ def load_VHDL_addition_subtraction_no_reduction_test(VHDL_memory_file_name, base
     
     VHDL_memory_file.close()
     
+def test_single_addition_subtraction_with_reduction(arithmetic_parameters, test_value_a, test_value_b):
+    extended_word_size_signed = arithmetic_parameters[0]
+    extended_word_division = arithmetic_parameters[21]
+    extended_word_modulus = arithmetic_parameters[22]
+    number_of_words = arithmetic_parameters[9]
+    maximum_number_of_words = number_of_words
+    accumulator_word_modulus = arithmetic_parameters[23]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
+    
+    test_value_a_list = integer_to_list(extended_word_size_signed, number_of_words, test_value_a)
+    test_value_b_list = integer_to_list(extended_word_size_signed, number_of_words, test_value_b)
+    
+    test_value_o1_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_a_list, test_value_b_list, 1)
+    test_value_o1 = list_to_integer(extended_word_size_signed, number_of_words, test_value_o1_list)
+    test_value_o2_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_a_list, test_value_b_list, 0)
+    test_value_o2 = list_to_integer(extended_word_size_signed, number_of_words, test_value_o2_list)
+    test_value_o3_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_b_list, test_value_a_list, 0)
+    test_value_o3 = list_to_integer(extended_word_size_signed, number_of_words, test_value_o3_list)
+    
+    true_value_o1 = (test_value_a+test_value_b) % prime2
+    true_value_o2 = (test_value_b-test_value_a) % prime2
+    true_value_o3 = (test_value_a-test_value_b) % prime2
+    
+    if((test_value_o1 != true_value_o1) or (test_value_o2 != true_value_o2) or (test_value_o3 != true_value_o3)):
+        print("Error during the addition/subtraction procedure with reduction")
+        print("2*Prime")
+        print(prime2)
+        print("Value a")
+        print(test_value_a)
+        print("Value b")
+        print(test_value_b)
+        print("Computed value o1 = a+b")
+        print(test_value_o1)
+        print("True value o1")
+        print(true_value_o1)
+        print('')
+        print("Computed value o2 = b-a")
+        print(test_value_o2)
+        print("True value o2")
+        print(true_value_o2)
+        print('')
+        print("Computed value o3 = a-b")
+        print(test_value_o3)
+        print("True value o3")
+        print(true_value_o3)
+        print('')
+        print('')
+        return True
+            
+    return False
+    
+def test_addition_subtraction_with_reduction(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_tests):
+    arithmetic_parameters = generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+    error_computation = False
+        
+    # Maximum tests
+    max_value = 2*prime
+    min_value = -2*prime
+    maximum_tests = [min_value + 1, min_value + 2, -1, 0, 1, max_value - 2, max_value - 1]
+    for test_value_a in maximum_tests:
+        for test_value_b in maximum_tests:
+            error_computation = test_single_addition_subtraction_with_reduction(arithmetic_parameters, test_value_a, test_value_b)
+            if(error_computation):
+                break
+        if(error_computation):
+            break
+    # Random tests
+    if(not error_computation):
+        for i in range(number_of_tests):
+            if(((i %(10000)) == 0) and (i != 0)):
+                print(i)
+            test_value_a = randint(min_value+1, max_value-1)
+            test_value_b = randint(min_value+1, max_value-1)
+            
+            error_computation = test_single_addition_subtraction_with_reduction(arithmetic_parameters, test_value_a, test_value_b)
+            if(error_computation):
+                break
+        
+    return error_computation
+
+def print_VHDL_addition_subtraction_with_reduction_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_tests):
+    
+    VHDL_memory_file = open(VHDL_memory_file_name, 'w')
+    
+    arithmetic_parameters = generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+    extended_word_size_signed = arithmetic_parameters[0]
+    extended_word_division = arithmetic_parameters[21]
+    extended_word_modulus = arithmetic_parameters[22]
+    base_word_size_signed = arithmetic_parameters[1]
+    base_word_size_signed_number_words = (((extended_word_size_signed) + ((base_word_size_signed)-1))//(base_word_size_signed))
+    number_of_words = arithmetic_parameters[9]
+    maximum_number_of_words = number_of_words
+    accumulator_word_modulus = arithmetic_parameters[23]
+    prime = arithmetic_parameters[3]
+    prime_list = arithmetic_parameters[4]
+    prime_plus_one = arithmetic_parameters[5]
+    prime_plus_one_list = arithmetic_parameters[6]
+    prime_line = arithmetic_parameters[17]
+    prime_line_list = arithmetic_parameters[18]
+    prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
+    
+    tests_already_performed = 0
+    
+    VHDL_memory_file.write((("{0:0d}").format(number_of_tests)))
+    VHDL_memory_file.write('\n')
+
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_plus_one_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_line_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime2_list, maximum_number_of_words)
+    
+    # Maximum tests
+    max_value = 2*prime
+    min_value = -2*prime
+    maximum_tests = [min_value + 1, min_value + 2, -1, 0, 1, max_value - 2, max_value - 1]
+    for test_value_a in maximum_tests:
+        for test_value_b in maximum_tests:
+            test_value_a_list = integer_to_list(extended_word_size_signed, number_of_words, test_value_a)
+            test_value_b_list = integer_to_list(extended_word_size_signed, number_of_words, test_value_b)
+            
+            print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_a_list, maximum_number_of_words)
+            print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_b_list, maximum_number_of_words)
+            
+            test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_a_list, test_value_b_list, 1)
+            print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o_list, maximum_number_of_words)
+    
+            test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_a_list, test_value_b_list, 0)
+            print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o_list, maximum_number_of_words)
+    
+            test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_b_list, test_value_a_list, 0)
+            print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o_list, maximum_number_of_words)
+            
+            tests_already_performed += 1
+    
+    # Random tests
+    for i in range(tests_already_performed, number_of_tests):
+        
+        test_value_a = randint(min_value+1, max_value-1)
+        test_value_a_list = integer_to_list(extended_word_size_signed, number_of_words, test_value_a)
+        test_value_b = randint(min_value+1, max_value-1)
+        test_value_b_list = integer_to_list(extended_word_size_signed, number_of_words, test_value_b)
+        
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_a_list, maximum_number_of_words)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_b_list, maximum_number_of_words)
+        
+        test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_a_list, test_value_b_list, 1)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o_list, maximum_number_of_words)
+
+        test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_a_list, test_value_b_list, 0)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o_list, maximum_number_of_words)
+
+        test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, test_value_b_list, test_value_a_list, 0)
+        print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, test_value_o_list, maximum_number_of_words)
+        
+    VHDL_memory_file.close()
+    
+def load_VHDL_addition_subtraction_with_reduction_test(VHDL_memory_file_name, base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_tests = 0, debug_mode=False):
+    VHDL_memory_file = open(VHDL_memory_file_name, 'r')
+    VHDL_memory_file.seek(0, 2)
+    VHDL_file_size = VHDL_memory_file.tell()
+    VHDL_memory_file.seek(0)
+    
+    arithmetic_parameters = generate_arithmetic_parameters(base_word_size, extended_word_size, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+    
+    extended_word_size_signed = arithmetic_parameters[0]
+    extended_word_division = arithmetic_parameters[21]
+    extended_word_modulus = arithmetic_parameters[22]
+    base_word_size_signed = arithmetic_parameters[1]
+    base_word_size_signed_number_words = (((extended_word_size_signed) + ((base_word_size_signed)-1))//(base_word_size_signed))
+    number_of_words = arithmetic_parameters[9]
+    maximum_number_of_words = number_of_words
+    accumulator_word_modulus = arithmetic_parameters[23]
+    prime = arithmetic_parameters[3]
+    prime_list = arithmetic_parameters[4]
+    prime_plus_one = arithmetic_parameters[5]
+    prime_plus_one_list = arithmetic_parameters[6]
+    prime_line = arithmetic_parameters[17]
+    prime_line_list = arithmetic_parameters[18]
+    prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
+    
+    VHDL_word_size = base_word_size_signed_number_words*base_word_size_signed
+    
+    current_test = 0
+    total_number_of_tests_file = int(VHDL_memory_file.readline())
+
+    loaded_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime != prime):
+        print("Error loading the prime")
+        print("Loaded prime")
+        print(loaded_prime)
+        print("Input prime")
+        print(prime)
+    loaded_prime_plus_one = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime_plus_one != prime_plus_one):
+        print("Error loading the prime plus one")
+        print("Loaded prime plus one")
+        print(loaded_prime_plus_one)
+        print("Input prime plus one")
+        print(prime_plus_one)
+    loaded_prime_line = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime_line != prime_line):
+        print("Error loading the prime line 0")
+        print("Loaded prime line 0")
+        print(loaded_prime_line)
+        print("Input prime line 0")
+        print(prime_line)
+    loaded_prime2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime2 != prime2):
+        print("Error loading the prime")
+        print("Loaded 2*prime")
+        print(loaded_prime2)
+        print("Input prime")
+        print(prime2)
+    
+    if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
+        number_of_tests = total_number_of_tests_file
+    
+    while(current_test != (number_of_tests-1)):
+        loaded_test_value_a = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+        loaded_test_value_b = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+        
+        loaded_test_value_a_list = integer_to_list(extended_word_size_signed, maximum_number_of_words, loaded_test_value_a)
+        loaded_test_value_b_list = integer_to_list(extended_word_size_signed, maximum_number_of_words, loaded_test_value_b)
+
+        loaded_test_value_o = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+        computed_test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, loaded_test_value_a_list, loaded_test_value_b_list, 1)
+        computed_test_value_o = list_to_integer(extended_word_size_signed, len(computed_test_value_o_list), computed_test_value_o_list)
+        
+        if(computed_test_value_o != loaded_test_value_o):
+            print("Error in addition with reduction at test number : " + str(current_test) + " at part 0")
+            print("Loaded value a")
+            print(loaded_test_value_a)
+            print("Loaded value b")
+            print(loaded_test_value_b)
+            print("Loaded value o")
+            print(loaded_test_value_o)
+            print("True value o")
+            print(loaded_test_value_a + loaded_test_value_b)
+            print("Computed value o")
+            print(computed_test_value_o)
+        
+        loaded_test_value_o = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+        computed_test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, loaded_test_value_a_list, loaded_test_value_b_list, 0)
+        computed_test_value_o = list_to_integer(extended_word_size_signed, len(computed_test_value_o_list), computed_test_value_o_list)
+        
+        if(computed_test_value_o != loaded_test_value_o):
+            print("Error in subtraction with reduction at test number : " + str(current_test) + " at part 1")
+            print("Loaded value a")
+            print(loaded_test_value_a)
+            print("Loaded value b")
+            print(loaded_test_value_b)
+            print("Loaded value o")
+            print(loaded_test_value_o)
+            print("True value o")
+            print(loaded_test_value_b - loaded_test_value_a)
+            print("Computed value o")
+            print(computed_test_value_o)
+        
+        loaded_test_value_o = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+        computed_test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, loaded_test_value_b_list, loaded_test_value_a_list, 0)
+        computed_test_value_o = list_to_integer(extended_word_size_signed, len(computed_test_value_o_list), computed_test_value_o_list)
+        
+        if(computed_test_value_o != loaded_test_value_o):
+            print("Error in subtraction with reduction at test number : " + str(current_test) + " at part 2")
+            print("Loaded value a")
+            print(loaded_test_value_a)
+            print("Loaded value b")
+            print(loaded_test_value_b)
+            print("Loaded value o")
+            print(loaded_test_value_o)
+            print("True value o")
+            print(loaded_test_value_a - loaded_test_value_b)
+            print("Computed value o")
+            print(computed_test_value_o)
+        current_test += 1
+        
+    loaded_test_value_a = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+    loaded_test_value_b = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+    
+    loaded_test_value_a_list = integer_to_list(extended_word_size_signed, maximum_number_of_words, loaded_test_value_a)
+    loaded_test_value_b_list = integer_to_list(extended_word_size_signed, maximum_number_of_words, loaded_test_value_b)
+
+    loaded_test_value_o = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+    computed_test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, loaded_test_value_a_list, loaded_test_value_b_list, 1, debug_mode)
+    computed_test_value_o = list_to_integer(extended_word_size_signed, len(computed_test_value_o_list), computed_test_value_o_list)
+    
+    if(computed_test_value_o != loaded_test_value_o):
+        print("Error in addition with reduction at test number : " + str(current_test) + " at part 0")
+        print("Loaded value a")
+        print(loaded_test_value_a)
+        print("Loaded value b")
+        print(loaded_test_value_b)
+        print("Loaded value o")
+        print(loaded_test_value_o)
+        print("True value o")
+        print(loaded_test_value_a + loaded_test_value_b)
+        print("Computed value o")
+        print(computed_test_value_o)
+    
+    loaded_test_value_o = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+    computed_test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, loaded_test_value_a_list, loaded_test_value_b_list, 0, debug_mode)
+    computed_test_value_o = list_to_integer(extended_word_size_signed, len(computed_test_value_o_list), computed_test_value_o_list)
+    
+    if(computed_test_value_o != loaded_test_value_o):
+        print("Error in subtraction with reduction at test number : " + str(current_test) + " at part 1")
+        print("Loaded value a")
+        print(loaded_test_value_a)
+        print("Loaded value b")
+        print(loaded_test_value_b)
+        print("Loaded value o")
+        print(loaded_test_value_o)
+        print("True value o")
+        print(loaded_test_value_b - loaded_test_value_a)
+        print("Computed value o")
+        print(computed_test_value_o)
+    
+    loaded_test_value_o = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, True)
+    computed_test_value_o_list = addition_subtraction_with_reduction(extended_word_division, extended_word_modulus, accumulator_word_modulus, number_of_words, prime2_list, loaded_test_value_b_list, loaded_test_value_a_list, 0, debug_mode)
+    computed_test_value_o = list_to_integer(extended_word_size_signed, len(computed_test_value_o_list), computed_test_value_o_list)
+    
+    if(computed_test_value_o != loaded_test_value_o):
+        print("Error in subtraction with reduction at test number : " + str(current_test) + " at part 2")
+        print("Loaded value a")
+        print(loaded_test_value_a)
+        print("Loaded value b")
+        print(loaded_test_value_b)
+        print("Loaded value o")
+        print(loaded_test_value_o)
+        print("True value o")
+        print(loaded_test_value_a - loaded_test_value_b)
+        print("Computed value o")
+        print(computed_test_value_o)
+    
+    VHDL_memory_file.close()
     
 def test_single_iterative_modular_reduction(arithmetic_parameters, test_value_a):
     extended_word_size_signed = arithmetic_parameters[0]
@@ -11118,7 +12663,7 @@ def test_iterative_modular_reduction(base_word_size, extended_word_size, prime_s
     # Maximum tests
     max_value = 2*prime
     min_value = -2*prime
-    maximum_tests = [min_value + 1, min_value + 2, -1, 0, 1, max_value - 2, max_value - 1]
+    maximum_tests = [min_value + 1, min_value + 2, -prime, -1, 0, 1, prime, max_value - 2, max_value - 1]
     for test_value_a in maximum_tests:
         error_computation = test_single_iterative_modular_reduction(arithmetic_parameters, test_value_a)
         if(error_computation):
@@ -11154,6 +12699,8 @@ def print_VHDL_iterative_modular_reduction_test(VHDL_memory_file_name, base_word
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line_list = arithmetic_parameters[18]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r2_constant_list = arithmetic_parameters[15]
     accumulator_word_modulus = arithmetic_parameters[23]
@@ -11166,11 +12713,12 @@ def print_VHDL_iterative_modular_reduction_test(VHDL_memory_file_name, base_word
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_plus_one_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_line_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime2_list, maximum_number_of_words)
     
     # Maximum tests
     max_value = 2*prime
     min_value = -2*prime
-    maximum_tests = [min_value + 1, min_value + 2, -1, 0, 1, max_value - 2, max_value - 1]
+    maximum_tests = [min_value + 1, min_value + 2, -prime, -1, 0, 1, prime, max_value - 2, max_value - 1]
     for test_value_a in maximum_tests:
         test_value_a_list = integer_to_list(extended_word_size_signed, number_of_words, test_value_a)
         
@@ -11215,6 +12763,8 @@ def load_VHDL_iterative_modular_reduction_test(VHDL_memory_file_name, base_word_
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line = arithmetic_parameters[17]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r2_constant_list = arithmetic_parameters[15]
     accumulator_word_modulus = arithmetic_parameters[23]
@@ -11244,7 +12794,14 @@ def load_VHDL_iterative_modular_reduction_test(VHDL_memory_file_name, base_word_
         print(loaded_prime_line)
         print("Input prime line 0")
         print(prime_line)
-        
+    loaded_prime2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime2 != prime2):
+        print("Error loading the prime")
+        print("Loaded 2*prime")
+        print(loaded_prime2)
+        print("Input prime")
+        print(prime2)
+    
     if((number_of_tests == 0) or (number_of_tests > total_number_of_tests_file)):
         number_of_tests = total_number_of_tests_file
     
@@ -11293,11 +12850,11 @@ def load_VHDL_iterative_modular_reduction_test(VHDL_memory_file_name, base_word_
     
     
 def test_all_operations(number_of_random_tests=100000):
-    number_of_bits_added = 16
+    number_of_bits_added = 3
     base_word_size_signed = 16
     extended_word_size_signed = 128
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^(128)*2503155504993241601315571986085827 - 1, 2^(128)*369988485035126972924700782451696644186473100389722973815184405301748242 - 1, 2^(128)*54687564869829362182513248937549525219772952158835913478965817740815987158012171902102365647884201078947650423 - 1, 2^(128)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792290 - 1, 2^(128)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175179 - 1, 2^(128)*176599601089934078359548270864285863603827251393046775434920390764769898521366084669687132105709979857873800115716040400421172212786462009325232075541447482362180166602559904626487994750416695920834514229486516405288106797329 - 1, 2^(128)*26102980312143604580379781426139335779091260301758026221495303393196039344305009624874488017227324790317412920525253886011853217074287636537729904547128731845728160914486066244742089352609334182138245049106257642108402738856230144495829015803277090696341313660203 - 1, 2^(256)*42391158275216203514294433068 - 1, 2^(256)*369988485035126972924700782451696644186473100389722973815184405301747940 - 1, 2^(256)*5468756486982936218251324893754952521977295215883591347896581774081598715801217190210236564788420107894765046 - 1, 2^(256)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792715 - 1, 2^(256)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175170 - 1, 2^(256)*176599601089934078359548270864285863603827251393046775434920390764769898521366084669687132105709979857873800115716040400421172212786462009325232075541447482362180166602559904626487994750416695920834514229486516405288106797569 - 1, 2^(384)*2503155504993241601315571986085684 - 1, 2^(384)*369988485035126972924700782451696644186473100389722973815184405301747903 - 1, 2^(384)*54687564869829362182513248937549525219772952158835913478965817740815987158012171902102365647884201078947650478 - 1, 2^(384)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792989 - 1, 2^(384)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175125 - 1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    primes = [2^(128)*2503155504993241601315571986085827 - 1, 2^(128)*369988485035126972924700782451696644186473100389722973815184405301748242 - 1, 2^(128)*54687564869829362182513248937549525219772952158835913478965817740815987158012171902102365647884201078947650423 - 1, 2^(128)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792290 - 1, 2^(128)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175179 - 1, 2^(128)*176599601089934078359548270864285863603827251393046775434920390764769898521366084669687132105709979857873800115716040400421172212786462009325232075541447482362180166602559904626487994750416695920834514229486516405288106797329 - 1, 2^(128)*26102980312143604580379781426139335779091260301758026221495303393196039344305009624874488017227324790317412920525253886011853217074287636537729904547128731845728160914486066244742089352609334182138245049106257642108402738856230144495829015803277090696341313660203 - 1, 2^(256)*42391158275216203514294433068 - 1, 2^(256)*369988485035126972924700782451696644186473100389722973815184405301747940 - 1, 2^(256)*5468756486982936218251324893754952521977295215883591347896581774081598715801217190210236564788420107894765046 - 1, 2^(256)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792715 - 1, 2^(256)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175170 - 1, 2^(256)*176599601089934078359548270864285863603827251393046775434920390764769898521366084669687132105709979857873800115716040400421172212786462009325232075541447482362180166602559904626487994750416695920834514229486516405288106797569 - 1, 2^(384)*2503155504993241601315571986085684 - 1, 2^(384)*369988485035126972924700782451696644186473100389722973815184405301747903 - 1, 2^(384)*54687564869829362182513248937549525219772952158835913478965817740815987158012171902102365647884201078947650478 - 1, 2^(384)*8083304946930585013911810590884932969503714762980550286204433743937610914334142973787308373287276300034802855732870950234095113357081569792347792989 - 1, 2^(384)*1194783842005001366872669673930715104684379915202413516958309593884097707862672257897327618239887790786549346048626664496721871548575328400043101228717425477619608889629973635327326175125 - 1, 3^(63)+2, 3^(139)+2, 3^(235)+2, 3^(315)+2, 3^(391)+2, 3^(480)+326, 3^(562)+4, 3^(637)+286, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -11325,6 +12882,10 @@ def test_all_operations(number_of_random_tests=100000):
         if(not error):
             print("Testing addition/subtraction no reduction")
             error = test_addition_subtraction_no_reduction(base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_random_tests)
+            print("Done")
+        if(not error):
+            print("Testing addition/subtraction with reduction")
+            error = test_addition_subtraction_with_reduction(base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_random_tests)
             print("Done")
         if(not error):
             print("Testing iterative modular reduction")
@@ -11332,11 +12893,11 @@ def test_all_operations(number_of_random_tests=100000):
             print("Done")
         if(error):
             break
-    number_of_bits_added = 16
+    number_of_bits_added = 3
     base_word_size_signed = 16
     extended_word_size_signed = 256
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^240-1, 2^496-1, 2^752-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    primes = [2^(253)-1, 2^(509)-1, 2^(765)-1, 2^(1021)-1, 3^(139)+2, 3^(315)+2, 3^(480)+326, 3^(637)+286, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -11364,6 +12925,10 @@ def test_all_operations(number_of_random_tests=100000):
         if(not error):
             print("Testing addition/subtraction no reduction")
             error = test_addition_subtraction_no_reduction(base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_random_tests)
+            print("Done")
+        if(not error):
+            print("Testing addition/subtraction with reduction")
+            error = test_addition_subtraction_with_reduction(base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_random_tests)
             print("Done")
         if(not error):
             print("Testing iterative modular reduction")
@@ -11373,14 +12938,14 @@ def test_all_operations(number_of_random_tests=100000):
             break
 
 def print_all_VHDL_tests():
-    tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v128/"
+    tests_folder_name = script_working_folder + "../hw_sidh_tests_v128/"
     number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 128
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["112_max", "240_max", "368_max", "496_max", "624_max", "752_max", "880_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
-    number_of_each_test = 1000
+    primes = [2^(128-number_of_bits_added)-1, 2^(2*128-number_of_bits_added)-1, 2^(3*128-number_of_bits_added)-1, 2^(4*128-number_of_bits_added)-1, 2^(5*128-number_of_bits_added)-1, 2^(6*128-number_of_bits_added)-1, 2^(7*128-number_of_bits_added)-1, 2^(8*128-number_of_bits_added)-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["1_word_max", "2_words_max", "3_words_max", "4_words_max", "5_words_max", "6_words_max", "7_words_max", "8_words_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    number_of_each_test = 100
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -11399,19 +12964,21 @@ def print_all_VHDL_tests():
         load_VHDL_square_no_reduction_test(tests_folder_name + "square_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print_VHDL_addition_subtraction_no_reduction_test(tests_folder_name + "addition_subtraction_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_each_test)
         load_VHDL_addition_subtraction_no_reduction_test(tests_folder_name + "addition_subtraction_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+        print_VHDL_addition_subtraction_with_reduction_test(tests_folder_name + "addition_subtraction_with_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_each_test)
+        load_VHDL_addition_subtraction_with_reduction_test(tests_folder_name + "addition_subtraction_with_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_each_test)
         load_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print("Done")
         print("")
         
-    tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v256/"
+    tests_folder_name = script_working_folder + "../hw_sidh_tests_v256/"
     number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 256
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^240-1, 2^496-1, 2^752-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["240_max", "496_max", "752_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
-    number_of_each_test = 1000
+    primes = [2^(256-number_of_bits_added)-1, 2^(2*256-number_of_bits_added)-1, 2^(3*256-number_of_bits_added)-1, 2^(4*256-number_of_bits_added)-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["1_word_max", "2_words_max", "3_words_max", "4_words_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    number_of_each_test = 100
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -11430,6 +12997,8 @@ def print_all_VHDL_tests():
         load_VHDL_square_no_reduction_test(tests_folder_name + "square_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print_VHDL_addition_subtraction_no_reduction_test(tests_folder_name + "addition_subtraction_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_each_test)
         load_VHDL_addition_subtraction_no_reduction_test(tests_folder_name + "addition_subtraction_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+        print_VHDL_addition_subtraction_with_reduction_test(tests_folder_name + "addition_subtraction_with_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_each_test)
+        load_VHDL_addition_subtraction_with_reduction_test(tests_folder_name + "addition_subtraction_with_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_each_test)
         load_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print("Done")
@@ -11437,13 +13006,13 @@ def print_all_VHDL_tests():
         
         
 def load_all_VHDL_tests():
-    tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v128/"
+    tests_folder_name = script_working_folder + "../hw_sidh_tests_v128/"
     number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 128
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["112_max", "240_max", "368_max", "496_max", "624_max", "752_max", "880_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    primes = [2^(128-number_of_bits_added)-1, 2^(2*128-number_of_bits_added)-1, 2^(3*128-number_of_bits_added)-1, 2^(4*128-number_of_bits_added)-1, 2^(5*128-number_of_bits_added)-1, 2^(6*128-number_of_bits_added)-1, 2^(7*128-number_of_bits_added)-1, 2^(8*128-number_of_bits_added)-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["1_word_max", "2_words_max", "3_words_max", "4_words_max", "5_words_max", "6_words_max", "7_words_max", "8_words_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -11457,17 +13026,18 @@ def load_all_VHDL_tests():
         load_VHDL_multiplication_no_reduction_test(tests_folder_name + "multiplication_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         load_VHDL_square_no_reduction_test(tests_folder_name + "square_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         load_VHDL_addition_subtraction_no_reduction_test(tests_folder_name + "addition_subtraction_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+        load_VHDL_addition_subtraction_with_reduction_test(tests_folder_name + "addition_subtraction_with_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         load_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print("Done")
         print('')
         
-    tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v256/"
+    tests_folder_name = script_working_folder + "../hw_sidh_tests_v256/"
     number_of_bits_added = 16
     base_word_size_signed = 16
     extended_word_size_signed = 256
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^240-1, 2^496-1, 2^752-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["240_max", "496_max", "752_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
+    primes = [2^(256-number_of_bits_added)-1, 2^(2*256-number_of_bits_added)-1, 2^(3*256-number_of_bits_added)-1, 2^(4*256-number_of_bits_added)-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+    files_name_prime_append = ["1_word_max", "2_words_max", "3_words_max", "4_words_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     start_test = 0
     end_test = len(primes)
     for i in range(start_test,end_test):
@@ -11481,22 +13051,25 @@ def load_all_VHDL_tests():
         load_VHDL_multiplication_no_reduction_test(tests_folder_name + "multiplication_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         load_VHDL_square_no_reduction_test(tests_folder_name + "square_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         load_VHDL_addition_subtraction_no_reduction_test(tests_folder_name + "addition_subtraction_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
+        load_VHDL_addition_subtraction_with_reduction_test(tests_folder_name + "addition_subtraction_with_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         load_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime)
         print("Done")
         print('')
 
 def load_VHDL_test(prime_test=0, operation_type=0, debug_test_number=0, extended_word_size_signed=128):
     if(extended_word_size_signed == 128):
-        tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v128/"
+        tests_folder_name = script_working_folder + "../hw_sidh_tests_v128/"
+        primes = [2^(128-number_of_bits_added)-1, 2^(2*128-number_of_bits_added)-1, 2^(3*128-number_of_bits_added)-1, 2^(4*128-number_of_bits_added)-1, 2^(5*128-number_of_bits_added)-1, 2^(6*128-number_of_bits_added)-1, 2^(7*128-number_of_bits_added)-1, 2^(8*128-number_of_bits_added)-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+        files_name_prime_append = ["1_word_max", "2_words_max", "3_words_max", "4_words_max", "5_words_max", "6_words_max", "7_words_max", "8_words_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     elif(extended_word_size_signed == 256):
-        tests_folder_name = "/home/pedro/hw-sidh/vhdl_project/hw_sidh_tests_v256/"
+        tests_folder_name = script_working_folder + "../hw_sidh_tests_v256/"
+        primes = [2^(256-number_of_bits_added)-1, 2^(2*256-number_of_bits_added)-1, 2^(3*256-number_of_bits_added)-1, 2^(4*256-number_of_bits_added)-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
+        files_name_prime_append = ["1_word_max", "2_words_max", "3_words_max", "4_words_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     else:
         print('Not a valid size')
     number_of_bits_added = 16
     base_word_size_signed = 16
     accumulator_word_size = (extended_word_size_signed)*2+32
-    primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
-    files_name_prime_append = ["112_max", "240_max", "368_max", "496_max", "624_max", "752_max", "880_max", "1008_max","8_5", "216_137", "250_159", "305_192", "372_239", "486_301"]
     prime = primes[prime_test]
     file_name_prime_append = files_name_prime_append[prime_test]
     prime_size_bits = int(prime).bit_length()
@@ -11512,27 +13085,27 @@ def load_VHDL_test(prime_test=0, operation_type=0, debug_test_number=0, extended
         load_VHDL_square_no_reduction_test(tests_folder_name + "square_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, debug_test_number, True)
     elif(operation_type == 4):
         load_VHDL_addition_subtraction_no_reduction_test(tests_folder_name + "addition_subtraction_no_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, debug_test_number, True)
+    elif(operation_type == 5):
+        load_VHDL_addition_subtraction_with_reduction_test(tests_folder_name + "addition_subtraction_with_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, debug_test_number, True)
     else:
         load_VHDL_iterative_modular_reduction_test(tests_folder_name + "iterative_modular_reduction_test_" + file_name_prime_append + ".dat", base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, debug_test_number, True)
 
-#test_all_operations(1000)
+#test_all_operations(100)
 #print_all_VHDL_tests()
 #load_all_VHDL_tests()
 
-#load_VHDL_test(10, 0, 15, 256)
-
-
+#load_VHDL_test(prime_test=7, operation_type=0, debug_test_number=1, extended_word_size_signed=256)
 
 
 #number_of_bits_added = 16
 #base_word_size_signed = 16
-#extended_word_size_signed = 128
+#extended_word_size_signed = 256
 #accumulator_word_size = (extended_word_size_signed)*2+32
 #number_of_random_tests = 1
 #primes = [2^112-1, 2^240-1, 2^368-1, 2^496-1, 2^624-1, 2^752-1, 2^880-1, 2^1008-1, 2^(8)*3^(5)-1, 2^(216)*3^(137)-1, 2^(250)*3^(159)-1, 2^(305)*3^(192)-1,  2^(372)*3^(239)-1, 2^(486)*3^(301)-1]
 #start_test = 0
 #end_test = len(primes)
 #
-#prime = primes[10]
+#prime = primes[11]
 #prime_size_bits = int(prime).bit_length()
 #test_montgomery_multiplication(base_word_size_signed, extended_word_size_signed, prime_size_bits, number_of_bits_added, accumulator_word_size, prime, number_of_random_tests)

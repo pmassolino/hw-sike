@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    
--- Design Name: 
--- Module Name:    
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -48,6 +37,19 @@ Generic(
     skip_shared_secret_bob_fast : boolean := false;
     
     test_prom_file : string := "../assembler/test_sidh_functions_v256.dat";
+    
+    param_8_5_number_of_words  : integer := 1;
+    param_8_5_p_line_equal_one : integer := 0;
+    param_216_137_number_of_words  : integer := 2;
+    param_216_137_p_line_equal_one : integer := 0;
+    param_250_159_number_of_words  : integer := 3;
+    param_250_159_p_line_equal_one : integer := 0;
+    param_305_192_number_of_words  : integer := 3;
+    param_305_192_p_line_equal_one : integer := 1;
+    param_372_239_number_of_words  : integer := 3;
+    param_372_239_p_line_equal_one : integer := 1;
+    param_486_301_number_of_words  : integer := 4;
+    param_486_301_p_line_equal_one : integer := 1;
     
     test_program_start_keygen_alice_fast : integer := 1;
     test_program_number_inputs_keygen_alice_fast : integer := 1;
@@ -143,29 +145,31 @@ constant reg_prime_line_equal_one_address : integer        := 16#0E003#;
 constant reg_prime_address_address : integer               := 16#0E004#;
 constant reg_prime_plus_one_address_address : integer      := 16#0E005#;
 constant reg_prime_line_address_address : integer          := 16#0E006#;
-constant reg_initial_stack_address_address : integer       := 16#0E007#;
-constant reg_flag_address : integer                        := 16#0E008#;
-constant reg_scalar_address_address : integer              := 16#0E009#;
+constant reg_2prime_address_address : integer              := 16#0E007#;
+constant reg_initial_stack_address_address : integer       := 16#0E008#;
+constant reg_flag_address : integer                        := 16#0E009#;
+constant reg_scalar_address_address : integer              := 16#0E00A#;
 
 constant mac_ram_prime_address : integer                   := 16#00000#;
 constant mac_ram_prime_plus_one_address : integer          := 16#00001#;
 constant mac_ram_prime_line_address : integer              := 16#00002#;
-constant mac_ram_const_r_address : integer                 := 16#00003#;
-constant mac_ram_const_r2_address : integer                := 16#00004#;
-constant mac_ram_const_1_address : integer                 := 16#00005#;
-constant mac_ram_inv_4_mont_address : integer              := 16#00006#;
-constant mac_ram_sidh_xpa_mont_address : integer           := 16#00007#;
-constant mac_ram_sidh_xpai_mont_address : integer          := 16#00008#;
-constant mac_ram_sidh_xqa_mont_address : integer           := 16#00009#;
-constant mac_ram_sidh_xqai_mont_address : integer          := 16#0000A#;
-constant mac_ram_sidh_xra_mont_address : integer           := 16#0000B#;
-constant mac_ram_sidh_xrai_mont_address : integer          := 16#0000C#;
-constant mac_ram_sidh_xpb_mont_address : integer           := 16#0000D#;
-constant mac_ram_sidh_xpbi_mont_address : integer          := 16#0000E#;
-constant mac_ram_sidh_xqb_mont_address : integer           := 16#0000F#;
-constant mac_ram_sidh_xqbi_mont_address : integer          := 16#00010#;
-constant mac_ram_sidh_xrb_mont_address : integer           := 16#00011#;
-constant mac_ram_sidh_xrbi_mont_address : integer          := 16#00012#;
+constant mac_ram_2prime_address : integer                  := 16#00003#;
+constant mac_ram_const_r_address : integer                 := 16#00004#;
+constant mac_ram_const_r2_address : integer                := 16#00005#;
+constant mac_ram_const_1_address : integer                 := 16#00006#;
+constant mac_ram_inv_4_mont_address : integer              := 16#00007#;
+constant mac_ram_sidh_xpa_mont_address : integer           := 16#00008#;
+constant mac_ram_sidh_xpai_mont_address : integer          := 16#00009#;
+constant mac_ram_sidh_xqa_mont_address : integer           := 16#0000A#;
+constant mac_ram_sidh_xqai_mont_address : integer          := 16#0000B#;
+constant mac_ram_sidh_xra_mont_address : integer           := 16#0000C#;
+constant mac_ram_sidh_xrai_mont_address : integer          := 16#0000D#;
+constant mac_ram_sidh_xpb_mont_address : integer           := 16#0000E#;
+constant mac_ram_sidh_xpbi_mont_address : integer          := 16#0000F#;
+constant mac_ram_sidh_xqb_mont_address : integer           := 16#00010#;
+constant mac_ram_sidh_xqbi_mont_address : integer          := 16#00011#;
+constant mac_ram_sidh_xrb_mont_address : integer           := 16#00012#;
+constant mac_ram_sidh_xrbi_mont_address : integer          := 16#00013#;
 
 constant mac_ram_input_function_start_address : integer    := 16#00014#;
 constant mac_ram_output_function_start_address : integer   := 16#00024#;
@@ -603,6 +607,16 @@ begin
         temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
     end loop;
     wait for PERIOD;
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
+    load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
+    wait for PERIOD;
+    
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_MAC_RAM_operand_values);
+        temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
+    end loop;
+    wait for PERIOD;
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_const_r_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
@@ -876,6 +890,11 @@ begin
         current_operation_addres := std_logic_vector(to_unsigned(reg_prime_line_address_address, current_operation_addres'length));
         load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
         wait for PERIOD;
+        buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(3, buffer_test_value_communication_base_alu_ram'length));
+        wait for PERIOD;
+        current_operation_addres := std_logic_vector(to_unsigned(reg_2prime_address_address, current_operation_addres'length));
+        load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
+        wait for PERIOD;
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned((2**mac_max_operands_size)*224, buffer_test_value_communication_base_alu_ram'length));
         wait for PERIOD;
         current_operation_addres := std_logic_vector(to_unsigned(reg_initial_stack_address_address, current_operation_addres'length));
@@ -953,69 +972,69 @@ begin
     wait for PERIOD;
     if( not skip_keygen_alice_fast ) then
         report "Start keygen fast alice test." severity note;
-        test_function(test_memory_file_keygen_alice_fast_8_5, 1, test_program_start_keygen_alice_fast, 0, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
+        test_function(test_memory_file_keygen_alice_fast_8_5, param_8_5_number_of_words, test_program_start_keygen_alice_fast, param_8_5_p_line_equal_one, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
         wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_function(test_memory_file_keygen_alice_fast_216_137, 2, test_program_start_keygen_alice_fast, 0, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
+            test_function(test_memory_file_keygen_alice_fast_216_137, param_216_137_number_of_words, test_program_start_keygen_alice_fast, param_216_137_p_line_equal_one, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_alice_fast_250_159, 3, test_program_start_keygen_alice_fast, 0, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
+            test_function(test_memory_file_keygen_alice_fast_250_159, param_250_159_number_of_words, test_program_start_keygen_alice_fast, param_250_159_p_line_equal_one, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_alice_fast_305_192, 3, test_program_start_keygen_alice_fast, 1, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
+            test_function(test_memory_file_keygen_alice_fast_305_192, param_305_192_number_of_words, test_program_start_keygen_alice_fast, param_305_192_p_line_equal_one, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_alice_fast_372_239, 3, test_program_start_keygen_alice_fast, 1, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
+            test_function(test_memory_file_keygen_alice_fast_372_239, param_372_239_number_of_words, test_program_start_keygen_alice_fast, param_372_239_p_line_equal_one, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_alice_fast_486_301, 4, test_program_start_keygen_alice_fast, 1, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
+            test_function(test_memory_file_keygen_alice_fast_486_301, param_486_301_number_of_words, test_program_start_keygen_alice_fast, param_486_301_p_line_equal_one, test_program_number_inputs_keygen_alice_fast, test_program_number_outputs_keygen_alice_fast);
             wait for PERIOD;
         end if;
     end if;
     if( not skip_keygen_bob_fast ) then
         report "Start keygen fast bob test." severity note;
-        test_function(test_memory_file_keygen_bob_fast_8_5, 1, test_program_start_keygen_bob_fast, 0, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
+        test_function(test_memory_file_keygen_bob_fast_8_5, param_8_5_number_of_words, test_program_start_keygen_bob_fast, param_8_5_p_line_equal_one, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
         wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_function(test_memory_file_keygen_bob_fast_216_137, 2, test_program_start_keygen_bob_fast, 0, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
+            test_function(test_memory_file_keygen_bob_fast_216_137, param_216_137_number_of_words, test_program_start_keygen_bob_fast, param_216_137_p_line_equal_one, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_bob_fast_250_159, 3, test_program_start_keygen_bob_fast, 0, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
+            test_function(test_memory_file_keygen_bob_fast_250_159, param_250_159_number_of_words, test_program_start_keygen_bob_fast, param_250_159_p_line_equal_one, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_bob_fast_305_192, 3, test_program_start_keygen_bob_fast, 1, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
+            test_function(test_memory_file_keygen_bob_fast_305_192, param_305_192_number_of_words, test_program_start_keygen_bob_fast, param_305_192_p_line_equal_one, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_bob_fast_372_239, 3, test_program_start_keygen_bob_fast, 1, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
+            test_function(test_memory_file_keygen_bob_fast_372_239, param_372_239_number_of_words, test_program_start_keygen_bob_fast, param_372_239_p_line_equal_one, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_keygen_bob_fast_486_301, 4, test_program_start_keygen_bob_fast, 1, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
+            test_function(test_memory_file_keygen_bob_fast_486_301, param_486_301_number_of_words, test_program_start_keygen_bob_fast, param_486_301_p_line_equal_one, test_program_number_inputs_keygen_bob_fast, test_program_number_outputs_keygen_bob_fast);
             wait for PERIOD;
         end if;
     end if;
     if( not skip_shared_secret_alice_fast ) then
         report "Start shared secret fast alice test." severity note;
-        test_function(test_memory_file_shared_secret_alice_fast_8_5, 1, test_program_start_shared_secret_alice_fast, 0, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
+        test_function(test_memory_file_shared_secret_alice_fast_8_5, param_8_5_number_of_words, test_program_start_shared_secret_alice_fast, param_8_5_p_line_equal_one, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
         wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_function(test_memory_file_shared_secret_alice_fast_216_137, 2, test_program_start_shared_secret_alice_fast, 0, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
+            test_function(test_memory_file_shared_secret_alice_fast_216_137, param_216_137_number_of_words, test_program_start_shared_secret_alice_fast, param_216_137_p_line_equal_one, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_alice_fast_250_159, 3, test_program_start_shared_secret_alice_fast, 0, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
+            test_function(test_memory_file_shared_secret_alice_fast_250_159, param_250_159_number_of_words, test_program_start_shared_secret_alice_fast, param_250_159_p_line_equal_one, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_alice_fast_305_192, 3, test_program_start_shared_secret_alice_fast, 1, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
+            test_function(test_memory_file_shared_secret_alice_fast_305_192, param_305_192_number_of_words, test_program_start_shared_secret_alice_fast, param_305_192_p_line_equal_one, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_alice_fast_372_239, 3, test_program_start_shared_secret_alice_fast, 1, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
+            test_function(test_memory_file_shared_secret_alice_fast_372_239, param_372_239_number_of_words, test_program_start_shared_secret_alice_fast, param_372_239_p_line_equal_one, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_alice_fast_486_301, 4, test_program_start_shared_secret_alice_fast, 1, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
+            test_function(test_memory_file_shared_secret_alice_fast_486_301, param_486_301_number_of_words, test_program_start_shared_secret_alice_fast, param_486_301_p_line_equal_one, test_program_number_inputs_shared_secret_alice_fast, test_program_number_outputs_shared_secret_alice_fast);
             wait for PERIOD;
         end if;
     end if;
     if( not skip_shared_secret_bob_fast ) then
         report "Start shared secret fast bob test." severity note;
-        test_function(test_memory_file_shared_secret_bob_fast_8_5, 1, test_program_start_shared_secret_bob_fast, 0, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
+        test_function(test_memory_file_shared_secret_bob_fast_8_5, param_8_5_number_of_words, test_program_start_shared_secret_bob_fast, param_8_5_p_line_equal_one, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
         wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_function(test_memory_file_shared_secret_bob_fast_216_137, 2, test_program_start_shared_secret_bob_fast, 0, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
+            test_function(test_memory_file_shared_secret_bob_fast_216_137, param_216_137_number_of_words, test_program_start_shared_secret_bob_fast, param_216_137_p_line_equal_one, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_bob_fast_250_159, 3, test_program_start_shared_secret_bob_fast, 0, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
+            test_function(test_memory_file_shared_secret_bob_fast_250_159, param_250_159_number_of_words, test_program_start_shared_secret_bob_fast, param_250_159_p_line_equal_one, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_bob_fast_305_192, 3, test_program_start_shared_secret_bob_fast, 1, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
+            test_function(test_memory_file_shared_secret_bob_fast_305_192, param_305_192_number_of_words, test_program_start_shared_secret_bob_fast, param_305_192_p_line_equal_one, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_bob_fast_372_239, 3, test_program_start_shared_secret_bob_fast, 1, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
+            test_function(test_memory_file_shared_secret_bob_fast_372_239, param_372_239_number_of_words, test_program_start_shared_secret_bob_fast, param_372_239_p_line_equal_one, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;
-            test_function(test_memory_file_shared_secret_bob_fast_486_301, 4, test_program_start_shared_secret_bob_fast, 1, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
+            test_function(test_memory_file_shared_secret_bob_fast_486_301, param_486_301_number_of_words, test_program_start_shared_secret_bob_fast, param_486_301_p_line_equal_one, test_program_number_inputs_shared_secret_bob_fast, test_program_number_outputs_shared_secret_bob_fast);
             wait for PERIOD;
         end if;
     end if;

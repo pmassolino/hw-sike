@@ -1,24 +1,13 @@
 ----------------------------------------------------------------------------------
--- Engineer: Pedro Maat C. Massolino
--- 
--- Create Date:    
--- Design Name:    
--- Module Name:    
--- Project Name:   
--- Target Devices: Any
--- Tool versions:  
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Description: 
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 --
---
--- Dependencies:
--- VHDL-93
--- IEEE.NUMERIC_STD.ALL;
--- 
--- Revision: 
--- Revision 1.0
--- Additional Comments: 
---
+-- The barrel shift design taken from:
+-- https://www.princeton.edu/~rblee/ELE572Papers/Fall04Readings/Shifter_Schulte.pdf
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

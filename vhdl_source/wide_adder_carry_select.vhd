@@ -1,21 +1,16 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    
--- Design Name: 
--- Module Name:    
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 --
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- Design from the paper 
+-- H. D. Nguyen, B. Pasca, and T. B. Preusser. FPGA-Specific Arithmetic
+-- Optimizations of Short-Latency Adders. In 2011 21st International Conference
+-- on Field Programmable Logic and Applications, pages 232–237, Sept 2011.
+-- http://dx.doi.org/10.1109/FPL.2011.49.
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

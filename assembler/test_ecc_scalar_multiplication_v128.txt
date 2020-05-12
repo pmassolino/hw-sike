@@ -3,25 +3,28 @@
 prime:0
 prime_plus_one:1
 prime_line:2
-const_r:3
-const_r2:4
-const_1:5
-ecc_const_a:6
-ecc_const_a2:7
-ecc_const_b3:8
+prime2:3
+const_r:4
+const_r2:5
+const_1:6
+ecc_prime_size:49569
 ; Program itself
 ;
 fin                                                                ; 0
-test_ecc_scalar: call ecc_scalar                                   ;
+test_ecc_scalar_mul: call ecc_scalar_mul                           ;
 fin                                                                ;
 ;
 ; ECC scalar multiplication                                        ;
-; 
+;
+; curve scalar     = tmpf0
 ; curve point x    = tmpf1
 ; curve point y    = tmpf2
 ; curve point z    = tmpf3
-; curve scalar max = b251
-; curve scalar     = tmpf0
+; curve scalar max = b250
+; ecc_const_a      = tmpf4
+; ecc_const_a2     = tmpf5
+; ecc_const_b3     = tmpf6
+;
 ;
 ; r0x              = var0
 ; r0y              = var1
@@ -60,11 +63,11 @@ fin                                                                ;
 ; t26              = tmpf36
 ; t27              = tmpf37
 ;
-ecc_scalar: mmulm var3 tmpf1 const_r2 var4 tmpf2 const_r2 var5 tmpf3 const_r2  ;
+ecc_scalar_mul: mmulm var3 tmpf1 const_r2 var4 tmpf2 const_r2 var5 tmpf3 const_r2 ;
 lconstm var0 #0                                                    ;
 copym var2 var0                                                    ;
 copym var1 const_r                                                 ;
-badd rd3 b251 #15                                                  ; (scalar_max+15)/16
+badd rd3 b250 #15                                                  ; (scalar_max+15)/16
 bshiftr rd3 rd3 #4                                                 ;
 badd rd1 rd3 #tmpf0.0.0                                            ; last scalar word
 bsub rd1 rd1 #1                                                    ;
@@ -74,7 +77,7 @@ copy rd6 #var1                                                     ;
 copy rd7 #var4                                                     ;
 copy rd8 #var2                                                     ;
 copy rd9 #var5                                                     ;
-ecc_scalar_loop1: copy rd2 #16                                     ;
+ecc_scalar_mul_loop1: copy rd2 #16                                 ;
 copy rd0 *rd1                                                      ;
 ; Point Addition
 ;
@@ -84,7 +87,7 @@ copy rd0 *rd1                                                      ;
 ; t1 := X2+Y2
 ; t2 := Y1+Z1
 ; t3 := Y2+Z2
-ecc_scalar_loop2: madd_subd tmpf10 var0 + var1 tmpf11 var3 + var4 tmpf12 var1 + var2 tmpf13 var4 + var5
+ecc_scalar_mul_loop2: madd_subd tmpf10 var0 + var1 tmpf11 var3 + var4 tmpf12 var1 + var2 tmpf13 var4 + var5
 ;
 ; t4 := X1+Z1
 ; t5 := X2+Z2
@@ -122,7 +125,7 @@ madd_subd tmpf10 tmpf13 - tmpf20 tmpf11 tmpf14 - tmpf21 tmpf12 tmpf15 - tmpf19
 ; t6 := b3*t2
 ; t7 := a*t9
 ; t8 := a^2*t11
-mmulm tmpf13 ecc_const_b3 tmpf21 tmpf14 ecc_const_a tmpf21 tmpf15 ecc_const_a tmpf12 tmpf16 ecc_const_b3 tmpf12 tmpf17 ecc_const_a tmpf19 tmpf18 ecc_const_a2 tmpf21
+mmulm tmpf13 tmpf6 tmpf21 tmpf14 tmpf4 tmpf21 tmpf15 tmpf4 tmpf12 tmpf16 tmpf6 tmpf12 tmpf17 tmpf4 tmpf19 tmpf18 tmpf5 tmpf21
 ;
 ; Step 6
 ;
@@ -205,7 +208,7 @@ madd_subd tmpf24 tmpf27 - tmpf34 tmpf25 tmpf28 - tmpf35 tmpf26 tmpf29 - tmpf33
 ; t20 := b3*t16
 ; t21 := a*t23
 ; t22 := a^2*t25
-mmulm tmpf27 ecc_const_b3 tmpf35 tmpf28 ecc_const_a tmpf35 tmpf29 ecc_const_a tmpf26 tmpf30 ecc_const_b3 tmpf26 tmpf31 ecc_const_a tmpf33 tmpf32 ecc_const_a2 tmpf35
+mmulm tmpf27 tmpf6 tmpf35 tmpf28 tmpf4 tmpf35 tmpf29 tmpf4 tmpf26 tmpf30 tmpf6 tmpf26 tmpf31 tmpf4 tmpf33 tmpf32 tmpf5 tmpf35
 ;
 ; Step 6
 ;
@@ -241,16 +244,16 @@ mmulm tmpf26 tmpf24 tmpf29 tmpf31 tmpf24 tmpf28 tmpf32 tmpf25 tmpf27 tmpf33 tmpf
 madd_subd *rm4 tmpf26 - tmpf32 *rm6 tmpf34 + tmpf33 *rm8 tmpf35 + tmpf31
 bshiftl rd0 rd0 #1                                                 ;
 bsub rd2 rd2 #1                                                    ;
-jumpl ecc_scalar_loop2 #0 rd2                                      ; 
+jumpl ecc_scalar_mul_loop2 #0 rd2                                  ; 
 bsub rd3 rd3 #1                                                    ; 
 bsub rd1 rd1 #1                                                    ; 
-jumpl ecc_scalar_loop1 #0 rd3                                      ; 
+jumpl ecc_scalar_mul_loop1 #0 rd3                                  ; 
 copym tmpf0 var2                                                   ;
 copym tmpf1 var5                                                   ;
 call fp_inv                                                        ;
 mmulm tmpf0 tmpf16 var0 tmpf1 tmpf16 var1 tmpf2 tmpf17 var3 tmpf3 tmpf17 var4
-mmulm tmpf4 tmpf0 const_1 tmpf5 tmpf1 const_1 tmpf6 tmpf2 const_1 tmpf7 tmpf3 const_1
-mitred tmpf16 tmpf4 tmpf17 tmpf5 tmpf18 tmpf6 tmpf19 tmpf7         ;
+mmulm tmpf10 tmpf0 const_1 tmpf11 tmpf1 const_1 tmpf12 tmpf2 const_1 tmpf13 tmpf3 const_1
+mitred tmpf16 tmpf10 tmpf17 tmpf11 tmpf18 tmpf12 tmpf19 tmpf13     ;
 ret                                                                ;
 ;
 ;
@@ -274,7 +277,7 @@ copy rd1 roperands                                                 ;
 badd rd1 rd1 #1                                                    ; 
 bsmul rd1 rd1 #8                                                   ; 
 bsmul rd5 rd1 #16                                                  ; rd5 has the maximum number of bits the prime could have.
-copy rd4 b417                                                      ; rd4 has the current number of bits.
+copy rd4 ecc_prime_size                                           ; rd4 has the current number of bits.
 badd rd4 rd4 #16                                                   ; 
 jumpeql fp_inv_loop5 rd5 rd4                                       ; remove unnecessary 0's from the most significant part.
 fp_inv_loop4: badd rd4 rd4 #16                                     ; Only remove words multiple of 16.

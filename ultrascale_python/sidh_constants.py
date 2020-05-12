@@ -1,6 +1,67 @@
 # -*- coding: utf-8 -*-
 
+# Implementation by Pedro Maat C. Massolino,
+# hereby denoted as "the implementer".
+#
+# To the extent possible under law, the implementer has waived all copyright
+# and related or neighboring rights to the source code in this file.
+# http://creativecommons.org/publicdomain/zero/1.0/
+#
+
 sidh_constants = [
+[
+"p16",
+# prime constant f
+1,
+# prime constant ea
+2,
+# prime constant eb
+3,
+# prime constant la
+8,
+# prime constant lb
+5,
+# coordinate x of point PA - Real
+0x7F4,
+# coordinate x of point PA - Imaginary
+0x1641,
+# coordinate x of point QA - Real
+0xDCC,
+# coordinate x of point QA - Imaginary
+0x6DF,
+# coordinate x of point RA - Real
+0x2490,
+# coordinate x of point RA - Imaginary
+0x3796,
+# coordinate x of point PB - Real
+0x64B7,
+# coordinate x of point PB - Imaginary
+0x0,
+# coordinate x of point QB - Real
+0x80A2,
+# coordinate x of point QB - Imaginary
+0x0,
+# coordinate x of point RB - Real
+0x65DC,
+# coordinate x of point RB - Imaginary
+0xC5E0,
+# splits Alice
+[2, 1, 1],
+# max Alice row
+4,
+# max Alice points
+2,
+# splits Bob
+[2, 1, 1, 1],
+# max Bob row
+5,
+# max Bob points
+3,
+# SIKE SK length, also known as message length
+16,
+# SIKE shared secret length
+16,
+],
 [
 "p434",
 # prime constant f
@@ -14,41 +75,45 @@ sidh_constants = [
 # prime constant lb
 137,
 # coordinate x of point PA - Real
-0x00003CCFC5E1F050030363E6920A0F7A4C6C71E63DE63A0E6475AF621995705F7C84500CB2BB61E950E19EAB8661D25C4A50ED279646CB48,
+0x3CCFC5E1F050030363E6920A0F7A4C6C71E63DE63A0E6475AF621995705F7C84500CB2BB61E950E19EAB8661D25C4A50ED279646CB48,
 # coordinate x of point PA - Imaginary
-0x0001AD1C1CAE7840EDDA6D8A924520F60E573D3B9DFAC6D189941CB22326D284A8816CC4249410FE80D68047D823C97D705246F869E3EA50,
+0x1AD1C1CAE7840EDDA6D8A924520F60E573D3B9DFAC6D189941CB22326D284A8816CC4249410FE80D68047D823C97D705246F869E3EA50,
 # coordinate x of point QA - Real
-0x0000C7461738340EFCF09CE388F666EB38F7F3AFD42DC0B664D9F461F31AA2EDC6B4AB71BD42F4D7C058E13F64B237EF7DDD2ABC0DEB0C6C,
+0xC7461738340EFCF09CE388F666EB38F7F3AFD42DC0B664D9F461F31AA2EDC6B4AB71BD42F4D7C058E13F64B237EF7DDD2ABC0DEB0C6C,
 # coordinate x of point QA - Imaginary
-0x000025DE37157F50D75D320DD0682AB4A67E471586FBC2D31AA32E6957FA2B2614C4CD40A1E27283EAAF4272AE517847197432E2D61C85F5,
+0x25DE37157F50D75D320DD0682AB4A67E471586FBC2D31AA32E6957FA2B2614C4CD40A1E27283EAAF4272AE517847197432E2D61C85F5,
 # coordinate x of point RA - Real
-0x0000F37AB34BA0CEAD94F43CDC50DE06AD19C67CE4928346E829CB92580DA84D7C36506A2516696BBE3AEB523AD7172A6D239513C5FD2516,
+0xF37AB34BA0CEAD94F43CDC50DE06AD19C67CE4928346E829CB92580DA84D7C36506A2516696BBE3AEB523AD7172A6D239513C5FD2516,
 # coordinate x of point RA - Imaginary
-0x000196CA2ED06A657E90A73543F3902C208F410895B49CF84CD89BE9ED6E4EE7E8DF90B05F3FDB8BDFE489D1B3558E987013F9806036C5AC,
+0x196CA2ED06A657E90A73543F3902C208F410895B49CF84CD89BE9ED6E4EE7E8DF90B05F3FDB8BDFE489D1B3558E987013F9806036C5AC,
 # coordinate x of point PB - Real
-0x00008664865EA7D816F03B31E223C26D406A2C6CD0C3D667466056AAE85895EC37368BFC009DFAFCB3D97E639F65E9E45F46573B0637B7A9,
+0x8664865EA7D816F03B31E223C26D406A2C6CD0C3D667466056AAE85895EC37368BFC009DFAFCB3D97E639F65E9E45F46573B0637B7A9,
 # coordinate x of point PB - Imaginary
 0x0,
 # coordinate x of point QB - Real
-0x00012E84D7652558E694BF84C1FBDAAF99B83B4266C32EC65B10457BCAF94C63EB063681E8B1E7398C0B241C19B9665FDB9E1406DA3D3846,
+0x12E84D7652558E694BF84C1FBDAAF99B83B4266C32EC65B10457BCAF94C63EB063681E8B1E7398C0B241C19B9665FDB9E1406DA3D3846,
 # coordinate x of point QB - Imaginary
 0x0,
 # coordinate x of point RB - Real
-0x0001CD28597256D4FFE7E002E87870752A8F8A64A1CC78B5A2122074783F51B4FDE90E89C48ED91A8F4A0CCBACBFA7F51A89CE518A52B76C,
+0x1CD28597256D4FFE7E002E87870752A8F8A64A1CC78B5A2122074783F51B4FDE90E89C48ED91A8F4A0CCBACBFA7F51A89CE518A52B76C,
 # coordinate x of point RB - Imaginary
-0x000147073290D78DD0CC8420B1188187D1A49DBFA24F26AAD46B2D9BB547DBB6F63A760ECB0C2B20BE52FB77BD2776C3D14BCBC404736AE4,
+0x147073290D78DD0CC8420B1188187D1A49DBFA24F26AAD46B2D9BB547DBB6F63A760ECB0C2B20BE52FB77BD2776C3D14BCBC404736AE4,
 # splits Alice
-[48, 28, 16, 8, 4, 2, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 8, 4, 2, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 13, 7, 4, 2, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 5, 4, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 21, 12, 7, 4, 2, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 9, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1],
+[43, 28, 16, 9, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 12, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 16, 11, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 4, 3, 2, 1, 1, 1, 1, 2, 1, 1, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1],
 # max Alice row
 108,
 # max Alice points
-7,
+8,
 # splits Bob
-[66, 33, 17, 9, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1, 8, 4, 2, 1, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 16, 8, 4, 2, 1, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 8, 4, 2, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 32, 16, 8, 4, 3, 1, 1, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 8, 4, 2, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 16, 8, 4, 2, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 8, 4, 2, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1],
+[49, 33, 21, 13, 8, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 2, 1, 1, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 8, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 2, 1, 1, 1, 1, 1, 12, 8, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 2, 1, 1, 1, 1, 1, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 16, 12, 8, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 2, 1, 1, 1, 1, 1, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1],
 # max Bob row
 137,
 # max Bob points
-8,
+10,
+# SIKE SK length, also known as message length
+16,
+# SIKE shared secret length
+16,
 ],
 [
 "p503",
@@ -98,6 +163,10 @@ sidh_constants = [
 159,
 # max Bob points
 8,
+# SIKE SK length, also known as message length
+24,
+# SIKE shared secret length
+24,
 ],
 [
 "p610",
@@ -147,6 +216,10 @@ sidh_constants = [
 192,
 # max Bob points
 10,
+# SIKE SK length, also known as message length
+24,
+# SIKE shared secret length
+24,
 ],
 [
 "p751",
@@ -196,6 +269,10 @@ sidh_constants = [
 239,
 # max Bob points
 10,
+# SIKE SK length, also known as message length
+32,
+# SIKE shared secret length
+32,
 ],
 [
 "p964",
@@ -245,5 +322,9 @@ sidh_constants = [
 301,
 # max Bob points
 12,
+# SIKE SK length, also known as message length
+32,
+# SIKE shared secret length
+32,
 ]
 ]

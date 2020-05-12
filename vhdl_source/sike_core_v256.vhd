@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 
--- Design Name: 
--- Module Name: 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -73,6 +62,7 @@ component carmela_with_control_unit_v256
         load_new_address_prime : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_prime_line : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_prime_plus_one : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
+        load_new_address_2prime : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_address_input_ma : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
         load_new_sign_ma : in std_logic;
         load_new_address_input_mb : in std_logic_vector((memory_address_size - max_operands_size - 1) downto 0);
@@ -295,6 +285,7 @@ signal mac_prime_line_equal_one : std_logic;
 signal mac_load_new_address_prime : std_logic_vector((mac_memory_address_size - mac_max_operands_size - 1) downto 0);
 signal mac_load_new_address_prime_line : std_logic_vector((mac_memory_address_size - mac_max_operands_size - 1) downto 0);
 signal mac_load_new_address_prime_plus_one : std_logic_vector((mac_memory_address_size - mac_max_operands_size - 1) downto 0);
+signal mac_load_new_address_2prime : std_logic_vector((mac_memory_address_size - mac_max_operands_size - 1) downto 0);
 signal mac_load_new_address_input_ma : std_logic_vector((mac_memory_address_size - mac_max_operands_size - 1) downto 0);
 signal mac_load_new_sign_ma : std_logic;
 signal mac_load_new_address_input_mb : std_logic_vector((mac_memory_address_size - mac_max_operands_size - 1) downto 0);
@@ -515,6 +506,7 @@ signal reg_prime_line_equal_one : std_logic;
 signal reg_prime_address : std_logic_vector((mac_memory_address_size - 3) downto 0);
 signal reg_prime_plus_one_address : std_logic_vector((mac_memory_address_size - 3) downto 0);
 signal reg_prime_line_address : std_logic_vector((mac_memory_address_size - 3) downto 0);
+signal reg_2prime_address : std_logic_vector((mac_memory_address_size - 3) downto 0);
 signal reg_initial_stack_address : std_logic_vector((mac_memory_address_size - 1) downto 0);
 signal reg_flag : std_logic;
 signal reg_scalar_address : std_logic_vector((rd_ram_memory_size - 1) downto 0);
@@ -532,9 +524,10 @@ constant reg_prime_line_equal_one_address : unsigned((mac_base_word_size - 1) do
 constant reg_prime_address_address : unsigned((mac_base_word_size - 1) downto 0)            := to_unsigned(16#0E004#, mac_base_word_size);
 constant reg_prime_plus_one_address_address : unsigned((mac_base_word_size - 1) downto 0)   := to_unsigned(16#0E005#, mac_base_word_size);
 constant reg_prime_line_address_address : unsigned((mac_base_word_size - 1) downto 0)       := to_unsigned(16#0E006#, mac_base_word_size);
-constant reg_initial_stack_address_address : unsigned((mac_base_word_size - 1) downto 0)    := to_unsigned(16#0E007#, mac_base_word_size);
-constant reg_flag_address : unsigned((mac_base_word_size - 1) downto 0)                     := to_unsigned(16#0E008#, mac_base_word_size);
-constant reg_scalar_address_address : unsigned((mac_base_word_size - 1) downto 0)           := to_unsigned(16#0E009#, mac_base_word_size);
+constant reg_2prime_address_address : unsigned((mac_base_word_size - 1) downto 0)           := to_unsigned(16#0E007#, mac_base_word_size);
+constant reg_initial_stack_address_address : unsigned((mac_base_word_size - 1) downto 0)    := to_unsigned(16#0E008#, mac_base_word_size);
+constant reg_flag_address : unsigned((mac_base_word_size - 1) downto 0)                     := to_unsigned(16#0E009#, mac_base_word_size);
+constant reg_scalar_address_address : unsigned((mac_base_word_size - 1) downto 0)           := to_unsigned(16#0E00A#, mac_base_word_size);
 
 constant base_unit_nop_operation : std_logic_vector(5 downto 0)          := "000000";
 constant base_unit_jumpeq_operation : std_logic_vector(5 downto 0)       := "000001";
@@ -652,6 +645,7 @@ mac : carmela_with_control_unit_v256
         load_new_address_prime => mac_load_new_address_prime,
         load_new_address_prime_line => mac_load_new_address_prime_line,
         load_new_address_prime_plus_one => mac_load_new_address_prime_plus_one,
+        load_new_address_2prime => mac_load_new_address_2prime,
         load_new_address_input_ma => mac_load_new_address_input_ma,
         load_new_sign_ma => mac_load_new_sign_ma,
         load_new_address_input_mb => mac_load_new_address_input_mb,
@@ -1204,10 +1198,12 @@ begin
         small_bus_address_data_in_decoded <= "1010"; -- Address is in the prime plus one address register
     elsif(to_01(unsigned(small_bus_address_data_in)) = reg_prime_line_address_address) then
         small_bus_address_data_in_decoded <= "1011"; -- Address is in the prime line address register
+    elsif(to_01(unsigned(small_bus_address_data_in)) = reg_2prime_address_address) then
+        small_bus_address_data_in_decoded <= "1100"; -- Address is in the 2prime address register
     elsif(to_01(unsigned(small_bus_address_data_in)) = reg_initial_stack_address_address) then
-        small_bus_address_data_in_decoded <= "1100"; -- Address is in the initial stack address register
+        small_bus_address_data_in_decoded <= "1101"; -- Address is in the initial stack address register
     elsif(to_01(unsigned(small_bus_address_data_in)) = reg_flag_address) then
-        small_bus_address_data_in_decoded <= "1101"; -- Address is in the flag register
+        small_bus_address_data_in_decoded <= "1110"; -- Address is in the flag register
     end if;
 end process;
 
@@ -1236,14 +1232,16 @@ begin
         small_bus_address_data_out_decoded <= "1010"; -- Address is in the prime plus one address register
     elsif(to_01(unsigned(small_bus_address_data_out)) = reg_prime_line_address_address) then
         small_bus_address_data_out_decoded <= "1011"; -- Address is in the prime line address register
+    elsif(to_01(unsigned(small_bus_address_data_out)) = reg_2prime_address_address) then
+        small_bus_address_data_out_decoded <= "1100"; -- Address is in the 2prime address register
     elsif(to_01(unsigned(small_bus_address_data_out)) = reg_initial_stack_address_address) then
-        small_bus_address_data_out_decoded <= "1100"; -- Address is in the initial stack address register
+        small_bus_address_data_out_decoded <= "1101"; -- Address is in the initial stack address register
     elsif(to_01(unsigned(small_bus_address_data_out)) = reg_flag_address) then
-        small_bus_address_data_out_decoded <= "1101"; -- Address is in the flag register
+        small_bus_address_data_out_decoded <= "1110"; -- Address is in the flag register
     end if;
 end process;
 
-process(small_bus_address_data_out_decoded, mac_ram_data_out_small_bus_mode, base_alu_ram_data_out_0, keccak_small_bus_data_out, reg_scalar_address, reg_next_instruction_program_counter, reg_status, reg_operands_size, reg_prime_line_equal_one, reg_current_instruction_address_o, reg_current_instruction_constant_a, reg_current_instruction_address_a, reg_prime_address, reg_prime_plus_one_address, reg_prime_line_address, reg_initial_stack_address)
+process(reg_current_instruction_constant_a, reg_current_instruction_address_a, small_bus_address_data_out_decoded, mac_ram_data_out_small_bus_mode, base_alu_ram_data_out_0, keccak_small_bus_data_out, reg_scalar_address, reg_next_instruction_program_counter, reg_status, reg_operands_size, reg_prime_line_equal_one, reg_prime_address, reg_prime_plus_one_address, reg_prime_line_address, reg_2prime_address, reg_initial_stack_address)
 begin
     if((reg_status = '0') and (reg_current_instruction_constant_a = '0')) then
         small_bus_data_out <= reg_current_instruction_address_a;
@@ -1280,6 +1278,9 @@ begin
                 small_bus_data_out((small_bus_data_out'length - 1) downto reg_prime_line_address'length) <= (others => '0');
                 small_bus_data_out((reg_prime_line_address'length - 1) downto 0) <= reg_prime_line_address;
             when "1100" =>
+                small_bus_data_out((small_bus_data_out'length - 1) downto reg_2prime_address'length) <= (others => '0');
+                small_bus_data_out((reg_2prime_address'length - 1) downto 0) <= reg_2prime_address;
+            when "1101" =>
                 small_bus_data_out((small_bus_data_out'length - 1) downto reg_initial_stack_address'length) <= (others => '0');
                 small_bus_data_out((reg_initial_stack_address'length - 1) downto 0) <= reg_initial_stack_address;
             when others =>
@@ -1370,6 +1371,19 @@ begin
         else
             if((small_bus_enable = '1') and (small_bus_write_enable = '1') and (small_bus_address_data_in = std_logic_vector(reg_prime_line_address_address))) then
                 reg_prime_line_address <= small_bus_data_in((mac_memory_address_size - 3) downto 0);
+            end if;
+        end if;
+    end if;
+end process;
+
+process(clk)
+begin
+    if(rising_edge(clk)) then
+        if(rstn = '0') then
+            reg_2prime_address <= std_logic_vector(to_unsigned(3, mac_memory_address_size - 2));
+        else
+            if((small_bus_enable = '1') and (small_bus_write_enable = '1') and (small_bus_address_data_in = std_logic_vector(reg_2prime_address_address))) then
+                reg_2prime_address <= small_bus_data_in((mac_memory_address_size - 3) downto 0);
             end if;
         end if;
     end if;
@@ -1553,6 +1567,7 @@ mac_instruction_type <= reg_current_instruction(58 downto 55);
 mac_load_new_address_prime_plus_one <= reg_prime_plus_one_address;
 mac_load_new_address_prime_line <= reg_prime_line_address;
 mac_load_new_address_prime <= reg_prime_address;
+mac_load_new_address_2prime <= reg_2prime_address;
 mac_load_new_address_input_ma <= reg_current_instruction_address_a((mac_load_new_address_input_ma'length - 1) downto 0) when (reg_current_instruction(16) = '1') else
                                  (others => '0');
 mac_load_new_sign_ma <= reg_current_instruction(18);
@@ -1593,6 +1608,8 @@ begin
                     when "1010" =>
                         data_out_valid <= '1';
                     when "1011" =>
+                        data_out_valid <= '1';
+                    when "1100" =>
                         data_out_valid <= '1';
                     when others =>
                         data_out_valid <= '0';

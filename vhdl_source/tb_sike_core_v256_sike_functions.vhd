@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    
--- Design Name: 
--- Module Name:    
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -47,6 +36,19 @@ Generic(
     skip_decryption : boolean := false;
     
     test_prom_file : string := "../assembler/test_sike_functions_v256.dat";
+    
+    param_8_5_number_of_words  : integer := 1;
+    param_8_5_p_line_equal_one : integer := 0;
+    param_216_137_number_of_words  : integer := 2;
+    param_216_137_p_line_equal_one : integer := 0;
+    param_250_159_number_of_words  : integer := 3;
+    param_250_159_p_line_equal_one : integer := 0;
+    param_305_192_number_of_words  : integer := 3;
+    param_305_192_p_line_equal_one : integer := 1;
+    param_372_239_number_of_words  : integer := 3;
+    param_372_239_p_line_equal_one : integer := 1;
+    param_486_301_number_of_words  : integer := 4;
+    param_486_301_p_line_equal_one : integer := 1;
     
     test_program_start_keygen : integer := 1;
     test_memory_file_keygen_8_5     : string := "../hw_sike_tests_v256/keygen_sike_8_5.dat";
@@ -125,29 +127,31 @@ constant reg_prime_line_equal_one_address : integer            := 16#0E003#;
 constant reg_prime_address_address : integer                   := 16#0E004#;
 constant reg_prime_plus_one_address_address : integer          := 16#0E005#;
 constant reg_prime_line_address_address : integer              := 16#0E006#;
-constant reg_initial_stack_address_address : integer           := 16#0E007#;
-constant reg_flag_address : integer                            := 16#0E008#;
-constant reg_scalar_address_address : integer                  := 16#0E009#;
-
+constant reg_2prime_address_address : integer                  := 16#0E007#;
+constant reg_initial_stack_address_address : integer           := 16#0E008#;
+constant reg_flag_address : integer                            := 16#0E009#;
+constant reg_scalar_address_address : integer                  := 16#0E00A#;
+                                                               
 constant mac_ram_prime_address : integer                       := 16#00000#;
 constant mac_ram_prime_plus_one_address : integer              := 16#00001#;
 constant mac_ram_prime_line_address : integer                  := 16#00002#;
-constant mac_ram_const_r_address : integer                     := 16#00003#;
-constant mac_ram_const_r2_address : integer                    := 16#00004#;
-constant mac_ram_const_1_address : integer                     := 16#00005#;
-constant mac_ram_inv_4_mont_address : integer                  := 16#00006#;
-constant mac_ram_sidh_xpa_mont_address : integer               := 16#00007#;
-constant mac_ram_sidh_xpai_mont_address : integer              := 16#00008#;
-constant mac_ram_sidh_xqa_mont_address : integer               := 16#00009#;
-constant mac_ram_sidh_xqai_mont_address : integer              := 16#0000A#;
-constant mac_ram_sidh_xra_mont_address : integer               := 16#0000B#;
-constant mac_ram_sidh_xrai_mont_address : integer              := 16#0000C#;
-constant mac_ram_sidh_xpb_mont_address : integer               := 16#0000D#;
-constant mac_ram_sidh_xpbi_mont_address : integer              := 16#0000E#;
-constant mac_ram_sidh_xqb_mont_address : integer               := 16#0000F#;
-constant mac_ram_sidh_xqbi_mont_address : integer              := 16#00010#;
-constant mac_ram_sidh_xrb_mont_address : integer               := 16#00011#;
-constant mac_ram_sidh_xrbi_mont_address : integer              := 16#00012#;
+constant mac_ram_2prime_address : integer                      := 16#00003#;
+constant mac_ram_const_r_address : integer                     := 16#00004#;
+constant mac_ram_const_r2_address : integer                    := 16#00005#;
+constant mac_ram_const_1_address : integer                     := 16#00006#;
+constant mac_ram_inv_4_mont_address : integer                  := 16#00007#;
+constant mac_ram_sidh_xpa_mont_address : integer               := 16#00008#;
+constant mac_ram_sidh_xpai_mont_address : integer              := 16#00009#;
+constant mac_ram_sidh_xqa_mont_address : integer               := 16#0000A#;
+constant mac_ram_sidh_xqai_mont_address : integer              := 16#0000B#;
+constant mac_ram_sidh_xra_mont_address : integer               := 16#0000C#;
+constant mac_ram_sidh_xrai_mont_address : integer              := 16#0000D#;
+constant mac_ram_sidh_xpb_mont_address : integer               := 16#0000E#;
+constant mac_ram_sidh_xpbi_mont_address : integer              := 16#0000F#;
+constant mac_ram_sidh_xqb_mont_address : integer               := 16#00010#;
+constant mac_ram_sidh_xqbi_mont_address : integer              := 16#00011#;
+constant mac_ram_sidh_xrb_mont_address : integer               := 16#00012#;
+constant mac_ram_sidh_xrbi_mont_address : integer              := 16#00013#;
 
 constant mac_ram_input_function_start_address : integer        := 16#00014#;
 constant mac_ram_output_function_start_address : integer       := 16#00024#;
@@ -630,6 +634,16 @@ begin
         temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
     end loop;
     wait for PERIOD;
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
+    load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
+    wait for PERIOD;
+        
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_MAC_RAM_operand_values);
+        temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
+    end loop;
+    wait for PERIOD;
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_const_r_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
@@ -931,6 +945,11 @@ begin
         current_operation_addres := std_logic_vector(to_unsigned(reg_prime_line_address_address, current_operation_addres'length));
         load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
         wait for PERIOD;
+        buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(3, buffer_test_value_communication_base_alu_ram'length));
+        wait for PERIOD;
+        current_operation_addres := std_logic_vector(to_unsigned(reg_2prime_address_address, current_operation_addres'length));
+        load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
+        wait for PERIOD;
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned((2**mac_max_operands_size)*224, buffer_test_value_communication_base_alu_ram'length));
         wait for PERIOD;
         current_operation_addres := std_logic_vector(to_unsigned(reg_initial_stack_address_address, current_operation_addres'length));
@@ -1041,6 +1060,16 @@ begin
     end loop;
     wait for PERIOD;
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_prime_line_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
+    load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
+    wait for PERIOD;
+    
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_MAC_RAM_operand_values);
+        temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
+    end loop;
+    wait for PERIOD;
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
     
@@ -1393,6 +1422,11 @@ begin
         current_operation_addres := std_logic_vector(to_unsigned(reg_prime_line_address_address, current_operation_addres'length));
         load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
         wait for PERIOD;
+        buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(3, buffer_test_value_communication_base_alu_ram'length));
+        wait for PERIOD;
+        current_operation_addres := std_logic_vector(to_unsigned(reg_2prime_address_address, current_operation_addres'length));
+        load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
+        wait for PERIOD;
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned((2**mac_max_operands_size)*224, buffer_test_value_communication_base_alu_ram'length));
         wait for PERIOD;
         current_operation_addres := std_logic_vector(to_unsigned(reg_initial_stack_address_address, current_operation_addres'length));
@@ -1517,6 +1551,16 @@ begin
     end loop;
     wait for PERIOD;
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_prime_line_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
+    load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
+    wait for PERIOD;
+    
+    for j in 0 to (operands_size-1) loop
+        readline (ram_file, line_n);
+        read (line_n, read_MAC_RAM_operand_values);
+        temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
+    end loop;
+    wait for PERIOD;
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
     
@@ -1860,6 +1904,11 @@ begin
         current_operation_addres := std_logic_vector(to_unsigned(reg_prime_line_address_address, current_operation_addres'length));
         load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
         wait for PERIOD;
+        buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned(3, buffer_test_value_communication_base_alu_ram'length));
+        wait for PERIOD;
+        current_operation_addres := std_logic_vector(to_unsigned(reg_2prime_address_address, current_operation_addres'length));
+        load_value_device_base_alu_internal_registers(buffer_test_value_communication_base_alu_ram, current_operation_addres);
+        wait for PERIOD;
         buffer_test_value_communication_base_alu_ram <= std_logic_vector(to_unsigned((2**mac_max_operands_size)*224, buffer_test_value_communication_base_alu_ram'length));
         wait for PERIOD;
         current_operation_addres := std_logic_vector(to_unsigned(reg_initial_stack_address_address, current_operation_addres'length));
@@ -1935,52 +1984,52 @@ begin
     wait for PERIOD;
     if( not skip_keygen ) then
         report "Start keygen test." severity note;
-        test_keygen(test_memory_file_keygen_8_5, 1, 0);
+        test_keygen(test_memory_file_keygen_8_5, param_8_5_number_of_words, param_8_5_p_line_equal_one);
         wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_keygen(test_memory_file_keygen_216_137, 2, 0);
+            test_keygen(test_memory_file_keygen_216_137, param_216_137_number_of_words, param_216_137_p_line_equal_one);
             wait for PERIOD;
-            test_keygen(test_memory_file_keygen_250_159, 3, 0);
+            test_keygen(test_memory_file_keygen_250_159, param_250_159_number_of_words, param_250_159_p_line_equal_one);
             wait for PERIOD;
-            test_keygen(test_memory_file_keygen_305_192, 3, 1);
+            test_keygen(test_memory_file_keygen_305_192, param_305_192_number_of_words, param_305_192_p_line_equal_one);
             wait for PERIOD;
-            test_keygen(test_memory_file_keygen_372_239, 3, 1);
+            test_keygen(test_memory_file_keygen_372_239, param_372_239_number_of_words, param_372_239_p_line_equal_one);
             wait for PERIOD;
-            test_keygen(test_memory_file_keygen_486_301, 4, 1);
+            test_keygen(test_memory_file_keygen_486_301, param_486_301_number_of_words, param_486_301_p_line_equal_one);
             wait for PERIOD;
         end if;
     end if;
     if( not skip_encryption ) then
         report "Start encryption test." severity note;
-        test_encryption(test_memory_file_encryption_8_5, 1, 0);
+        test_encryption(test_memory_file_encryption_8_5, param_8_5_number_of_words, param_8_5_p_line_equal_one);
         wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_encryption(test_memory_file_encryption_216_137, 2, 0);
+            test_encryption(test_memory_file_encryption_216_137, param_216_137_number_of_words, param_216_137_p_line_equal_one);
             wait for PERIOD;
-            test_encryption(test_memory_file_encryption_250_159, 3, 0);
+            test_encryption(test_memory_file_encryption_250_159, param_250_159_number_of_words, param_250_159_p_line_equal_one);
             wait for PERIOD;
-            test_encryption(test_memory_file_encryption_305_192, 3, 1);
+            test_encryption(test_memory_file_encryption_305_192, param_305_192_number_of_words, param_305_192_p_line_equal_one);
             wait for PERIOD;
-            test_encryption(test_memory_file_encryption_372_239, 3, 1);
+            test_encryption(test_memory_file_encryption_372_239, param_372_239_number_of_words, param_372_239_p_line_equal_one);
             wait for PERIOD;
-            test_encryption(test_memory_file_encryption_486_301, 4, 1);
+            test_encryption(test_memory_file_encryption_486_301, param_486_301_number_of_words, param_486_301_p_line_equal_one);
             wait for PERIOD;
         end if;
     end if;
     if( not skip_decryption ) then
         report "Start decryption test." severity note;
-        test_decryption(test_memory_file_decryption_8_5, 1, 0);
+        test_decryption(test_memory_file_decryption_8_5, param_8_5_number_of_words, param_8_5_p_line_equal_one);
         wait for PERIOD;
         if(not test_only_smallest_size) then
-            test_decryption(test_memory_file_decryption_216_137, 2, 0);
+            test_decryption(test_memory_file_decryption_216_137, param_216_137_number_of_words, param_216_137_p_line_equal_one);
             wait for PERIOD;
-            test_decryption(test_memory_file_decryption_250_159, 3, 0);
+            test_decryption(test_memory_file_decryption_250_159, param_250_159_number_of_words, param_250_159_p_line_equal_one);
             wait for PERIOD;
-            test_decryption(test_memory_file_decryption_305_192, 3, 1);
+            test_decryption(test_memory_file_decryption_305_192, param_305_192_number_of_words, param_305_192_p_line_equal_one);
             wait for PERIOD;
-            test_decryption(test_memory_file_decryption_372_239, 3, 1);
+            test_decryption(test_memory_file_decryption_372_239, param_372_239_number_of_words, param_372_239_p_line_equal_one);
             wait for PERIOD;
-            test_decryption(test_memory_file_decryption_486_301, 4, 1);
+            test_decryption(test_memory_file_decryption_486_301, param_486_301_number_of_words, param_486_301_p_line_equal_one);
             wait for PERIOD;
         end if;
     end if;

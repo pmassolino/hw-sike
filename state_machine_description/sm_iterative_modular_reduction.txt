@@ -9,126 +9,126 @@ reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;
 -- In case of size 2
 reg_a = a1_X; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
 reg_a = a0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc
-reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
+reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; Enable sign a,b operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; Enable sign a,b operation : s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; Enable sign a,b operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; Enable sign a,b operation : s*b + a + acc
 reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;
 -- In case of size 3
 reg_a = a2_X; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
 reg_a = a0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc
-reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : -s*b + a + acc
-reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
+reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc
+reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; Enable sign a,b operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; Enable sign a,b operation : s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; Enable sign a,b operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; Enable sign a,b operation : s*b + a + acc
 reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;
 -- In case of size 4
 reg_a = a3_X; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
 reg_a = a0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc
-reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : -s*b + a + acc
-reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : -s*b + a + acc
-reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
+reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc
+reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : -s*b + a + acc
+reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;
 -- In case of size 5
 reg_a = a4_X; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
 reg_a = a0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc
-reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : -s*b + a + acc
-reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : -s*b + a + acc
-reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : -s*b + a + acc
-reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
+reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc
+reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : -s*b + a + acc
+reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : -s*b + a + acc
+reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;
 -- In case of size 6
 reg_a = a5_X; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
 reg_a = a0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc
-reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : -s*b + a + acc
-reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : -s*b + a + acc
-reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : -s*b + a + acc
-reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : -s*b + a + acc
-reg_a = a5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
+reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc
+reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : -s*b + a + acc
+reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : -s*b + a + acc
+reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : -s*b + a + acc
+reg_a = a5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : s*b + a + acc
-reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : s*b + a + acc
+reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : s*b + a + acc
-reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : s*b + a + acc
+reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;
 -- In case of size 7
 reg_a = a6_X; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
 reg_a = a0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc
-reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : -s*b + a + acc
-reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : -s*b + a + acc
-reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : -s*b + a + acc
-reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : -s*b + a + acc
-reg_a = a5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; operation : -s*b + a + acc
-reg_a = a6_X; reg_b = prime6; reg_acc = reg_o >> 272; o6_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
+reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc
+reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : -s*b + a + acc
+reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : -s*b + a + acc
+reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : -s*b + a + acc
+reg_a = a5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; operation : -s*b + a + acc
+reg_a = a6_X; reg_b = prime6; reg_acc = reg_o >> 256; o6_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : s*b + a + acc
-reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; operation : s*b + a + acc
-reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 272; o6_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : s*b + a + acc
+reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; operation : s*b + a + acc
+reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 256; o6_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : s*b + a + acc
-reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; operation : s*b + a + acc
-reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 272; o6_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : s*b + a + acc
+reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; operation : s*b + a + acc
+reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 256; o6_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;
 -- In case of size 8
 reg_a = a7_X; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
 reg_a = a0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc
-reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : -s*b + a + acc
-reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : -s*b + a + acc
-reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : -s*b + a + acc
-reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : -s*b + a + acc
-reg_a = a5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; operation : -s*b + a + acc
-reg_a = a6_X; reg_b = prime6; reg_acc = reg_o >> 272; o6_X = reg_o; operation : -s*b + a + acc
-reg_a = a7_X; reg_b = prime7; reg_acc = reg_o >> 272; o7_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
+reg_a = a1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc
+reg_a = a2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : -s*b + a + acc
+reg_a = a3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : -s*b + a + acc
+reg_a = a4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : -s*b + a + acc
+reg_a = a5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; operation : -s*b + a + acc
+reg_a = a6_X; reg_b = prime6; reg_acc = reg_o >> 256; o6_X = reg_o; operation : -s*b + a + acc
+reg_a = a7_X; reg_b = prime7; reg_acc = reg_o >> 256; o7_X = reg_o; Enable sign a,b; operation : -s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : s*b + a + acc
-reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; operation : s*b + a + acc
-reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 272; o6_X = reg_o; operation : s*b + a + acc
-reg_a = o7_X; reg_b = prime7; reg_acc = reg_o >> 272; o7_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : s*b + a + acc
+reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; operation : s*b + a + acc
+reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 256; o6_X = reg_o; operation : s*b + a + acc
+reg_a = o7_X; reg_b = prime7; reg_acc = reg_o >> 256; o7_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = o0_X; reg_b = prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc
-reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 272; o1_X = reg_o; operation : s*b + a + acc
-reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 272; o2_X = reg_o; operation : s*b + a + acc
-reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 272; o3_X = reg_o; operation : s*b + a + acc
-reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 272; o4_X = reg_o; operation : s*b + a + acc
-reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 272; o5_X = reg_o; operation : s*b + a + acc
-reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 272; o6_X = reg_o; operation : s*b + a + acc
-reg_a = o7_X; reg_b = prime7; reg_acc = reg_o >> 272; o7_X = reg_o; Enable sign a,b; operation : s*b + a + acc
+reg_a = o1_X; reg_b = prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc
+reg_a = o2_X; reg_b = prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc
+reg_a = o3_X; reg_b = prime3; reg_acc = reg_o >> 256; o3_X = reg_o; operation : s*b + a + acc
+reg_a = o4_X; reg_b = prime4; reg_acc = reg_o >> 256; o4_X = reg_o; operation : s*b + a + acc
+reg_a = o5_X; reg_b = prime5; reg_acc = reg_o >> 256; o5_X = reg_o; operation : s*b + a + acc
+reg_a = o6_X; reg_b = prime6; reg_acc = reg_o >> 256; o6_X = reg_o; operation : s*b + a + acc
+reg_a = o7_X; reg_b = prime7; reg_acc = reg_o >> 256; o7_X = reg_o; Enable sign a,b; operation : s*b + a + acc
 reg_a = 0; reg_b = 0; reg_acc = 0; operation : b +/- a + acc;

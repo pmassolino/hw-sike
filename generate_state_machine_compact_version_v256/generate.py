@@ -3,70 +3,139 @@ import sys
 nop_4_stages = {}
 nop_8_stages = {}
 
-nop_4_stages['next_sm_rotation_size'] = '10'
-nop_4_stages['next_sel_address_a'] = '0'
-nop_4_stages['next_sel_address_b_prime'] = '00'
-nop_4_stages['next_sm_specific_carmela_address_a'] = '000'
-nop_4_stages['next_sm_specific_carmela_address_b'] = '000'
-nop_4_stages['next_sm_specific_carmela_address_o'] = '000'
-nop_4_stages['next_sm_specific_carmela_next_address_o'] = '001'
-nop_4_stages['next_carmela_enable_signed_a'] = '0'
-nop_4_stages['next_carmela_enable_signed_b'] = '0'
-nop_4_stages['next_carmela_sel_load_reg_a'] = '11'
-nop_4_stages['next_carmela_clear_reg_b'] = '1'
-nop_4_stages['next_carmela_clear_reg_acc'] = '1'
-nop_4_stages['next_carmela_sel_shift_reg_o'] = '0'
-nop_4_stages['next_carmela_enable_update_reg_s'] = '0'
-nop_4_stages['next_carmela_sel_reg_s_reg_o_sign'] = '0'
-nop_4_stages['next_carmela_reg_s_reg_o_positive'] = '0'
-nop_4_stages['next_sm_sign_a_mode'] = '0'
-nop_4_stages['next_sm_carmela_operation_mode'] = '01'
-nop_4_stages['next_carmela_enable_reg_s_mask'] = '0'
-nop_4_stages['next_carmela_subtraction_reg_a_b'] = '0'
-nop_4_stages['next_carmela_sel_multiply_two_a_b'] = '0'
-nop_4_stages['next_carmela_sel_reg_y_output'] = '0'
-nop_4_stages['next_sm_carmela_write_enable_output'] = '0'
-nop_4_stages['next_carmela_memory_double_mode'] = '0'
-nop_4_stages['next_carmela_memory_only_write_mode'] = '0'
-nop_4_stages['next_base_address_generator_o_increment_previous_address'] = '0'
-nop_4_stages['last_state'] = '1'
-nop_4_stages['current_operand_size'] = '000'
-nop_4_stages['next_operation_same_operand_size'] = '00000'
-nop_4_stages['next_operation_different_operand_size'] = '0000000'
-nop_4_stages['comment'] = '-- NOP 4 stages                  \n-- reg_a = 0; reg_b = 0; reg_acc = 0; operation : b + a + acc;\n'
+nop_4_stages_v128 = {}
+nop_8_stages_v128 = {}
+nop_4_stages_v256 = {}
+nop_8_stages_v256 = {}
 
-nop_8_stages['next_sm_rotation_size'] = '11'
-nop_8_stages['next_sel_address_a'] = '0'
-nop_8_stages['next_sel_address_b_prime'] = '00'
-nop_8_stages['next_sm_specific_carmela_address_a'] = '000'
-nop_8_stages['next_sm_specific_carmela_address_b'] = '000'
-nop_8_stages['next_sm_specific_carmela_address_o'] = '000'
-nop_8_stages['next_sm_specific_carmela_next_address_o'] = '001'
-nop_8_stages['next_carmela_enable_signed_a'] = '0'
-nop_8_stages['next_carmela_enable_signed_b'] = '0'
-nop_8_stages['next_carmela_sel_load_reg_a'] = '11'
-nop_8_stages['next_carmela_clear_reg_b'] = '1'
-nop_8_stages['next_carmela_clear_reg_acc'] = '1'
-nop_8_stages['next_carmela_sel_shift_reg_o'] = '0'
-nop_8_stages['next_carmela_enable_update_reg_s'] = '0'
-nop_8_stages['next_carmela_sel_reg_s_reg_o_sign'] = '0'
-nop_8_stages['next_carmela_reg_s_reg_o_positive'] = '0'
-nop_8_stages['next_sm_sign_a_mode'] = '0'
-nop_8_stages['next_sm_carmela_operation_mode'] = '10'
-nop_8_stages['next_carmela_enable_reg_s_mask'] = '0'
-nop_8_stages['next_carmela_subtraction_reg_a_b'] = '0'
-nop_8_stages['next_carmela_sel_multiply_two_a_b'] = '0'
-nop_8_stages['next_carmela_sel_reg_y_output'] = '0'
-nop_8_stages['next_sm_carmela_write_enable_output'] = '0'
-nop_8_stages['next_carmela_memory_double_mode'] = '0'
-nop_8_stages['next_carmela_memory_only_write_mode'] = '0'
-nop_8_stages['next_base_address_generator_o_increment_previous_address'] = '0'
-nop_8_stages['last_state'] = '1'
-nop_8_stages['current_operand_size'] = '000'
-nop_8_stages['next_operation_same_operand_size'] = '00000'
-nop_8_stages['next_operation_different_operand_size'] = '0000000'
-nop_8_stages['comment'] = '-- NOP 8 stages                  \n-- reg_a = 0; reg_b = 0; reg_acc = 0; operation : a*b + acc;\n'
+nop_4_stages_v128['next_sm_rotation_size'] = '10'
+nop_4_stages_v128['next_sel_address_a'] = '0'
+nop_4_stages_v128['next_sel_address_b_prime'] = '00'
+nop_4_stages_v128['next_sm_specific_mac_address_a'] = '000'
+nop_4_stages_v128['next_sm_specific_mac_address_b'] = '000'
+nop_4_stages_v128['next_sm_specific_mac_address_o'] = '000'
+nop_4_stages_v128['next_sm_specific_mac_next_address_o'] = '001'
+nop_4_stages_v128['next_mac_enable_signed_a'] = '0'
+nop_4_stages_v128['next_mac_enable_signed_b'] = '0'
+nop_4_stages_v128['next_mac_sel_load_reg_a'] = '11'
+nop_4_stages_v128['next_mac_clear_reg_b'] = '1'
+nop_4_stages_v128['next_mac_clear_reg_acc'] = '1'
+nop_4_stages_v128['next_mac_sel_shift_reg_o'] = '0'
+nop_4_stages_v128['next_mac_enable_update_reg_s'] = '0'
+nop_4_stages_v128['next_mac_sel_reg_s_reg_o_sign'] = '0'
+nop_4_stages_v128['next_mac_reg_s_reg_o_positive'] = '0'
+nop_4_stages_v128['next_sm_sign_a_mode'] = '0'
+nop_4_stages_v128['next_sm_mac_operation_mode'] = '01'
+nop_4_stages_v128['next_mac_enable_reg_s_mask'] = '0'
+nop_4_stages_v128['next_mac_subtraction_reg_a_b'] = '0'
+nop_4_stages_v128['next_mac_sel_multiply_two_a_b'] = '0'
+nop_4_stages_v128['next_mac_sel_reg_y_output'] = '0'
+nop_4_stages_v128['next_sm_mac_write_enable_output'] = '0'
+nop_4_stages_v128['next_mac_memory_double_mode'] = '0'
+nop_4_stages_v128['next_mac_memory_only_write_mode'] = '0'
+nop_4_stages_v128['next_base_address_generator_o_increment_previous_address'] = '0'
+nop_4_stages_v128['last_state'] = '1'
+nop_4_stages_v128['current_operand_size'] = '000'
+nop_4_stages_v128['next_operation_same_operand_size'] = '00000'
+nop_4_stages_v128['next_operation_different_operand_size'] = '0000000'
+nop_4_stages_v128['comment'] = '-- NOP 4 stages                  \n-- reg_a = 0; reg_b = 0; reg_acc = 0; operation : b + a + acc;\n'
 
+nop_8_stages_v128['next_sm_rotation_size'] = '11'
+nop_8_stages_v128['next_sel_address_a'] = '0'
+nop_8_stages_v128['next_sel_address_b_prime'] = '00'
+nop_8_stages_v128['next_sm_specific_mac_address_a'] = '000'
+nop_8_stages_v128['next_sm_specific_mac_address_b'] = '000'
+nop_8_stages_v128['next_sm_specific_mac_address_o'] = '000'
+nop_8_stages_v128['next_sm_specific_mac_next_address_o'] = '001'
+nop_8_stages_v128['next_mac_enable_signed_a'] = '0'
+nop_8_stages_v128['next_mac_enable_signed_b'] = '0'
+nop_8_stages_v128['next_mac_sel_load_reg_a'] = '11'
+nop_8_stages_v128['next_mac_clear_reg_b'] = '1'
+nop_8_stages_v128['next_mac_clear_reg_acc'] = '1'
+nop_8_stages_v128['next_mac_sel_shift_reg_o'] = '0'
+nop_8_stages_v128['next_mac_enable_update_reg_s'] = '0'
+nop_8_stages_v128['next_mac_sel_reg_s_reg_o_sign'] = '0'
+nop_8_stages_v128['next_mac_reg_s_reg_o_positive'] = '0'
+nop_8_stages_v128['next_sm_sign_a_mode'] = '0'
+nop_8_stages_v128['next_sm_mac_operation_mode'] = '10'
+nop_8_stages_v128['next_mac_enable_reg_s_mask'] = '0'
+nop_8_stages_v128['next_mac_subtraction_reg_a_b'] = '0'
+nop_8_stages_v128['next_mac_sel_multiply_two_a_b'] = '0'
+nop_8_stages_v128['next_mac_sel_reg_y_output'] = '0'
+nop_8_stages_v128['next_sm_mac_write_enable_output'] = '0'
+nop_8_stages_v128['next_mac_memory_double_mode'] = '0'
+nop_8_stages_v128['next_mac_memory_only_write_mode'] = '0'
+nop_8_stages_v128['next_base_address_generator_o_increment_previous_address'] = '0'
+nop_8_stages_v128['last_state'] = '1'
+nop_8_stages_v128['current_operand_size'] = '000'
+nop_8_stages_v128['next_operation_same_operand_size'] = '00000'
+nop_8_stages_v128['next_operation_different_operand_size'] = '0000000'
+nop_8_stages_v128['comment'] = '-- NOP 8 stages                  \n-- reg_a = 0; reg_b = 0; reg_acc = 0; operation : a*b + acc;\n'
+
+
+nop_4_stages_v256['next_sm_rotation_size'] = '10'
+nop_4_stages_v256['next_sel_address_a'] = '0'
+nop_4_stages_v256['next_sel_address_b_prime'] = '00'
+nop_4_stages_v256['next_sm_specific_mac_address_a'] = '00'
+nop_4_stages_v256['next_sm_specific_mac_address_b'] = '00'
+nop_4_stages_v256['next_sm_specific_mac_address_o'] = '00'
+nop_4_stages_v256['next_sm_specific_mac_next_address_o'] = '01'
+nop_4_stages_v256['next_mac_enable_signed_a'] = '0'
+nop_4_stages_v256['next_mac_enable_signed_b'] = '0'
+nop_4_stages_v256['next_mac_sel_load_reg_a'] = '11'
+nop_4_stages_v256['next_mac_clear_reg_b'] = '1'
+nop_4_stages_v256['next_mac_clear_reg_acc'] = '1'
+nop_4_stages_v256['next_mac_sel_shift_reg_o'] = '0'
+nop_4_stages_v256['next_mac_enable_update_reg_s'] = '0'
+nop_4_stages_v256['next_mac_sel_reg_s_reg_o_sign'] = '0'
+nop_4_stages_v256['next_mac_reg_s_reg_o_positive'] = '0'
+nop_4_stages_v256['next_sm_sign_a_mode'] = '0'
+nop_4_stages_v256['next_sm_mac_operation_mode'] = '01'
+nop_4_stages_v256['next_mac_enable_reg_s_mask'] = '0'
+nop_4_stages_v256['next_mac_subtraction_reg_a_b'] = '0'
+nop_4_stages_v256['next_mac_sel_multiply_two_a_b'] = '0'
+nop_4_stages_v256['next_mac_sel_reg_y_output'] = '0'
+nop_4_stages_v256['next_sm_mac_write_enable_output'] = '0'
+nop_4_stages_v256['next_mac_memory_double_mode'] = '0'
+nop_4_stages_v256['next_mac_memory_only_write_mode'] = '0'
+nop_4_stages_v256['next_base_address_generator_o_increment_previous_address'] = '0'
+nop_4_stages_v256['last_state'] = '1'
+nop_4_stages_v256['current_operand_size'] = '00'
+nop_4_stages_v256['next_operation_same_operand_size'] = '00000'
+nop_4_stages_v256['next_operation_different_operand_size'] = '00000'
+nop_4_stages_v256['comment'] = '-- NOP 4 stages                  \n-- reg_a = 0; reg_b = 0; reg_acc = 0; operation : b + a + acc;\n'
+
+nop_8_stages_v256['next_sm_rotation_size'] = '11'
+nop_8_stages_v256['next_sel_address_a'] = '0'
+nop_8_stages_v256['next_sel_address_b_prime'] = '00'
+nop_8_stages_v256['next_sm_specific_mac_address_a'] = '00'
+nop_8_stages_v256['next_sm_specific_mac_address_b'] = '00'
+nop_8_stages_v256['next_sm_specific_mac_address_o'] = '00'
+nop_8_stages_v256['next_sm_specific_mac_next_address_o'] = '01'
+nop_8_stages_v256['next_mac_enable_signed_a'] = '0'
+nop_8_stages_v256['next_mac_enable_signed_b'] = '0'
+nop_8_stages_v256['next_mac_sel_load_reg_a'] = '11'
+nop_8_stages_v256['next_mac_clear_reg_b'] = '1'
+nop_8_stages_v256['next_mac_clear_reg_acc'] = '1'
+nop_8_stages_v256['next_mac_sel_shift_reg_o'] = '0'
+nop_8_stages_v256['next_mac_enable_update_reg_s'] = '0'
+nop_8_stages_v256['next_mac_sel_reg_s_reg_o_sign'] = '0'
+nop_8_stages_v256['next_mac_reg_s_reg_o_positive'] = '0'
+nop_8_stages_v256['next_sm_sign_a_mode'] = '0'
+nop_8_stages_v256['next_sm_mac_operation_mode'] = '10'
+nop_8_stages_v256['next_mac_enable_reg_s_mask'] = '0'
+nop_8_stages_v256['next_mac_subtraction_reg_a_b'] = '0'
+nop_8_stages_v256['next_mac_sel_multiply_two_a_b'] = '0'
+nop_8_stages_v256['next_mac_sel_reg_y_output'] = '0'
+nop_8_stages_v256['next_sm_mac_write_enable_output'] = '0'
+nop_8_stages_v256['next_mac_memory_double_mode'] = '0'
+nop_8_stages_v256['next_mac_memory_only_write_mode'] = '0'
+nop_8_stages_v256['next_base_address_generator_o_increment_previous_address'] = '0'
+nop_8_stages_v256['last_state'] = '1'
+nop_8_stages_v256['current_operand_size'] = '00'
+nop_8_stages_v256['next_operation_same_operand_size'] = '00000'
+nop_8_stages_v256['next_operation_different_operand_size'] = '00000'
+nop_8_stages_v256['comment'] = '-- NOP 8 stages                  \n-- reg_a = 0; reg_b = 0; reg_acc = 0; operation : a*b + acc;\n'
 
 def check_decode_state_name(line):
     line_without_spaces_lowercase = line.lower().strip(' ').split(' ')
@@ -122,28 +191,28 @@ def write_value_and_comment(file, state_name, state_number, state_value, program
     state_value_list[0]  = state_value['next_sm_rotation_size']
     state_value_list[1]  = state_value['next_sel_address_a']
     state_value_list[2]  = state_value['next_sel_address_b_prime']
-    state_value_list[3]  = state_value['next_sm_specific_carmela_address_a']
-    state_value_list[4]  = state_value['next_sm_specific_carmela_address_b']
-    state_value_list[5]  = state_value['next_sm_specific_carmela_address_o']
-    state_value_list[6]  = state_value['next_sm_specific_carmela_next_address_o']
-    state_value_list[7]  = state_value['next_carmela_enable_signed_a']
-    state_value_list[8]  = state_value['next_carmela_enable_signed_b']
-    state_value_list[9] = state_value['next_carmela_sel_load_reg_a']
-    state_value_list[10] = state_value['next_carmela_clear_reg_b']
-    state_value_list[11] = state_value['next_carmela_clear_reg_acc']
-    state_value_list[12] = state_value['next_carmela_sel_shift_reg_o']
-    state_value_list[13] = state_value['next_carmela_enable_update_reg_s']
-    state_value_list[14] = state_value['next_carmela_sel_reg_s_reg_o_sign']
-    state_value_list[15] = state_value['next_carmela_reg_s_reg_o_positive']
+    state_value_list[3]  = state_value['next_sm_specific_mac_address_a']
+    state_value_list[4]  = state_value['next_sm_specific_mac_address_b']
+    state_value_list[5]  = state_value['next_sm_specific_mac_address_o']
+    state_value_list[6]  = state_value['next_sm_specific_mac_next_address_o']
+    state_value_list[7]  = state_value['next_mac_enable_signed_a']
+    state_value_list[8]  = state_value['next_mac_enable_signed_b']
+    state_value_list[9]  = state_value['next_mac_sel_load_reg_a']
+    state_value_list[10] = state_value['next_mac_clear_reg_b']
+    state_value_list[11] = state_value['next_mac_clear_reg_acc']
+    state_value_list[12] = state_value['next_mac_sel_shift_reg_o']
+    state_value_list[13] = state_value['next_mac_enable_update_reg_s']
+    state_value_list[14] = state_value['next_mac_sel_reg_s_reg_o_sign']
+    state_value_list[15] = state_value['next_mac_reg_s_reg_o_positive']
     state_value_list[16] = state_value['next_sm_sign_a_mode']
-    state_value_list[17] = state_value['next_sm_carmela_operation_mode']
-    state_value_list[18] = state_value['next_carmela_enable_reg_s_mask']
-    state_value_list[19] = state_value['next_carmela_subtraction_reg_a_b']
-    state_value_list[20] = state_value['next_carmela_sel_multiply_two_a_b']
-    state_value_list[21] = state_value['next_carmela_sel_reg_y_output']
-    state_value_list[22] = state_value['next_sm_carmela_write_enable_output']
-    state_value_list[23] = state_value['next_carmela_memory_double_mode']
-    state_value_list[24] = state_value['next_carmela_memory_only_write_mode']
+    state_value_list[17] = state_value['next_sm_mac_operation_mode']
+    state_value_list[18] = state_value['next_mac_enable_reg_s_mask']
+    state_value_list[19] = state_value['next_mac_subtraction_reg_a_b']
+    state_value_list[20] = state_value['next_mac_sel_multiply_two_a_b']
+    state_value_list[21] = state_value['next_mac_sel_reg_y_output']
+    state_value_list[22] = state_value['next_sm_mac_write_enable_output']
+    state_value_list[23] = state_value['next_mac_memory_double_mode']
+    state_value_list[24] = state_value['next_mac_memory_only_write_mode']
     state_value_list[25] = state_value['next_base_address_generator_o_increment_previous_address']
     
     state_value_list[26] = state_value['last_state']
@@ -161,9 +230,12 @@ def write_value_and_comment(file, state_name, state_number, state_value, program
     string_value_formated = string_value_formated + '\n'
     file.write(string_value_formated)
     
-def read_state_description_and_fill_dictionary(filename_state_output):
+def read_state_description_and_fill_dictionary(filename_state_output, multiplier_version):
     file_state = open(filename_state_output, 'r')
-    all_state_values = {'multiplication_direct':{}, 'square_direct':{}, 'multiplication_with_reduction':{}, 'multiplication_with_reduction_special_prime':{}, 'square_with_reduction':{}, 'square_with_reduction_special_prime':{}, 'addition_subtraction_direct':{}, 'iterative_modular_reduction':{}}
+    if(multiplier_version == "128"):
+        all_state_values = {'multiplication_direct':{'starting_operand_size':1}, 'square_direct':{'starting_operand_size':1}, 'multiplication_with_reduction':{'starting_operand_size':1}, 'multiplication_with_reduction_special_prime_1':{'starting_operand_size':1}, 'multiplication_with_reduction_special_prime_2':{'starting_operand_size':2}, 'multiplication_with_reduction_special_prime_3':{'starting_operand_size':3}, 'square_with_reduction':{'starting_operand_size':1}, 'square_with_reduction_special_prime_1':{'starting_operand_size':1}, 'square_with_reduction_special_prime_2':{'starting_operand_size':2}, 'square_with_reduction_special_prime_3':{'starting_operand_size':3}, 'addition_subtraction_direct':{'starting_operand_size':1}, 'iterative_modular_reduction':{'starting_operand_size':1}, 'addition_subtraction_with_reduction':{'starting_operand_size':1}}
+    else:
+        all_state_values = {'multiplication_direct':{'starting_operand_size':1}, 'square_direct':{'starting_operand_size':1}, 'multiplication_with_reduction':{'starting_operand_size':1}, 'multiplication_with_reduction_special_prime':{'starting_operand_size':1}, 'square_with_reduction':{'starting_operand_size':1}, 'square_with_reduction_special_prime':{'starting_operand_size':1}, 'addition_subtraction_direct':{'starting_operand_size':1}, 'iterative_modular_reduction':{'starting_operand_size':1}, 'addition_subtraction_with_reduction':{'starting_operand_size':1}}
     
     state_name = None
     state_number = None
@@ -175,9 +247,18 @@ def read_state_description_and_fill_dictionary(filename_state_output):
     current_state_number = state_number
     current_values = {}
     current_values['last_state'] = '0'
-    current_values['current_operand_size'] = '000'
-    current_values['next_operation_same_operand_size'] = '00000'
-    current_values['next_operation_different_operand_size'] = '0000000'
+    if(multiplier_version == "256"):
+        current_values['current_operand_size'] = '00'
+        current_values['next_operation_same_operand_size'] = '00000'
+        current_values['next_operation_different_operand_size'] = '00000'
+        nop_4_stages = nop_4_stages_v256
+        nop_8_stages = nop_8_stages_v256
+    elif(multiplier_version == "128"):
+        current_values['current_operand_size'] = '000'
+        current_values['next_operation_same_operand_size'] = '00000'
+        current_values['next_operation_different_operand_size'] = '0000000'
+        nop_4_stages = nop_4_stages_v128
+        nop_8_stages = nop_8_stages_v128
     current_line = file_state.readline()
     while(current_line != ''):
         # A new state has been reached
@@ -186,7 +267,7 @@ def read_state_description_and_fill_dictionary(filename_state_output):
             current_dict = all_state_values[current_state_name]
             current_dict[current_state_number] = current_values
             if(int(state_number) != int(current_state_number) + 1):
-                if((current_state_name == 'addition_subtraction_direct') or (current_state_name == 'iterative_modular_reduction')):
+                if((current_state_name == 'addition_subtraction_direct') or (current_state_name == 'iterative_modular_reduction') or (current_state_name == 'addition_subtraction_with_reduction')):
                     current_dict[str(int(current_state_number) + 1)] = nop_4_stages
                 else:
                     current_dict[str(int(current_state_number) + 1)] = nop_8_stages
@@ -195,9 +276,14 @@ def read_state_description_and_fill_dictionary(filename_state_output):
             current_state_number = state_number
             current_values = {}
             current_values['last_state'] = '0'
-            current_values['current_operand_size'] = '000'
-            current_values['next_operation_same_operand_size'] = '00000'
-            current_values['next_operation_different_operand_size'] = '0000000'
+            if(multiplier_version == "256"):
+                current_values['current_operand_size'] = '00'
+                current_values['next_operation_same_operand_size'] = '00000'
+                current_values['next_operation_different_operand_size'] = '00000'
+            elif(multiplier_version == "128"):
+                current_values['current_operand_size'] = '000'
+                current_values['next_operation_same_operand_size'] = '00000'
+                current_values['next_operation_different_operand_size'] = '0000000'
         else:
             comment_line = check_comment(current_line)
             if(comment_line != None):
@@ -216,7 +302,7 @@ def read_state_description_and_fill_dictionary(filename_state_output):
         
     current_dict = all_state_values[current_state_name]
     current_dict[current_state_number] = current_values
-    if((current_state_name == 'addition_subtraction_direct') or (current_state_name == 'iterative_modular_reduction')):
+    if((current_state_name == 'addition_subtraction_direct') or (current_state_name == 'iterative_modular_reduction') or (current_state_name == 'addition_subtraction_with_reduction')):
         current_dict[str(int(current_state_number) + 1)] = nop_4_stages
     else:
         current_dict[str(int(current_state_number) + 1)] = nop_8_stages
@@ -225,7 +311,13 @@ def read_state_description_and_fill_dictionary(filename_state_output):
     file_state.close()
     return all_state_values
     
-def read_state_flow_and_fill_dictionary(filename_state_flow, all_state_values):
+def read_state_flow_and_fill_dictionary(filename_state_flow, all_state_values, multiplier_version):
+    if(multiplier_version == "256"):
+        size_of_current_operand_size = 2
+        size_of_operation_different_operand_size = 5
+    elif(multiplier_version == "128"):
+        size_of_current_operand_size = 3
+        size_of_operation_different_operand_size = 7
     file_state = open(filename_state_flow, 'r')
     state_name = None
     state_number = None
@@ -242,11 +334,11 @@ def read_state_flow_and_fill_dictionary(filename_state_flow, all_state_values):
         # A new state has been reached
         state_name, state_number = check_decode_state_name(current_line)
         if(state_name != None):
-            all_state_values[current_state_name][current_state_number]['current_operand_size'] = bin(current_operand_size-1)[2:].zfill(3)
+            all_state_values[current_state_name][current_state_number]['current_operand_size'] = bin(current_operand_size-1)[2:].zfill(size_of_current_operand_size)
             all_state_values[current_state_name][current_state_number]['next_operation_same_operand_size'] = '00001'
-            all_state_values[current_state_name][current_state_number]['next_operation_different_operand_size'] = bin(next_operation_different_operand_size)[2:].zfill(7)
+            all_state_values[current_state_name][current_state_number]['next_operation_different_operand_size'] = bin(next_operation_different_operand_size)[2:].zfill(size_of_operation_different_operand_size)
             if(state_name != current_state_name):
-                current_operand_size = 1
+                current_operand_size = all_state_values[state_name]['starting_operand_size']
             elif(int(state_number) != int(current_state_number) + 1):
                 current_operand_size += 1
             current_state_name = state_name
@@ -265,21 +357,23 @@ def read_state_flow_and_fill_dictionary(filename_state_flow, all_state_values):
                     current_line = file_state.readline()
                     jump_state_name, jump_state_number = check_next_state_number(current_line)
                     next_operation_different_operand_size = int(jump_state_number) - int(current_state_number)
-                    if(next_operation_different_operand_size >= 128):
+                    if(next_operation_different_operand_size >= (2**size_of_operation_different_operand_size)):
                         print('More bits are necessary: ' + str(next_operation_different_operand_size))
                     first_internal_if = False
         current_line = file_state.readline()
-    all_state_values[current_state_name][current_state_number]['current_operand_size'] = bin(current_operand_size-1)[2:].zfill(3)
+    all_state_values[current_state_name][current_state_number]['current_operand_size'] = bin(current_operand_size-1)[2:].zfill(size_of_current_operand_size)
     all_state_values[current_state_name][current_state_number]['next_operation_same_operand_size'] = '00001'
-    all_state_values[current_state_name][current_state_number]['next_operation_different_operand_size'] = bin(next_operation_different_operand_size)[2:].zfill(7)
+    all_state_values[current_state_name][current_state_number]['next_operation_different_operand_size'] = bin(next_operation_different_operand_size)[2:].zfill(size_of_operation_different_operand_size)
     file_state.close()
     return all_state_values
     
-def generate_compact_version(filename_state_output, filename_state_flow, filename_compact_memory):
-    all_state_values = read_state_description_and_fill_dictionary(filename_state_output)
-    all_state_values = read_state_flow_and_fill_dictionary(filename_state_flow, all_state_values)
-    
-    list_of_possible_names = ['multiplication_direct', 'square_direct', 'multiplication_with_reduction', 'multiplication_with_reduction_special_prime', 'square_with_reduction', 'square_with_reduction_special_prime', 'addition_subtraction_direct', 'iterative_modular_reduction']
+def generate_compact_version(filename_state_output, filename_state_flow, filename_compact_memory, multiplier_version):
+    all_state_values = read_state_description_and_fill_dictionary(filename_state_output, multiplier_version)
+    all_state_values = read_state_flow_and_fill_dictionary(filename_state_flow, all_state_values, multiplier_version)
+    if(multiplier_version == "128"):
+        list_of_possible_names = ['multiplication_direct', 'square_direct', 'multiplication_with_reduction', 'multiplication_with_reduction_special_prime_1', 'multiplication_with_reduction_special_prime_2', 'multiplication_with_reduction_special_prime_3', 'square_with_reduction', 'square_with_reduction_special_prime_1', 'square_with_reduction_special_prime_2', 'square_with_reduction_special_prime_3', 'addition_subtraction_direct', 'iterative_modular_reduction', 'addition_subtraction_with_reduction']
+    else:
+        list_of_possible_names = ['multiplication_direct', 'square_direct', 'multiplication_with_reduction', 'multiplication_with_reduction_special_prime', 'square_with_reduction', 'square_with_reduction_special_prime', 'addition_subtraction_direct', 'iterative_modular_reduction', 'addition_subtraction_with_reduction']
     
     file_compact = open(filename_compact_memory, 'w')
     
@@ -318,7 +412,10 @@ def generate_compact_version(filename_state_output, filename_state_flow, filenam
 def print_main_class_help():
     print('The parameters options are:')
     print('')
-    print('generate_memory_big_integer_mac_unit_carmela_state_machine_v4_compact.py file_state_output.txt file_state_flow.txt file_state_compact.txt')
+    print('generate_memory_big_integer_mac_unit_carmela_state_machine_v4_compact.py multiplier_version file_state_output.txt file_state_flow.txt file_state_compact.txt')
+    print('')
+    print("multiplier_version")
+    print("The version of the multiplier, like 256 or 128")
     print('')
     print("file_state_output.txt")
     print("The state machine output for each value")
@@ -334,11 +431,12 @@ def print_main_class_help():
 
 if __name__ == "__main__":
     argc = len(sys.argv)
-    if(argc == 4):
-        filename_state_output = sys.argv[1]
-        filename_state_flow   = sys.argv[2]
-        filename_compact_memory = sys.argv[3]
-        generate_compact_version(filename_state_output, filename_state_flow, filename_compact_memory)
+    if(argc == 5):
+        multiplier_version      = sys.argv[1]
+        filename_state_output   = sys.argv[2]
+        filename_state_flow     = sys.argv[3]
+        filename_compact_memory = sys.argv[4]
+        generate_compact_version(filename_state_output, filename_state_flow, filename_compact_memory, multiplier_version)
     else:
         print("Unknown amount of options")
         print('')

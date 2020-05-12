@@ -1,21 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 
--- Design Name: 
--- Module Name: 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Implementation by Pedro Maat C. Massolino,
+-- hereby denoted as "the implementer".
 --
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+-- To the extent possible under law, the implementer has waived all copyright
+-- and related or neighboring rights to the source code in this file.
+-- http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -69,18 +58,19 @@ multiplication_direct_0, multiplication_direct_2, multiplication_direct_3, multi
 -- 0001 square with no reduction
 square_direct_0, square_direct_2, square_direct_3, square_direct_4, square_direct_6, square_direct_7, square_direct_8, square_direct_9, square_direct_10, square_direct_12, square_direct_13, square_direct_14, square_direct_15, square_direct_16, square_direct_17, square_direct_18,
 -- 0010 multiplication with reduction and prime line not equal to 1
-multiplication_with_reduction_0, multiplication_with_reduction_1, multiplication_with_reduction_2, multiplication_with_reduction_3, multiplication_with_reduction_5, multiplication_with_reduction_6, multiplication_with_reduction_7, multiplication_with_reduction_8, multiplication_with_reduction_9, multiplication_with_reduction_10, multiplication_with_reduction_11, multiplication_with_reduction_12, multiplication_with_reduction_13, multiplication_with_reduction_14, multiplication_with_reduction_16, multiplication_with_reduction_17, multiplication_with_reduction_18, multiplication_with_reduction_19, multiplication_with_reduction_20, multiplication_with_reduction_21, multiplication_with_reduction_22, multiplication_with_reduction_23, multiplication_with_reduction_24, multiplication_with_reduction_25, multiplication_with_reduction_26, multiplication_with_reduction_27, multiplication_with_reduction_28, multiplication_with_reduction_29, multiplication_with_reduction_30, multiplication_with_reduction_31, multiplication_with_reduction_32, multiplication_with_reduction_33, multiplication_with_reduction_35, multiplication_with_reduction_36, multiplication_with_reduction_37, multiplication_with_reduction_38, multiplication_with_reduction_39, multiplication_with_reduction_40, multiplication_with_reduction_41, multiplication_with_reduction_42, multiplication_with_reduction_43, multiplication_with_reduction_44, multiplication_with_reduction_45, multiplication_with_reduction_46, multiplication_with_reduction_47, multiplication_with_reduction_48, multiplication_with_reduction_49, multiplication_with_reduction_50, multiplication_with_reduction_51, multiplication_with_reduction_52, multiplication_with_reduction_53, multiplication_with_reduction_54, multiplication_with_reduction_55, multiplication_with_reduction_56, multiplication_with_reduction_57, multiplication_with_reduction_58, multiplication_with_reduction_59, multiplication_with_reduction_60, multiplication_with_reduction_61, multiplication_with_reduction_62,
+multiplication_with_reduction_0, multiplication_with_reduction_1, multiplication_with_reduction_2, multiplication_with_reduction_3, multiplication_with_reduction_5, multiplication_with_reduction_6, multiplication_with_reduction_7, multiplication_with_reduction_8, multiplication_with_reduction_9, multiplication_with_reduction_10, multiplication_with_reduction_11, multiplication_with_reduction_12, multiplication_with_reduction_13, multiplication_with_reduction_14, multiplication_with_reduction_16, multiplication_with_reduction_17, multiplication_with_reduction_18, multiplication_with_reduction_19, multiplication_with_reduction_20, multiplication_with_reduction_21, multiplication_with_reduction_22, multiplication_with_reduction_23, multiplication_with_reduction_24, multiplication_with_reduction_25, multiplication_with_reduction_26, multiplication_with_reduction_27, multiplication_with_reduction_28, multiplication_with_reduction_29, multiplication_with_reduction_30, multiplication_with_reduction_31, multiplication_with_reduction_32, multiplication_with_reduction_33, multiplication_with_reduction_35, multiplication_with_reduction_36, multiplication_with_reduction_37, multiplication_with_reduction_38, multiplication_with_reduction_39, multiplication_with_reduction_40, multiplication_with_reduction_41, multiplication_with_reduction_42, multiplication_with_reduction_43, multiplication_with_reduction_44, multiplication_with_reduction_45, multiplication_with_reduction_46, multiplication_with_reduction_47, multiplication_with_reduction_48, multiplication_with_reduction_49, multiplication_with_reduction_50, multiplication_with_reduction_51, multiplication_with_reduction_52, multiplication_with_reduction_53, multiplication_with_reduction_54, multiplication_with_reduction_55, multiplication_with_reduction_56, multiplication_with_reduction_57, multiplication_with_reduction_58, multiplication_with_reduction_59,
 -- 0010 multiplication with reduction and prime line equal to 1
-multiplication_with_reduction_special_prime_0, multiplication_with_reduction_special_prime_1, multiplication_with_reduction_special_prime_3, multiplication_with_reduction_special_prime_4, multiplication_with_reduction_special_prime_5, multiplication_with_reduction_special_prime_6, multiplication_with_reduction_special_prime_7, multiplication_with_reduction_special_prime_8, multiplication_with_reduction_special_prime_10, multiplication_with_reduction_special_prime_11, multiplication_with_reduction_special_prime_12, multiplication_with_reduction_special_prime_13, multiplication_with_reduction_special_prime_14, multiplication_with_reduction_special_prime_15, multiplication_with_reduction_special_prime_16, multiplication_with_reduction_special_prime_17, multiplication_with_reduction_special_prime_18, multiplication_with_reduction_special_prime_19, multiplication_with_reduction_special_prime_20,multiplication_with_reduction_special_prime_21, multiplication_with_reduction_special_prime_22, multiplication_with_reduction_special_prime_23, multiplication_with_reduction_special_prime_25, multiplication_with_reduction_special_prime_26, multiplication_with_reduction_special_prime_27, multiplication_with_reduction_special_prime_28, multiplication_with_reduction_special_prime_29, multiplication_with_reduction_special_prime_30, multiplication_with_reduction_special_prime_31, multiplication_with_reduction_special_prime_32, multiplication_with_reduction_special_prime_33, multiplication_with_reduction_special_prime_34, multiplication_with_reduction_special_prime_35, multiplication_with_reduction_special_prime_36, multiplication_with_reduction_special_prime_37, multiplication_with_reduction_special_prime_38, multiplication_with_reduction_special_prime_39, multiplication_with_reduction_special_prime_40, multiplication_with_reduction_special_prime_41, multiplication_with_reduction_special_prime_42, multiplication_with_reduction_special_prime_43, multiplication_with_reduction_special_prime_44, multiplication_with_reduction_special_prime_45, multiplication_with_reduction_special_prime_46, multiplication_with_reduction_special_prime_47, multiplication_with_reduction_special_prime_48,
+multiplication_with_reduction_special_prime_0, multiplication_with_reduction_special_prime_1, multiplication_with_reduction_special_prime_3, multiplication_with_reduction_special_prime_4, multiplication_with_reduction_special_prime_5, multiplication_with_reduction_special_prime_6, multiplication_with_reduction_special_prime_7, multiplication_with_reduction_special_prime_8, multiplication_with_reduction_special_prime_10, multiplication_with_reduction_special_prime_11, multiplication_with_reduction_special_prime_12, multiplication_with_reduction_special_prime_13, multiplication_with_reduction_special_prime_14, multiplication_with_reduction_special_prime_15, multiplication_with_reduction_special_prime_16, multiplication_with_reduction_special_prime_17, multiplication_with_reduction_special_prime_18, multiplication_with_reduction_special_prime_19, multiplication_with_reduction_special_prime_20, multiplication_with_reduction_special_prime_21, multiplication_with_reduction_special_prime_22, multiplication_with_reduction_special_prime_23, multiplication_with_reduction_special_prime_25, multiplication_with_reduction_special_prime_26, multiplication_with_reduction_special_prime_27, multiplication_with_reduction_special_prime_28, multiplication_with_reduction_special_prime_29, multiplication_with_reduction_special_prime_30, multiplication_with_reduction_special_prime_31, multiplication_with_reduction_special_prime_32, multiplication_with_reduction_special_prime_33, multiplication_with_reduction_special_prime_34, multiplication_with_reduction_special_prime_35, multiplication_with_reduction_special_prime_36, multiplication_with_reduction_special_prime_37, multiplication_with_reduction_special_prime_38, multiplication_with_reduction_special_prime_39, multiplication_with_reduction_special_prime_40, multiplication_with_reduction_special_prime_41, multiplication_with_reduction_special_prime_42, multiplication_with_reduction_special_prime_43, multiplication_with_reduction_special_prime_44, multiplication_with_reduction_special_prime_45,
 -- 0011 square with reduction and prime line not equal to 1
-square_with_reduction_0, square_with_reduction_1, square_with_reduction_2, square_with_reduction_3, square_with_reduction_5, square_with_reduction_6, square_with_reduction_7, square_with_reduction_8, square_with_reduction_9, square_with_reduction_10, square_with_reduction_11, square_with_reduction_12, square_with_reduction_13, square_with_reduction_15, square_with_reduction_16, square_with_reduction_17, square_with_reduction_18, square_with_reduction_19, square_with_reduction_20, square_with_reduction_21, square_with_reduction_22, square_with_reduction_23, square_with_reduction_24, square_with_reduction_25, square_with_reduction_26, square_with_reduction_27, square_with_reduction_28, square_with_reduction_29, square_with_reduction_31, square_with_reduction_32, square_with_reduction_33, square_with_reduction_34, square_with_reduction_35, square_with_reduction_36, square_with_reduction_37, square_with_reduction_38, square_with_reduction_39, square_with_reduction_40, square_with_reduction_41, square_with_reduction_42, square_with_reduction_43, square_with_reduction_44, square_with_reduction_45, square_with_reduction_46, square_with_reduction_47, square_with_reduction_48, square_with_reduction_49, square_with_reduction_50, square_with_reduction_51, square_with_reduction_52, square_with_reduction_53,
+square_with_reduction_0, square_with_reduction_1, square_with_reduction_2, square_with_reduction_3, square_with_reduction_5, square_with_reduction_6, square_with_reduction_7, square_with_reduction_8, square_with_reduction_9, square_with_reduction_10, square_with_reduction_11, square_with_reduction_12, square_with_reduction_13, square_with_reduction_15, square_with_reduction_16, square_with_reduction_17, square_with_reduction_18, square_with_reduction_19, square_with_reduction_20, square_with_reduction_21, square_with_reduction_22, square_with_reduction_23, square_with_reduction_24, square_with_reduction_25, square_with_reduction_26, square_with_reduction_27, square_with_reduction_28, square_with_reduction_29, square_with_reduction_31, square_with_reduction_32, square_with_reduction_33, square_with_reduction_34, square_with_reduction_35, square_with_reduction_36, square_with_reduction_37, square_with_reduction_38, square_with_reduction_39, square_with_reduction_40, square_with_reduction_41, square_with_reduction_42, square_with_reduction_43, square_with_reduction_44, square_with_reduction_45, square_with_reduction_46, square_with_reduction_47, square_with_reduction_48, square_with_reduction_49, square_with_reduction_50,
 -- 0011 square with reduction and prime line equal to 1
-square_with_reduction_special_prime_0, square_with_reduction_special_prime_1, square_with_reduction_special_prime_3, square_with_reduction_special_prime_4, square_with_reduction_special_prime_5, square_with_reduction_special_prime_6, square_with_reduction_special_prime_7, square_with_reduction_special_prime_9, square_with_reduction_special_prime_10, square_with_reduction_special_prime_11, square_with_reduction_special_prime_12, square_with_reduction_special_prime_13, square_with_reduction_special_prime_14, square_with_reduction_special_prime_15, square_with_reduction_special_prime_16, square_with_reduction_special_prime_17, square_with_reduction_special_prime_18, square_with_reduction_special_prime_19, square_with_reduction_special_prime_21, square_with_reduction_special_prime_22, square_with_reduction_special_prime_23, square_with_reduction_special_prime_24, square_with_reduction_special_prime_25, square_with_reduction_special_prime_26, square_with_reduction_special_prime_27, square_with_reduction_special_prime_28, square_with_reduction_special_prime_29, square_with_reduction_special_prime_30, square_with_reduction_special_prime_31, square_with_reduction_special_prime_32, square_with_reduction_special_prime_33, square_with_reduction_special_prime_34, square_with_reduction_special_prime_35, square_with_reduction_special_prime_36, square_with_reduction_special_prime_37, square_with_reduction_special_prime_38, square_with_reduction_special_prime_39,
--- 0100 addition with no reduction
+square_with_reduction_special_prime_0, square_with_reduction_special_prime_1, square_with_reduction_special_prime_3, square_with_reduction_special_prime_4, square_with_reduction_special_prime_5, square_with_reduction_special_prime_6, square_with_reduction_special_prime_7, square_with_reduction_special_prime_9, square_with_reduction_special_prime_10, square_with_reduction_special_prime_11, square_with_reduction_special_prime_12, square_with_reduction_special_prime_13, square_with_reduction_special_prime_14, square_with_reduction_special_prime_15, square_with_reduction_special_prime_16, square_with_reduction_special_prime_17, square_with_reduction_special_prime_18, square_with_reduction_special_prime_19, square_with_reduction_special_prime_21, square_with_reduction_special_prime_22, square_with_reduction_special_prime_23, square_with_reduction_special_prime_24, square_with_reduction_special_prime_25, square_with_reduction_special_prime_26, square_with_reduction_special_prime_27, square_with_reduction_special_prime_28, square_with_reduction_special_prime_29, square_with_reduction_special_prime_30, square_with_reduction_special_prime_31, square_with_reduction_special_prime_32, square_with_reduction_special_prime_33, square_with_reduction_special_prime_34, square_with_reduction_special_prime_35, square_with_reduction_special_prime_36,
+-- 0100 addition/subtraction with no reduction
 addition_subtraction_direct_0, addition_subtraction_direct_2, addition_subtraction_direct_3, addition_subtraction_direct_5, addition_subtraction_direct_6, addition_subtraction_direct_8, addition_subtraction_direct_9,
 -- 0101 iterative modular reduction
 iterative_modular_reduction_0, iterative_modular_reduction_1, iterative_modular_reduction_2, iterative_modular_reduction_3, iterative_modular_reduction_5, iterative_modular_reduction_6, iterative_modular_reduction_7, iterative_modular_reduction_8, iterative_modular_reduction_9, iterative_modular_reduction_10, iterative_modular_reduction_11, iterative_modular_reduction_13, iterative_modular_reduction_14, iterative_modular_reduction_15, iterative_modular_reduction_16, iterative_modular_reduction_17, iterative_modular_reduction_18, iterative_modular_reduction_19, iterative_modular_reduction_20, iterative_modular_reduction_21, iterative_modular_reduction_22, iterative_modular_reduction_24, iterative_modular_reduction_25, iterative_modular_reduction_26, iterative_modular_reduction_27, iterative_modular_reduction_28, iterative_modular_reduction_29, iterative_modular_reduction_30, iterative_modular_reduction_31, iterative_modular_reduction_32, iterative_modular_reduction_33, iterative_modular_reduction_34, iterative_modular_reduction_35, iterative_modular_reduction_36,
-            
+-- 0110 addition/subtraction with reduction
+addition_subtraction_with_reduction_0, addition_subtraction_with_reduction_1, addition_subtraction_with_reduction_2, addition_subtraction_with_reduction_3, addition_subtraction_with_reduction_5, addition_subtraction_with_reduction_6, addition_subtraction_with_reduction_7, addition_subtraction_with_reduction_8, addition_subtraction_with_reduction_9, addition_subtraction_with_reduction_10, addition_subtraction_with_reduction_11, addition_subtraction_with_reduction_12, addition_subtraction_with_reduction_14, addition_subtraction_with_reduction_15, addition_subtraction_with_reduction_16, addition_subtraction_with_reduction_17, addition_subtraction_with_reduction_18, addition_subtraction_with_reduction_19, addition_subtraction_with_reduction_20, addition_subtraction_with_reduction_21, addition_subtraction_with_reduction_22, addition_subtraction_with_reduction_23, addition_subtraction_with_reduction_24, addition_subtraction_with_reduction_26, addition_subtraction_with_reduction_27, addition_subtraction_with_reduction_28, addition_subtraction_with_reduction_29, addition_subtraction_with_reduction_30, addition_subtraction_with_reduction_31, addition_subtraction_with_reduction_32, addition_subtraction_with_reduction_33, addition_subtraction_with_reduction_34, addition_subtraction_with_reduction_35, addition_subtraction_with_reduction_36, addition_subtraction_with_reduction_37, addition_subtraction_with_reduction_38, addition_subtraction_with_reduction_39,
 -- NOP
 nop_4_stages, nop_8_stages
 ); 
@@ -116,7 +106,20 @@ signal next_mac_memory_only_write_mode : std_logic;
 signal next_base_address_generator_o_increment_previous_address : std_logic;
 signal next_sm_free_flag : std_logic;
 
+signal ultimate_operation : std_logic;
+
 begin
+
+process(clk)
+begin
+    if(rising_edge(clk)) then
+        if(rstn = '0') then
+            ultimate_operation <= '0';
+        else
+            ultimate_operation <= penultimate_operation;
+        end if;
+    end if;
+end process;
 
 registers_state : process(clk, rstn)
 begin
@@ -192,9 +195,9 @@ begin
     end if;
 end process;
 
-update_output : process(actual_state, instruction_values_valid, instruction_type, operands_size)
+update_output : process(next_state)
 begin
-    case (actual_state) is
+    case (next_state) is
         when reset =>
             next_sm_free_flag <= '1';
             next_sm_rotation_size <= "11";
@@ -253,623 +256,9 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-            if(instruction_values_valid = '1') then
-                if(instruction_type = "0000") then
-                    if(operands_size = "00") then
-                        -- multiplication_direct_0;
-                        -- -- In case of size 1
-                        -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; o0_0 = reg_o; o1_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "11";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "00";
-                        next_sm_specific_mac_address_a <= "00";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '1';
-                        next_mac_enable_signed_b <= '1';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '0';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "10";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '1';
-                        next_mac_memory_double_mode <= '1';
-                        next_mac_memory_only_write_mode <= '1';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    else
-                        -- multiplication_direct_2;
-                        -- -- Other cases
-                        -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; o0_0 = reg_o; operation : a*b + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "11";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "00";
-                        next_sm_specific_mac_address_a <= "00";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '0';
-                        next_mac_enable_signed_b <= '0';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '0';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "10";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '1';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    end if;
-                elsif(instruction_type = "0001") then
-                    if(operands_size = "00") then
-                        -- square_direct_0;
-                        -- -- In case of size 1
-                        -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; o0_0 = reg_o; o1_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "11";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "00";
-                        next_sm_specific_mac_address_a <= "00";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '1';
-                        next_mac_enable_signed_b <= '1';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '0';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "10";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '1';
-                        next_mac_memory_double_mode <= '1';
-                        next_mac_memory_only_write_mode <= '1';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    else
-                        -- square_direct_2;
-                        -- -- In case of sizes 2, 3, 4
-                        -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; o0_0 = reg_o; operation : a*b + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "11";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "00";
-                        next_sm_specific_mac_address_a <= "00";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '0';
-                        next_mac_enable_signed_b <= '0';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '0';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "10";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '1';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    end if;
-                elsif(instruction_type = "0010") then
-                    if(prime_line_equal_one = '1') then
-                        if(operands_size = "00") then
-                            -- multiplication_with_reduction_special_prime_0;
-                            -- -- In case of size 1
-                            -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; Enable sign a,b; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '0';
-                            next_mac_enable_signed_b <= '0';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '0';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        else
-                            -- multiplication_with_reduction_special_prime_3;
-                            -- -- In case of sizes 2, 3, 4
-                            -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; o0_0 = reg_o; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '0';
-                            next_mac_enable_signed_b <= '0';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '1';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        end if;
-                    else
-                        if(operands_size = "00") then
-                            -- multiplication_with_reduction_0
-                            -- -- In case of size 1
-                            -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; Enable sign a,b; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '1';
-                            next_mac_enable_signed_b <= '1';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '0';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        else
-                            -- multiplication_with_reduction_5
-                            -- -- In case of sizes 2, 3, 4
-                            -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '0';
-                            next_mac_enable_signed_b <= '0';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '0';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        end if;
-                    end if;
-                elsif(instruction_type = "0011") then
-                    if(prime_line_equal_one = '1') then
-                        if(operands_size = "00") then
-                            -- square_with_reduction_special_prime_0
-                            -- -- In case of size 1
-                            -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; Enable sign a,b; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '1';
-                            next_mac_enable_signed_b <= '1';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '0';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        else
-                            -- square_with_reduction_special_prime_3
-                            -- -- In case of size 2, 3, 4
-                            -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; o0_0 = reg_o; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '0';
-                            next_mac_enable_signed_b <= '0';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '1';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        end if;
-                    else
-                        if(operands_size = "00") then
-                            -- square_with_reduction_0
-                            -- -- In case of size 1
-                            -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; Enable sign a,b; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '1';
-                            next_mac_enable_signed_b <= '1';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '0';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        else
-                            -- square_with_reduction_5
-                            -- -- In case of 2, 3, 4
-                            -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; operation : a*b + acc;
-                            next_sm_free_flag <= '0';
-                            next_sm_rotation_size <= "11";
-                            next_sm_circular_shift_enable <= '1';
-                            next_sel_address_a <= '0';
-                            next_sel_address_b_prime <= "00";
-                            next_sm_specific_mac_address_a <= "00";
-                            next_sm_specific_mac_address_b <= "00";
-                            next_sm_specific_mac_address_o <= "00";
-                            next_sm_specific_mac_next_address_o <= "01";
-                            next_mac_enable_signed_a <= '0';
-                            next_mac_enable_signed_b <= '0';
-                            next_mac_sel_load_reg_a <= "00";
-                            next_mac_clear_reg_b <= '0';
-                            next_mac_clear_reg_acc <= '1';
-                            next_mac_sel_shift_reg_o <= '0';
-                            next_mac_enable_update_reg_s <= '0';
-                            next_mac_sel_reg_s_reg_o_sign <= '0';
-                            next_mac_reg_s_reg_o_positive <= '0';
-                            next_sm_sign_a_mode <= '0';
-                            next_sm_mac_operation_mode <= "10";
-                            next_mac_enable_reg_s_mask <= '0';
-                            next_mac_subtraction_reg_a_b <= '0';
-                            next_mac_sel_multiply_two_a_b <= '0';
-                            next_mac_sel_reg_y_output <= '0';
-                            next_sm_mac_write_enable_output <= '0';
-                            next_mac_memory_double_mode <= '0';
-                            next_mac_memory_only_write_mode <= '0';
-                            next_base_address_generator_o_increment_previous_address <= '0';
-                        end if;
-                    end if;
-                elsif(instruction_type = "0100") then
-                    if(operands_size = "00") then
-                        -- addition_subtraction_direct_0
-                        -- -- In case of size 1
-                        -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; o0_0 = reg_o; Enable sign a,b; operation : b +/- a + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "10";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "00";
-                        next_sm_specific_mac_address_a <= "00";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '1';
-                        next_mac_enable_signed_b <= '1';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '0';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '1';
-                        next_sm_mac_operation_mode(1) <= '0';
-                        next_sm_mac_operation_mode(0) <= '0';
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '1';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    else
-                        -- addition_subtraction_direct_2
-                        -- -- In case of size 2, 3, 4
-                        -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; o0_0 = reg_o; operation : b +/- a + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "10";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "00";
-                        next_sm_specific_mac_address_a <= "00";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '0';
-                        next_mac_enable_signed_b <= '0';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '0';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '1';
-                        next_sm_mac_operation_mode(1) <= '0';
-                        next_sm_mac_operation_mode(0) <= '0';
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '1';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    end if;
-                elsif(instruction_type = "0101") then
-                    if(operands_size = "00") then
-                        -- iterative_modular_reduction_0
-                        -- reg_a = a0_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "10";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "10";
-                        next_sm_specific_mac_address_a <= "00";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '1';
-                        next_mac_enable_signed_b <= '1';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '1';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "01";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '0';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    elsif(operands_size = "01") then
-                        -- iterative_modular_reduction_5
-                        -- reg_a = a1_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "10";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "10";
-                        next_sm_specific_mac_address_a <= "01";
-                        next_sm_specific_mac_address_b <= "00";
-                        next_sm_specific_mac_address_o <= "00";
-                        next_sm_specific_mac_next_address_o <= "01";
-                        next_mac_enable_signed_a <= '1';
-                        next_mac_enable_signed_b <= '1';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '1';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "01";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '0';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    elsif(operands_size = "10") then
-                        -- iterative_modular_reduction_13
-                        -- reg_a = a2_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "10";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "10";
-                        next_sm_specific_mac_address_a <= "10";
-                        next_sm_specific_mac_address_b <= "10";
-                        next_sm_specific_mac_address_o <= "10";
-                        next_sm_specific_mac_next_address_o <= "11";
-                        next_mac_enable_signed_a <= '1';
-                        next_mac_enable_signed_b <= '1';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '1';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "01";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '0';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    else
-                        -- iterative_modular_reduction_24
-                        -- reg_a = a3_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
-                        next_sm_free_flag <= '0';
-                        next_sm_rotation_size <= "10";
-                        next_sm_circular_shift_enable <= '1';
-                        next_sel_address_a <= '0';
-                        next_sel_address_b_prime <= "10";
-                        next_sm_specific_mac_address_a <= "11";
-                        next_sm_specific_mac_address_b <= "11";
-                        next_sm_specific_mac_address_o <= "11";
-                        next_sm_specific_mac_next_address_o <= "00";
-                        next_mac_enable_signed_a <= '1';
-                        next_mac_enable_signed_b <= '1';
-                        next_mac_sel_load_reg_a <= "00";
-                        next_mac_clear_reg_b <= '1';
-                        next_mac_clear_reg_acc <= '1';
-                        next_mac_sel_shift_reg_o <= '0';
-                        next_mac_enable_update_reg_s <= '0';
-                        next_mac_sel_reg_s_reg_o_sign <= '0';
-                        next_mac_reg_s_reg_o_positive <= '0';
-                        next_sm_sign_a_mode <= '0';
-                        next_sm_mac_operation_mode <= "01";
-                        next_mac_enable_reg_s_mask <= '0';
-                        next_mac_subtraction_reg_a_b <= '0';
-                        next_mac_sel_multiply_two_a_b <= '0';
-                        next_mac_sel_reg_y_output <= '0';
-                        next_sm_mac_write_enable_output <= '0';
-                        next_mac_memory_double_mode <= '0';
-                        next_mac_memory_only_write_mode <= '0';
-                        next_base_address_generator_o_increment_previous_address <= '0';
-                    end if;
-                end if;
-                
-                
-                if(instruction_type = "0000") then
-                    next_sm_rotation_size <= "11";
-                elsif(instruction_type = "0001") then
-                    next_sm_rotation_size <= "11";
-                elsif(instruction_type = "0010") then
-                    next_sm_rotation_size <= "11";
-                elsif(instruction_type = "0011") then
-                    next_sm_rotation_size <= "11";
-                elsif(instruction_type = "0100") then
-                    next_sm_rotation_size <= "10";
-                elsif(instruction_type = "0101") then
-                    next_sm_rotation_size <= "10";
-                elsif(instruction_type = "0110") then
-                    next_sm_rotation_size <= "00";
-                end if;
-            end if;
         when multiplication_direct_0 =>
         -- -- In case of size 1
-        -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; o0_0 = reg_o; o1_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+        -- reg_a = a0_0; reg_b = b0_0; reg_acc = 0; o0_0 = reg_o; o1_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -931,7 +320,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_3 =>
         -- -- In case of size 2
-        -- reg_a = a1_0; reg_b = b0_0; reg_acc = reg_o >> 272; Enable sign a; operation : a*b + acc;
+        -- reg_a = a1_0; reg_b = b0_0; reg_acc = reg_o >> 256; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -991,7 +380,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_5 =>
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 272; o2_0 = reg_o; o3_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 256; o2_0 = reg_o; o3_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1022,7 +411,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_7 =>
         -- -- In case of size 3, 4           
-        -- reg_a = a1_0; reg_b = b0_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+        -- reg_a = a1_0; reg_b = b0_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1082,7 +471,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_9 =>
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1173,7 +562,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_12 =>
-            -- reg_a = a2_0; reg_b = b1_0; reg_acc = reg_o >> 272; Enable sign a; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = b1_0; reg_acc = reg_o >> 256; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1233,7 +622,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '1';
         when multiplication_direct_14 =>
-        -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 272; o4_0 = reg_o; o5_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+        -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 256; o4_0 = reg_o; o5_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1324,7 +713,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_18 =>
-            -- reg_a = a2_0; reg_b = b1_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = b1_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1444,7 +833,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '1';
         when multiplication_direct_22 =>
-            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1534,7 +923,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_25 =>
-            -- reg_a = a3_0; reg_b = b2_0; reg_acc = reg_o >> 272; Enable sign a; operation : a*b + acc;
+            -- reg_a = a3_0; reg_b = b2_0; reg_acc = reg_o >> 256; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1594,7 +983,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_direct_27 =>
-            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 272; o6_0 = reg_o; o7_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 256; o6_0 = reg_o; o7_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1625,7 +1014,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_0 => 
             -- -- In case of size 1
-            -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; o0_0 = reg_o; o1_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a0_0; reg_b = a0_0; reg_acc = 0; o0_0 = reg_o; o1_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1687,7 +1076,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_3 => 
             -- -- In case of size 2
-            -- reg_a = a1_0; reg_b = a0_0; reg_acc = reg_o >> 272; o1_0 = reg_o; Enable sign a; operation : 2*a*b + acc;
+            -- reg_a = a1_0; reg_b = a0_0; reg_acc = reg_o >> 256; o1_0 = reg_o; Enable sign a; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1717,7 +1106,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_4 => 
-            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 272; o2_0 = reg_o; o3_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 256; o2_0 = reg_o; o3_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1748,7 +1137,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_6 => 
             -- -- In case of sizes 3, 4
-            -- reg_a = a1_0; reg_b = a0_0; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : 2*a*b + acc;
+            -- reg_a = a1_0; reg_b = a0_0; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1778,7 +1167,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_7 =>
-            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1839,7 +1228,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_9 =>
-            -- reg_a = a2_0; reg_b = a1_0; reg_acc = reg_o >> 272; o3_0 = reg_o; Enable sign a; operation : 2*a*b + acc; Increment o3_0 base address
+            -- reg_a = a2_0; reg_b = a1_0; reg_acc = reg_o >> 256; o3_0 = reg_o; Enable sign a; operation : 2*a*b + acc; Increment o3_0 base address
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1869,7 +1258,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '1';
         when square_direct_10 =>
-            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 272; o4_0 = reg_o; o5_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 256; o4_0 = reg_o; o5_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1930,7 +1319,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_13 =>
-            -- reg_a = a2_0; reg_b = a1_0; reg_acc = reg_o >> 272; operation : 2*a*b + acc;
+            -- reg_a = a2_0; reg_b = a1_0; reg_acc = reg_o >> 256; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -1990,7 +1379,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '1';
         when square_direct_15 =>
-            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2050,7 +1439,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_17 =>
-            -- reg_a = a3_0; reg_b = a2_0; reg_acc = reg_o >> 272; o5_0 = reg_o; Enable sign a; operation : 2*a*b + acc;
+            -- reg_a = a3_0; reg_b = a2_0; reg_acc = reg_o >> 256; o5_0 = reg_o; Enable sign a; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2080,7 +1469,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_direct_18 =>
-            -- reg_a = a3_0; reg_b = a3_0; reg_acc = reg_o >> 272; o6_0 = reg_o; o7_0 = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a3_0; reg_b = a3_0; reg_acc = reg_o >> 256; o6_0 = reg_o; o7_0 = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2201,7 +1590,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_3 =>
-            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 272; o0_0 = reg_o; operation : a*b + acc;
+            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 256; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2323,7 +1712,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_8 =>
             -- -- In case of size 2
-            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2473,7 +1862,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_13 =>
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2503,7 +1892,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_14 =>
-            -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2534,7 +1923,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_16 =>
             -- -- In case of sizes 3, 4
-            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -2684,19 +2073,18 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_21 =>
-            -- -- In case of size 3
-            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+            -- reg_a = o0_0; reg_b = prime2; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "10";
             next_sm_specific_mac_address_a <= "00";
             next_sm_specific_mac_address_b <= "10";
             next_sm_specific_mac_address_o <= "00";
             next_sm_specific_mac_next_address_o <= "01";
             next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '1';
+            next_mac_enable_signed_b <= '0';
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
@@ -2715,36 +2103,6 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_22 =>
-            -- reg_a = o0_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_23 =>
             -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -2774,7 +2132,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_24 =>
+        when multiplication_with_reduction_23 =>
             -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -2787,6 +2145,37 @@ begin
             next_sm_specific_mac_next_address_o <= "01";
             next_mac_enable_signed_a <= '0';
             next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "10";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '0';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when multiplication_with_reduction_24 =>
+            -- -- In case of size 3
+            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o; Enable sign b; operation : a*b + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "11";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '1';
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
@@ -2895,7 +2284,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_28 =>
-            -- reg_a = a1_0; reg_b = b2_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = b2_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3015,7 +2404,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_32 =>
-            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3045,7 +2434,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_33 =>
-            -- reg_a = o2_0; reg_b = prime2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o2_0; reg_b = prime2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3076,7 +2465,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_35 =>
             -- -- In case of size 4
-            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3091,7 +2480,7 @@ begin
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '1';
+            next_mac_sel_shift_reg_o <= '0';
             next_mac_enable_update_reg_s <= '0';
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
@@ -3106,96 +2495,6 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_36 =>
-            -- reg_a = o0_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_37 =>
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_38 =>
-            -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_39 =>
             -- reg_a = a2_0; reg_b = b0_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3225,7 +2524,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_40 =>
+        when multiplication_with_reduction_37 =>
             -- reg_a = reg_o; reg_b = prime_line_0; reg_acc = reg_o; o2_0 = reg_y; operation : keep accumulator;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3255,7 +2554,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_41 =>
+        when multiplication_with_reduction_38 =>
             -- reg_a = reg_y; reg_b = prime0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3285,8 +2584,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_42 =>
-            -- reg_a = a0_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+        when multiplication_with_reduction_39 =>
+            -- reg_a = a0_0; reg_b = b3_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3315,7 +2614,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_43 =>
+        when multiplication_with_reduction_40 =>
             -- reg_a = o0_0; reg_b = prime3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3345,7 +2644,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_44 =>
+        when multiplication_with_reduction_41 =>
             -- reg_a = a1_0; reg_b = b2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3375,7 +2674,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_45 =>
+        when multiplication_with_reduction_42 =>
             -- reg_a = o1_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3405,7 +2704,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_46 =>
+        when multiplication_with_reduction_43 =>
             -- reg_a = a2_0; reg_b = b1_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3435,7 +2734,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_47 =>
+        when multiplication_with_reduction_44 =>
             -- reg_a = o2_0; reg_b = prime1; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3465,7 +2764,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_48 =>
+        when multiplication_with_reduction_45 =>
             -- reg_a = a3_0; reg_b = b0_0; reg_acc = reg_o; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3495,7 +2794,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_49 =>
+        when multiplication_with_reduction_46 =>
             -- reg_a = reg_o; reg_b = prime_line_0; reg_acc = reg_o; o3_0 = reg_y; operation : keep accumulator;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3525,7 +2824,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_50 =>
+        when multiplication_with_reduction_47 =>
             -- reg_a = reg_y; reg_b = prime0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3555,8 +2854,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_51 =>
-            -- reg_a = a1_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+        when multiplication_with_reduction_48 =>
+            -- reg_a = a1_0; reg_b = b3_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3585,7 +2884,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_52 =>
+        when multiplication_with_reduction_49 =>
             -- reg_a = o1_0; reg_b = prime3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3615,7 +2914,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_53 =>
+        when multiplication_with_reduction_50 =>
             -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3645,7 +2944,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_54 =>
+        when multiplication_with_reduction_51 =>
             -- reg_a = o2_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3675,7 +2974,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_55 =>
+        when multiplication_with_reduction_52 =>
             -- reg_a = a3_0; reg_b = b1_0; reg_acc = reg_o; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3705,7 +3004,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_56 =>
+        when multiplication_with_reduction_53 =>
             -- reg_a = o3_0; reg_b = prime1; reg_acc = reg_o; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3735,8 +3034,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_57 =>
-            -- reg_a = a2_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+        when multiplication_with_reduction_54 =>
+            -- reg_a = a2_0; reg_b = b3_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3765,7 +3064,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_58 =>
+        when multiplication_with_reduction_55 =>
             -- reg_a = o2_0; reg_b = prime3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3795,7 +3094,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_59 =>
+        when multiplication_with_reduction_56 =>
             -- reg_a = a3_0; reg_b = b2_0; reg_acc = reg_o; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3825,7 +3124,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_60 =>
+        when multiplication_with_reduction_57 =>
             -- reg_a = o3_0; reg_b = prime2; reg_acc = reg_o; o1_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -3855,8 +3154,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_61 =>
-            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+        when multiplication_with_reduction_58 =>
+            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3885,8 +3184,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_62 =>
-            -- reg_a = o3_0; reg_b = prime3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 272; operation : a*b + acc;
+        when multiplication_with_reduction_59 =>
+            -- reg_a = o3_0; reg_b = prime3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -3947,7 +3246,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_1 =>
-            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 272; o0_0 = reg_o; operation : a*b + acc;
+            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 256; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4009,7 +3308,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_4 =>
             -- -- In case of size 2
-            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4099,7 +3398,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_7 =>
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4129,7 +3428,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_8 =>
-            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4160,7 +3459,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_10 =>
             -- -- In case of sizes 3, 4
-            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a0_0; reg_b = b1_0; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4250,13 +3549,12 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_13 =>
-            -- -- In case of size 3
-            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+            -- reg_a = o0_X; reg_b = primeSP2; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "10";
             next_sm_specific_mac_address_a <= "00";
             next_sm_specific_mac_address_b <= "10";
             next_sm_specific_mac_address_o <= "00";
@@ -4281,36 +3579,6 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_14 =>
-            -- reg_a = o0_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_15 =>
             -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4340,7 +3608,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_16 =>
+        when multiplication_with_reduction_special_prime_15 =>
             -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4353,6 +3621,37 @@ begin
             next_sm_specific_mac_next_address_o <= "01";
             next_mac_enable_signed_a <= '0';
             next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "10";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '0';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when multiplication_with_reduction_special_prime_16 =>
+            -- -- In case of size 3
+            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o; Enable sign b; operation : a*b + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "11";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '1';
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
@@ -4401,7 +3700,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_18 =>
-            -- reg_a = a1_0; reg_b = b2_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = b2_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4521,7 +3820,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_22 =>
-            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4551,7 +3850,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_23 =>
-            -- reg_a = o2_0; reg_b = primeSP2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o2_0; reg_b = primeSP2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4582,7 +3881,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_25 =>
             -- -- In case of size 4
-            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = a0_0; reg_b = b2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4597,7 +3896,7 @@ begin
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '1';
+            next_mac_sel_shift_reg_o <= '0';
             next_mac_enable_update_reg_s <= '0';
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
@@ -4612,96 +3911,6 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when multiplication_with_reduction_special_prime_26 =>
-            -- reg_a = o0_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_27 =>
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_28 =>
-            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_29 =>
             -- reg_a = a2_0; reg_b = b0_0; reg_acc = reg_o; o2_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4731,19 +3940,19 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_30 =>
-            -- reg_a = a0_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+        when multiplication_with_reduction_special_prime_27 =>
+            -- reg_a = o0_0; reg_b = primeSP3; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "10";
             next_sm_specific_mac_address_a <= "00";
             next_sm_specific_mac_address_b <= "11";
             next_sm_specific_mac_address_o <= "00";
             next_sm_specific_mac_next_address_o <= "01";
             next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '1';
+            next_mac_enable_signed_b <= '0';
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
@@ -4761,37 +3970,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_31 =>
-            -- reg_a = o0_0; reg_b = primeSP3; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "11";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_32 =>
+        when multiplication_with_reduction_special_prime_28 =>
             -- reg_a = a1_0; reg_b = b2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4821,7 +4000,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_33 =>
+        when multiplication_with_reduction_special_prime_29 =>
             -- reg_a = o1_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4851,7 +4030,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_34 =>
+        when multiplication_with_reduction_special_prime_30 =>
             -- reg_a = a2_0; reg_b = b1_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4881,7 +4060,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_35 =>
+        when multiplication_with_reduction_special_prime_31 =>
             -- reg_a = o2_0; reg_b = primeSP1; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4911,7 +4090,37 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_36 =>
+        when multiplication_with_reduction_special_prime_32 =>
+            -- reg_a = a0_0; reg_b = b3_0; reg_acc = reg_o; Enable sign b; operation : a*b + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "11";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "11";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "10";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '0';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when multiplication_with_reduction_special_prime_33 =>
             -- reg_a = a3_0; reg_b = b0_0; reg_acc = reg_o; o3_0 = reg_o; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -4941,8 +4150,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_37 =>
-            -- reg_a = a1_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+        when multiplication_with_reduction_special_prime_34 =>
+            -- reg_a = a1_0; reg_b = b3_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -4971,7 +4180,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_38 =>
+        when multiplication_with_reduction_special_prime_35 =>
             -- reg_a = o1_0; reg_b = primeSP3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5001,7 +4210,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_39 =>
+        when multiplication_with_reduction_special_prime_36 =>
             -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5031,7 +4240,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_40 =>
+        when multiplication_with_reduction_special_prime_37 =>
             -- reg_a = o2_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5061,7 +4270,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_41 =>
+        when multiplication_with_reduction_special_prime_38 =>
             -- reg_a = a3_0; reg_b = b1_0; reg_acc = reg_o; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5091,7 +4300,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_42 =>
+        when multiplication_with_reduction_special_prime_39 =>
             -- reg_a = o3_0; reg_b = primeSP1; reg_acc = reg_o; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5121,8 +4330,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_43 =>
-            -- reg_a = a2_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign b; operation : a*b + acc;
+        when multiplication_with_reduction_special_prime_40 =>
+            -- reg_a = a2_0; reg_b = b3_0; reg_acc = reg_o >> 256; Enable sign b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5151,7 +4360,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_44 =>
+        when multiplication_with_reduction_special_prime_41 =>
             -- reg_a = o2_0; reg_b = primeSP3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5181,7 +4390,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_45 =>
+        when multiplication_with_reduction_special_prime_42 =>
             -- reg_a = a3_0; reg_b = b2_0; reg_acc = reg_o; Enable sign a; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5211,7 +4420,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_46 =>
+        when multiplication_with_reduction_special_prime_43 =>
             -- reg_a = o3_0; reg_b = primeSP2; reg_acc = reg_o; o1_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5241,8 +4450,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_47 =>
-            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+        when multiplication_with_reduction_special_prime_44 =>
+            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5271,8 +4480,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when multiplication_with_reduction_special_prime_48 =>
-            -- reg_a = o3_0; reg_b = primeSP3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 272; operation : a*b + acc;
+        when multiplication_with_reduction_special_prime_45 =>
+            -- reg_a = o3_0; reg_b = primeSP3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5393,7 +4602,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_3 =>
-            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 272; o0_0 = reg_o; operation : a*b + acc;
+            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 256; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5515,7 +4724,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_8 =>
             -- -- In case of size 2
-            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5635,7 +4844,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_12 =>
-            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5665,7 +4874,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_13 =>
-            -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5696,7 +4905,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_15 =>
             -- -- In case of size 3, 4
-            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 272; operation : 2*a*b + acc;
+            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 256; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5816,38 +5025,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_19 =>
-            -- -- In case of size 3
-            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '1';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '1';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '1';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_20 =>
-            -- reg_a = o0_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
+            -- reg_a = o0_0; reg_b = prime2; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -5862,7 +5040,7 @@ begin
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
+            next_mac_sel_shift_reg_o <= '1';
             next_mac_enable_update_reg_s <= '0';
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
@@ -5876,7 +5054,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_21 =>
+        when square_with_reduction_20 =>
             -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5906,7 +5084,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_22 =>
+        when square_with_reduction_21 =>
             -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -5931,6 +5109,37 @@ begin
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '0';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when square_with_reduction_22 =>
+            -- -- In case of size 3
+            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o; Enable sign b; operation : 2*a*b + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "11";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "10";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '1';
             next_mac_sel_reg_y_output <= '0';
             next_sm_mac_write_enable_output <= '0';
             next_mac_memory_double_mode <= '0';
@@ -5997,7 +5206,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_25 =>
-            -- reg_a = a1_0; reg_b = a2_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+            -- reg_a = a1_0; reg_b = a2_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6087,7 +5296,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_28 =>
-            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6117,7 +5326,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_29 =>
-            -- reg_a = o2_0; reg_b = prime2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o2_0; reg_b = prime2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6148,7 +5357,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_31 =>
             -- -- In case of size 4
-            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o >> 272; operation : 2*a*b + acc;
+            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6163,7 +5372,7 @@ begin
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '1';
+            next_mac_sel_shift_reg_o <= '0';
             next_mac_enable_update_reg_s <= '0';
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
@@ -6178,96 +5387,6 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_32 =>
-            -- reg_a = o0_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_33 =>
-            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_34 =>
-            -- reg_a = o1_0; reg_b = prime1; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_35 =>
             -- reg_a = reg_o; reg_b = prime_line_0; reg_acc = reg_o; o2_0 = reg_y; operation : keep accumulator;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6297,7 +5416,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_36 =>
+        when square_with_reduction_33 =>
             -- reg_a = reg_y; reg_b = prime0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6327,8 +5446,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_37 =>
-            -- reg_a = a0_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+        when square_with_reduction_34 =>
+            -- reg_a = a0_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6357,7 +5476,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_38 =>
+        when square_with_reduction_35 =>
             -- reg_a = o0_0; reg_b = prime3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6387,7 +5506,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_39 =>
+        when square_with_reduction_36 =>
             -- reg_a = a1_0; reg_b = a2_0; reg_acc = reg_o; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6417,7 +5536,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_40 =>
+        when square_with_reduction_37 =>
             -- reg_a = o1_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6447,7 +5566,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_41 =>
+        when square_with_reduction_38 =>
             -- reg_a = o2_0; reg_b = prime1; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6477,7 +5596,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_42 =>
+        when square_with_reduction_39 =>
             -- reg_a = reg_o; reg_b = prime_line_0; reg_acc = reg_o; o3_0 = reg_y; operation : keep accumulator;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6507,7 +5626,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_43 =>
+        when square_with_reduction_40 =>
             -- reg_a = reg_y; reg_b = prime0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6537,8 +5656,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_44 =>
-            -- reg_a = a1_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+        when square_with_reduction_41 =>
+            -- reg_a = a1_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6567,7 +5686,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_45 =>
+        when square_with_reduction_42 =>
             -- reg_a = o1_0; reg_b = prime3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6597,7 +5716,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_46 =>
+        when square_with_reduction_43 =>
             -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6627,7 +5746,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_47 =>
+        when square_with_reduction_44 =>
             -- reg_a = o2_0; reg_b = prime2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6657,7 +5776,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_48 =>
+        when square_with_reduction_45 =>
             -- reg_a = o3_0; reg_b = prime1; reg_acc = reg_o; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6687,8 +5806,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_49 =>
-            -- reg_a = a2_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+        when square_with_reduction_46 =>
+            -- reg_a = a2_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6717,7 +5836,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_50 =>
+        when square_with_reduction_47 =>
             -- reg_a = o2_0; reg_b = prime3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6747,7 +5866,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_51 =>
+        when square_with_reduction_48 =>
             -- reg_a = o3_0; reg_b = prime2; reg_acc = reg_o; o1_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -6777,8 +5896,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_52 =>
-            -- reg_a = a3_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+        when square_with_reduction_49 =>
+            -- reg_a = a3_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6807,8 +5926,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_53 =>
-            -- reg_a = o3_0; reg_b = prime3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 272; operation : a*b + acc;
+        when square_with_reduction_50 =>
+            -- reg_a = o3_0; reg_b = prime3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6869,7 +5988,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_1 =>
-            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 272; o0_0 = reg_o; operation : a*b + acc;
+            -- reg_a = 0; reg_b = 0; reg_acc = reg_o >> 256; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6931,7 +6050,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_4 =>
             -- -- In case of size 2
-            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -6991,7 +6110,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_6 =>
-            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7021,7 +6140,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_7 =>
-            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; o0_0 = reg_o; o1_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7052,7 +6171,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_9 =>
             -- -- In case of size 3, 4
-            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 272; operation : 2*a*b + acc;
+            -- reg_a = a0_0; reg_b = a1_0; reg_acc = reg_o >> 256; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7112,38 +6231,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_11 =>
-            -- -- In case of size 3
-            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '1';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '1';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '1';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_12 =>
-            -- reg_a = o0_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
+            -- reg_a = o0_0; reg_b = primeSP2; reg_acc = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7158,7 +6246,7 @@ begin
             next_mac_sel_load_reg_a <= "00";
             next_mac_clear_reg_b <= '0';
             next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
+            next_mac_sel_shift_reg_o <= '1';
             next_mac_enable_update_reg_s <= '0';
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
@@ -7172,7 +6260,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_13 =>
+        when square_with_reduction_special_prime_12 =>
             -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7202,8 +6290,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_14 =>
-            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; o2_0 = reg_o; operation : a*b + acc;
+        when square_with_reduction_special_prime_13 =>
+            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7211,8 +6299,8 @@ begin
             next_sel_address_b_prime <= "10";
             next_sm_specific_mac_address_a <= "01";
             next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "10";
-            next_sm_specific_mac_next_address_o <= "11";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
             next_mac_enable_signed_a <= '0';
             next_mac_enable_signed_b <= '0';
             next_mac_sel_load_reg_a <= "00";
@@ -7228,12 +6316,43 @@ begin
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
             next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '0';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when square_with_reduction_special_prime_14 =>
+            -- -- In case of size 3
+            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o; o2_0 = reg_o; Enable sign b; operation : 2*a*b + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "11";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "11";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "10";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '1';
+            next_mac_sel_reg_y_output <= '0';
             next_sm_mac_write_enable_output <= '1';
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_15 =>
-            -- reg_a = a1_0; reg_b = a2_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+            -- reg_a = a1_0; reg_b = a2_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7323,7 +6442,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_18 =>
-            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+            -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7353,7 +6472,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_19 =>
-            -- reg_a = o2_0; reg_b = primeSP2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 272; operation : a*b + acc;
+            -- reg_a = o2_0; reg_b = primeSP2; reg_acc = reg_o; o1_0 = reg_o; o2_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7384,7 +6503,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when square_with_reduction_special_prime_21 =>
             -- -- In case of size 4
-            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o >> 272; operation : 2*a*b + acc;
+            -- reg_a = a0_0; reg_b = a2_0; reg_acc = reg_o; o2_0 = reg_o; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7392,96 +6511,6 @@ begin
             next_sel_address_b_prime <= "00";
             next_sm_specific_mac_address_a <= "00";
             next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '1';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '1';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_22 =>
-            -- reg_a = o0_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "00";
-            next_sm_specific_mac_address_b <= "10";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_23 =>
-            -- reg_a = a1_0; reg_b = a1_0; reg_acc = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '0';
-            next_sel_address_b_prime <= "00";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
-            next_sm_specific_mac_address_o <= "00";
-            next_sm_specific_mac_next_address_o <= "01";
-            next_mac_enable_signed_a <= '0';
-            next_mac_enable_signed_b <= '0';
-            next_mac_sel_load_reg_a <= "00";
-            next_mac_clear_reg_b <= '0';
-            next_mac_clear_reg_acc <= '0';
-            next_mac_sel_shift_reg_o <= '0';
-            next_mac_enable_update_reg_s <= '0';
-            next_mac_sel_reg_s_reg_o_sign <= '0';
-            next_mac_reg_s_reg_o_positive <= '0';
-            next_sm_sign_a_mode <= '0';
-            next_sm_mac_operation_mode <= "10";
-            next_mac_enable_reg_s_mask <= '0';
-            next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
-            next_mac_sel_reg_y_output <= '0';
-            next_sm_mac_write_enable_output <= '0';
-            next_mac_memory_double_mode <= '0';
-            next_mac_memory_only_write_mode <= '0';
-            next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_24 =>
-            -- reg_a = o1_0; reg_b = primeSP1; reg_acc = reg_o; o2_0 = reg_o; operation : a*b + acc;
-            next_sm_free_flag <= '0';
-            next_sm_rotation_size <= "11";
-            next_sm_circular_shift_enable <= '1';
-            next_sel_address_a <= '1';
-            next_sel_address_b_prime <= "10";
-            next_sm_specific_mac_address_a <= "01";
-            next_sm_specific_mac_address_b <= "01";
             next_sm_specific_mac_address_o <= "10";
             next_sm_specific_mac_next_address_o <= "11";
             next_mac_enable_signed_a <= '0';
@@ -7497,14 +6526,14 @@ begin
             next_sm_mac_operation_mode <= "10";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
-            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '1';
             next_mac_sel_reg_y_output <= '0';
             next_sm_mac_write_enable_output <= '1';
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_25 =>
-            -- reg_a = a0_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+        when square_with_reduction_special_prime_22 =>
+            -- reg_a = a0_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7533,7 +6562,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_26 =>
+        when square_with_reduction_special_prime_23 =>
             -- reg_a = o0_0; reg_b = primeSP3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7563,7 +6592,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_27 =>
+        when square_with_reduction_special_prime_24 =>
             -- reg_a = a1_0; reg_b = a2_0; reg_acc = reg_o; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7593,7 +6622,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_28 =>
+        when square_with_reduction_special_prime_25 =>
             -- reg_a = o1_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7623,7 +6652,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_29 =>
+        when square_with_reduction_special_prime_26 =>
             -- reg_a = o2_0; reg_b = primeSP1; reg_acc = reg_o; o3_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7653,8 +6682,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_30 =>
-            -- reg_a = a1_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+        when square_with_reduction_special_prime_27 =>
+            -- reg_a = a1_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7683,7 +6712,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_31 =>
+        when square_with_reduction_special_prime_28 =>
             -- reg_a = o1_0; reg_b = primeSP3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7713,7 +6742,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_32 =>
+        when square_with_reduction_special_prime_29 =>
             -- reg_a = a2_0; reg_b = a2_0; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7743,7 +6772,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_33 =>
+        when square_with_reduction_special_prime_30 =>
             -- reg_a = o2_0; reg_b = primeSP2; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7773,7 +6802,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_34 =>
+        when square_with_reduction_special_prime_31 =>
             -- reg_a = o3_0; reg_b = primeSP1; reg_acc = reg_o; o0_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7803,8 +6832,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_35 =>
-            -- reg_a = a2_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign b; operation : 2*a*b + acc;
+        when square_with_reduction_special_prime_32 =>
+            -- reg_a = a2_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign b; operation : 2*a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7833,7 +6862,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_36 =>
+        when square_with_reduction_special_prime_33 =>
             -- reg_a = o2_0; reg_b = primeSP3; reg_acc = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7863,7 +6892,7 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_37 =>
+        when square_with_reduction_special_prime_34 =>
             -- reg_a = o3_0; reg_b = primeSP2; reg_acc = reg_o; o1_0 = reg_o; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
@@ -7893,8 +6922,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_38 =>
-            -- reg_a = a3_0; reg_b = a3_0; reg_acc = reg_o >> 272; Enable sign a,b; operation : a*b + acc;
+        when square_with_reduction_special_prime_35 =>
+            -- reg_a = a3_0; reg_b = a3_0; reg_acc = reg_o >> 256; Enable sign a,b; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7923,8 +6952,8 @@ begin
             next_mac_memory_double_mode <= '0';
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
-        when square_with_reduction_special_prime_39 =>
-            -- reg_a = o3_0; reg_b = primeSP3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 272; operation : a*b + acc;
+        when square_with_reduction_special_prime_36 =>
+            -- reg_a = o3_0; reg_b = primeSP3; reg_acc = reg_o; o2_0 = reg_o; o3_0 = reg_o >> 256; operation : a*b + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "11";
             next_sm_circular_shift_enable <= '1';
@@ -7975,8 +7004,7 @@ begin
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
             next_sm_sign_a_mode <= '1';
-            next_sm_mac_operation_mode(1) <= '0';
-            next_sm_mac_operation_mode(0) <= '0';
+            next_sm_mac_operation_mode <= "00";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
@@ -8007,8 +7035,7 @@ begin
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
             next_sm_sign_a_mode <= '1';
-            next_sm_mac_operation_mode(1) <= '0';
-            next_sm_mac_operation_mode(0) <= '0';
+            next_sm_mac_operation_mode <= "00";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
@@ -8019,7 +7046,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when addition_subtraction_direct_3 =>
             -- -- In case of size 2
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 272; o1_0 = reg_o; Enable sign a,b; operation : b +/- a + acc;
+            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 256; o1_0 = reg_o; Enable sign a,b; operation : b +/- a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8039,8 +7066,7 @@ begin
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
             next_sm_sign_a_mode <= '1';
-            next_sm_mac_operation_mode(1) <= '0';
-            next_sm_mac_operation_mode(0) <= '0';
+            next_sm_mac_operation_mode <= "00";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
@@ -8051,7 +7077,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when addition_subtraction_direct_5 =>
             -- -- In case of size 3, 4
-            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : b +/- a + acc;
+            -- reg_a = a1_0; reg_b = b1_0; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : b +/- a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8071,8 +7097,7 @@ begin
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
             next_sm_sign_a_mode <= '1';
-            next_sm_mac_operation_mode(1) <= '0';
-            next_sm_mac_operation_mode(0) <= '0';
+            next_sm_mac_operation_mode <= "00";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
@@ -8083,7 +7108,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when addition_subtraction_direct_6 =>
             -- -- In case of size 3
-            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 272; o2_0 = reg_o; Enable sign a,b; operation : b +/- a + acc;
+            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 256; o2_0 = reg_o; Enable sign a,b; operation : b +/- a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8103,8 +7128,7 @@ begin
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
             next_sm_sign_a_mode <= '1';
-            next_sm_mac_operation_mode(1) <= '0';
-            next_sm_mac_operation_mode(0) <= '0';
+            next_sm_mac_operation_mode <= "00";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
@@ -8115,7 +7139,7 @@ begin
             next_base_address_generator_o_increment_previous_address <= '0';
         when addition_subtraction_direct_8 =>
             -- -- In case of size 4
-            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 272; o2_0 = reg_o; operation : b +/- a + acc;
+            -- reg_a = a2_0; reg_b = b2_0; reg_acc = reg_o >> 256; o2_0 = reg_o; operation : b +/- a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8135,8 +7159,7 @@ begin
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
             next_sm_sign_a_mode <= '1';
-            next_sm_mac_operation_mode(1) <= '0';
-            next_sm_mac_operation_mode(0) <= '0';
+            next_sm_mac_operation_mode <= "00";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
@@ -8146,7 +7169,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when addition_subtraction_direct_9 =>
-            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 272; o3_0 = reg_o; Enable sign a,b; operation : b +/- a + acc;
+            -- reg_a = a3_0; reg_b = b3_0; reg_acc = reg_o >> 256; o3_0 = reg_o; Enable sign a,b; operation : b +/- a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8166,8 +7189,7 @@ begin
             next_mac_sel_reg_s_reg_o_sign <= '0';
             next_mac_reg_s_reg_o_positive <= '0';
             next_sm_sign_a_mode <= '1';
-            next_sm_mac_operation_mode(1) <= '0';
-            next_sm_mac_operation_mode(0) <= '0';
+            next_sm_mac_operation_mode <= "00";
             next_mac_enable_reg_s_mask <= '0';
             next_mac_subtraction_reg_a_b <= '0';
             next_mac_sel_multiply_two_a_b <= '0';
@@ -8177,6 +7199,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_0 =>
+            -- -- In case of size 1
             -- reg_a = a0_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
@@ -8297,6 +7320,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_5 =>
+            -- -- In case of size 2
             -- reg_a = a1_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
@@ -8357,7 +7381,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_7 =>
-            -- reg_a = a1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; Enable sign a,b; operation : -s*b + a + acc
+            -- reg_a = a1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; Enable sign a,b; operation : -s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8417,7 +7441,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_9 =>
-            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; Enable sign a,b operation : s*b + a + acc
+            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; Enable sign a,b operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8477,7 +7501,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_11 =>
-            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; Enable sign a,b operation : s*b + a + acc
+            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; Enable sign a,b operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8507,6 +7531,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_13 =>
+            -- -- In case of size 3
             -- reg_a = a2_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
@@ -8567,7 +7592,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_15 =>
-            -- reg_a = a1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : -s*b + a + acc
+            -- reg_a = a1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : -s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8597,7 +7622,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_16 =>
-            -- reg_a = a2_0; reg_b = prime_2; reg_acc = reg_o >> 272; o2_0 = reg_o; Enable sign a,b; operation : -s*b + a + acc
+            -- reg_a = a2_0; reg_b = prime_2; reg_acc = reg_o >> 256; o2_0 = reg_o; Enable sign a,b; operation : -s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8657,7 +7682,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_18 =>
-            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : s*b + a + acc
+            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8687,7 +7712,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_19 =>
-            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 272; o2_0 = reg_o; Enable sign a,b operation : s*b + a + acc
+            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 256; o2_0 = reg_o; Enable sign a,b operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8747,7 +7772,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_21 =>
-            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : s*b + a + acc
+            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8777,7 +7802,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_22 =>
-            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 272; o2_0 = reg_o; Enable sign a,b operation : s*b + a + acc
+            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 256; o2_0 = reg_o; Enable sign a,b operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8807,6 +7832,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_24 =>
+            -- -- In case of size 4
             -- reg_a = a3_0; reg_b = 0; reg_acc = 0; Enable sign a,b; operation : b + a + acc;
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
@@ -8867,7 +7893,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_26 =>
-            -- reg_a = a1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : -s*b + a + acc
+            -- reg_a = a1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : -s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8897,7 +7923,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_27 =>
-            -- reg_a = a2_0; reg_b = prime_2; reg_acc = reg_o >> 272; o2_0 = reg_o; operation : -s*b + a + acc
+            -- reg_a = a2_0; reg_b = prime_2; reg_acc = reg_o >> 256; o2_0 = reg_o; operation : -s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8927,7 +7953,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_28 =>
-            -- reg_a = a3_0; reg_b = prime_3; reg_acc = reg_o >> 272; o3_0 = reg_o; Enable sign a,b; operation : -s*b + a + acc
+            -- reg_a = a3_0; reg_b = prime_3; reg_acc = reg_o >> 256; o3_0 = reg_o; Enable sign a,b; operation : -s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -8987,7 +8013,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_30 =>
-            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : s*b + a + acc
+            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -9017,7 +8043,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_31 =>
-            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 272; o2_0 = reg_o; operation : s*b + a + acc
+            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 256; o2_0 = reg_o; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -9047,7 +8073,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_32 =>
-            -- reg_a = o3_0; reg_b = prime_3; reg_acc = reg_o >> 272; o3_0 = reg_o; Enable sign a,b; operation : s*b + a + acc
+            -- reg_a = o3_0; reg_b = prime_3; reg_acc = reg_o >> 256; o3_0 = reg_o; Enable sign a,b; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -9107,7 +8133,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_34 =>
-            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 272; o1_0 = reg_o; operation : s*b + a + acc
+            -- reg_a = o1_0; reg_b = prime_1; reg_acc = reg_o >> 256; o1_0 = reg_o; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -9137,7 +8163,7 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_35 =>
-            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 272; o2_0 = reg_o; operation : s*b + a + acc
+            -- reg_a = o2_0; reg_b = prime_2; reg_acc = reg_o >> 256; o2_0 = reg_o; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
@@ -9167,12 +8193,1128 @@ begin
             next_mac_memory_only_write_mode <= '0';
             next_base_address_generator_o_increment_previous_address <= '0';
         when iterative_modular_reduction_36 =>
-            -- reg_a = o3_0; reg_b = prime_3; reg_acc = reg_o >> 272; o3_0 = reg_o; Enable sign a,b; operation : s*b + a + acc
+            -- reg_a = o3_0; reg_b = prime_3; reg_acc = reg_o >> 256; o3_0 = reg_o; Enable sign a,b; operation : s*b + a + acc
             next_sm_free_flag <= '0';
             next_sm_rotation_size <= "10";
             next_sm_circular_shift_enable <= '1';
             next_sel_address_a <= '1';
             next_sel_address_b_prime <= "10";
+            next_sm_specific_mac_address_a <= "11";
+            next_sm_specific_mac_address_b <= "11";
+            next_sm_specific_mac_address_o <= "11";
+            next_sm_specific_mac_next_address_o <= "00";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_0 =>
+            -- Operands size 1
+            -- reg_a = a0_X; reg_b = b0_X; reg_acc = 0; o0_X = reg_o; Enable sign a,b; operation : b +/- a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '1';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_1 =>
+            -- reg_a = 0; reg_b = 2prime0; reg_acc = reg_o; reg_s = reg_o_positive; o0_X = reg_o; Enable sign a,b; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "11";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '1';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_2 =>
+            -- reg_a = 0; reg_b = 2prime0; reg_acc = reg_o; reg_s = reg_o_negative; o0_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "11";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_3 =>
+            -- reg_a = 0; reg_b = 2prime0; reg_acc = reg_o; reg_s = reg_o_negative; o0_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "11";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_5 =>
+            -- -- In case of sizes 2, 3, 4
+            -- reg_a = a0_X; reg_b = b0_X; reg_acc = 0; o0_X = reg_o; operation : b +/- a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '1';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_6 =>
+            -- -- In case of size 2
+            -- reg_a = a1_X; reg_b = b1_X; reg_acc = reg_o >> 256; o1_X = reg_o; Enable sign a, b; operation : b +/- a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '1';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_7 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '1';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_8 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; Enable sign a,b; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_9 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_10 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_11 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_12 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_14 =>
+            -- -- In case of sizes 3, 4
+            -- reg_a = a1_X; reg_b = b1_X; reg_acc = reg_o >> 256; o1_X = reg_o; operation : b +/- a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '1';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_15 =>
+            -- -- In case of size 3
+            -- reg_a = a2_X; reg_b = b2_X; reg_acc = reg_o >> 256; o2_X = reg_o; Enable sign a, b; operation : b +/- a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '1';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_16 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '1';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_17 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_18 =>
+            -- reg_a = o2_X; reg_b = 2prime2; reg_acc = reg_o >> 256; o2_X = reg_o; Enable sign a,b; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "11";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_19 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_20 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_21 =>
+            -- reg_a = o2_X; reg_b = 2prime2; reg_acc = reg_o >> 256; o2_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "11";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_22 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_23 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_24 =>
+            -- reg_a = o2_X; reg_b = 2prime2; reg_acc = reg_o >> 256; o2_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "11";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_26 =>
+            -- -- In case of size 4
+            -- reg_a = a2_X; reg_b = b2_X; reg_acc = reg_o >> 256; o2_X = reg_o; operation : b +/- a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '1';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_27 =>
+            -- reg_a = a3_X; reg_b = b3_X; reg_acc = reg_o >> 256; o3_X = reg_o; Enable sign a, b; operation : b +/- a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '0';
+            next_sel_address_b_prime <= "00";
+            next_sm_specific_mac_address_a <= "11";
+            next_sm_specific_mac_address_b <= "11";
+            next_sm_specific_mac_address_o <= "11";
+            next_sm_specific_mac_next_address_o <= "00";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '1';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '0';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_28 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_positive; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '1';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_29 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_30 =>
+            -- reg_a = o2_X; reg_b = 2prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "11";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_31 =>
+            -- reg_a = o3_X; reg_b = 2prime3; reg_acc = reg_o >> 256; o3_X = reg_o; Enable sign a,b; operation : -s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "11";
+            next_sm_specific_mac_address_b <= "11";
+            next_sm_specific_mac_address_o <= "11";
+            next_sm_specific_mac_next_address_o <= "00";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "00";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '1';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_32 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_33 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_34 =>
+            -- reg_a = o2_X; reg_b = 2prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "11";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_35 =>
+            -- reg_a = o3_X; reg_b = 2prime3; reg_acc = reg_o >> 256; o3_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "11";
+            next_sm_specific_mac_address_b <= "11";
+            next_sm_specific_mac_address_o <= "11";
+            next_sm_specific_mac_next_address_o <= "00";
+            next_mac_enable_signed_a <= '1';
+            next_mac_enable_signed_b <= '1';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_36 =>
+            -- reg_a = o0_X; reg_b = 2prime0; reg_acc = 0; o0_X = reg_o; reg_s = reg_o_negative; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "00";
+            next_sm_specific_mac_address_b <= "00";
+            next_sm_specific_mac_address_o <= "00";
+            next_sm_specific_mac_next_address_o <= "01";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '1';
+            next_mac_sel_shift_reg_o <= '0';
+            next_mac_enable_update_reg_s <= '1';
+            next_mac_sel_reg_s_reg_o_sign <= '1';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_37 =>
+            -- reg_a = o1_X; reg_b = 2prime1; reg_acc = reg_o >> 256; o1_X = reg_o; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "01";
+            next_sm_specific_mac_address_b <= "01";
+            next_sm_specific_mac_address_o <= "01";
+            next_sm_specific_mac_next_address_o <= "10";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_38 =>
+            -- reg_a = o2_X; reg_b = 2prime2; reg_acc = reg_o >> 256; o2_X = reg_o; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
+            next_sm_specific_mac_address_a <= "10";
+            next_sm_specific_mac_address_b <= "10";
+            next_sm_specific_mac_address_o <= "10";
+            next_sm_specific_mac_next_address_o <= "11";
+            next_mac_enable_signed_a <= '0';
+            next_mac_enable_signed_b <= '0';
+            next_mac_sel_load_reg_a <= "00";
+            next_mac_clear_reg_b <= '0';
+            next_mac_clear_reg_acc <= '0';
+            next_mac_sel_shift_reg_o <= '1';
+            next_mac_enable_update_reg_s <= '0';
+            next_mac_sel_reg_s_reg_o_sign <= '0';
+            next_mac_reg_s_reg_o_positive <= '0';
+            next_sm_sign_a_mode <= '0';
+            next_sm_mac_operation_mode <= "01";
+            next_mac_enable_reg_s_mask <= '1';
+            next_mac_subtraction_reg_a_b <= '0';
+            next_mac_sel_multiply_two_a_b <= '0';
+            next_mac_sel_reg_y_output <= '0';
+            next_sm_mac_write_enable_output <= '1';
+            next_mac_memory_double_mode <= '0';
+            next_mac_memory_only_write_mode <= '0';
+            next_base_address_generator_o_increment_previous_address <= '0';
+        when addition_subtraction_with_reduction_39 =>
+            -- reg_a = o3_X; reg_b = 2prime3; reg_acc = reg_o >> 256; o3_X = reg_o; Enable sign a,b; operation : s*b + a + acc;
+            next_sm_free_flag <= '0';
+            next_sm_rotation_size <= "10";
+            next_sm_circular_shift_enable <= '1';
+            next_sel_address_a <= '1';
+            next_sel_address_b_prime <= "01";
             next_sm_specific_mac_address_a <= "11";
             next_sm_specific_mac_address_b <= "11";
             next_sm_specific_mac_address_o <= "11";
@@ -9288,7 +9430,7 @@ begin
     end case;
 end process;
 
-update_state : process(actual_state, instruction_values_valid, instruction_type, prime_line_equal_one, operands_size, penultimate_operation)
+update_state : process(actual_state, instruction_values_valid, instruction_type, prime_line_equal_one, operands_size, ultimate_operation)
 begin
 case (actual_state) is
         when reset =>
@@ -9352,16 +9494,22 @@ case (actual_state) is
                     else
                         next_state <= iterative_modular_reduction_24;
                     end if;
+                elsif(instruction_type = "0110") then
+                    if(operands_size = "00") then
+                        next_state <= addition_subtraction_with_reduction_0;
+                    else
+                        next_state <= addition_subtraction_with_reduction_5;
+                    end if;
                 end if;
             end if;
         when multiplication_direct_0 =>
             next_state <= multiplication_direct_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_direct_2 =>
             next_state <= multiplication_direct_2;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "01") then
                     next_state <= multiplication_direct_3;
                 else
@@ -9370,32 +9518,32 @@ case (actual_state) is
             end if;
         when multiplication_direct_3 =>
             next_state <= multiplication_direct_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_4;
             end if;
         when multiplication_direct_4 =>
             next_state <= multiplication_direct_4;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_5;
             end if;
         when multiplication_direct_5 =>
             next_state <= multiplication_direct_5;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_direct_7 =>
             next_state <= multiplication_direct_7;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_8;
             end if;
         when multiplication_direct_8 =>
             next_state <= multiplication_direct_8;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_9;
             end if;
         when multiplication_direct_9 =>
             next_state <= multiplication_direct_9;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "10") then
                     next_state <= multiplication_direct_10;
                 else
@@ -9404,97 +9552,97 @@ case (actual_state) is
             end if;
         when multiplication_direct_10 =>
             next_state <= multiplication_direct_10;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_11;
             end if;
         when multiplication_direct_11 =>
             next_state <= multiplication_direct_11;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_12;
             end if;
         when multiplication_direct_12 =>
             next_state <= multiplication_direct_12;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_13;
             end if;
         when multiplication_direct_13 =>
             next_state <= multiplication_direct_13;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_14;
             end if;
         when multiplication_direct_14 =>
             next_state <= multiplication_direct_14;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_direct_16 =>
             next_state <= multiplication_direct_16;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_17;
             end if;
         when multiplication_direct_17 =>
             next_state <= multiplication_direct_17;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_18;
             end if;
         when multiplication_direct_18 =>
             next_state <= multiplication_direct_18;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_19;
             end if;
         when multiplication_direct_19 =>
             next_state <= multiplication_direct_19;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_20;
             end if;
         when multiplication_direct_20 =>
             next_state <= multiplication_direct_20;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_21;
             end if;
         when multiplication_direct_21 =>
             next_state <= multiplication_direct_21;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_22;
             end if;
         when multiplication_direct_22 =>
             next_state <= multiplication_direct_22;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_23;
             end if;
         when multiplication_direct_23 =>
             next_state <= multiplication_direct_23;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_24;
             end if;
         when multiplication_direct_24 =>
             next_state <= multiplication_direct_24;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_25;
             end if;
         when multiplication_direct_25 =>
             next_state <= multiplication_direct_25;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_26;
             end if;
         when multiplication_direct_26 =>
             next_state <= multiplication_direct_26;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_direct_27;
             end if;
         when multiplication_direct_27 =>
             next_state <= multiplication_direct_27;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_direct_0 => 
             next_state <= square_direct_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_direct_2 => 
             next_state <= square_direct_2;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "01") then
                     next_state <= square_direct_3;
                 else
@@ -9503,22 +9651,22 @@ case (actual_state) is
             end if;
         when square_direct_3 => 
             next_state <= square_direct_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_4;
             end if;
         when square_direct_4 => 
             next_state <= square_direct_4;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_direct_6 => 
             next_state <= square_direct_6;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_7;
             end if;
         when square_direct_7 => 
             next_state <= square_direct_7;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "10") then
                     next_state <= square_direct_8;
                 else
@@ -9527,87 +9675,87 @@ case (actual_state) is
             end if;
         when square_direct_8 => 
             next_state <= square_direct_8;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_9;
             end if;
         when square_direct_9 => 
             next_state <= square_direct_9;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_10;
             end if;
         when square_direct_10 => 
             next_state <= square_direct_10;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_direct_12 => 
             next_state <= square_direct_12;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_13;
             end if;
         when square_direct_13 => 
             next_state <= square_direct_13;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_14;
             end if;
         when square_direct_14 => 
             next_state <= square_direct_14;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_15;
             end if;
         when square_direct_15 => 
             next_state <= square_direct_15;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_16;
             end if;
         when square_direct_16 => 
             next_state <= square_direct_16;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_17;
             end if;
         when square_direct_17 => 
             next_state <= square_direct_17;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_direct_18;
             end if;
         when square_direct_18 => 
             next_state <= square_direct_18;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_with_reduction_0 => 
             next_state <= multiplication_with_reduction_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_1;
             end if;
         when multiplication_with_reduction_1 => 
             next_state <= multiplication_with_reduction_1;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_2;
             end if;
         when multiplication_with_reduction_2 => 
             next_state <= multiplication_with_reduction_2;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_3;
             end if;
         when multiplication_with_reduction_3 => 
             next_state <= multiplication_with_reduction_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_with_reduction_5 => 
             next_state <= multiplication_with_reduction_5;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_6;
             end if;
         when multiplication_with_reduction_6 => 
             next_state <= multiplication_with_reduction_6;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_7;
             end if;
         when multiplication_with_reduction_7 => 
             next_state <= multiplication_with_reduction_7;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "01") then
                     next_state <= multiplication_with_reduction_8;
                 else
@@ -9616,286 +9764,271 @@ case (actual_state) is
             end if;
         when multiplication_with_reduction_8 => 
             next_state <= multiplication_with_reduction_8;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_9;
             end if;
         when multiplication_with_reduction_9 => 
             next_state <= multiplication_with_reduction_9;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_10;
             end if;
         when multiplication_with_reduction_10 => 
             next_state <= multiplication_with_reduction_10;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_11;
             end if;
         when multiplication_with_reduction_11 => 
             next_state <= multiplication_with_reduction_11;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_12;
             end if;
         when multiplication_with_reduction_12 => 
             next_state <= multiplication_with_reduction_12;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_13;
             end if;
         when multiplication_with_reduction_13 => 
             next_state <= multiplication_with_reduction_13;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_14;
             end if;
         when multiplication_with_reduction_14 => 
             next_state <= multiplication_with_reduction_14;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_with_reduction_16 => 
             next_state <= multiplication_with_reduction_16;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_17;
             end if;
         when multiplication_with_reduction_17 => 
             next_state <= multiplication_with_reduction_17;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_18;
             end if;
         when multiplication_with_reduction_18 => 
             next_state <= multiplication_with_reduction_18;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_19;
             end if;
         when multiplication_with_reduction_19 => 
             next_state <= multiplication_with_reduction_19;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_20;
             end if;
         when multiplication_with_reduction_20 => 
             next_state <= multiplication_with_reduction_20;
-            if(penultimate_operation = '1') then
-                if(operands_size = "10") then
-                    next_state <= multiplication_with_reduction_21;
-                else
-                    next_state <= multiplication_with_reduction_35;
-                end if;
+            if(ultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_21;
             end if;
         when multiplication_with_reduction_21 => 
             next_state <= multiplication_with_reduction_21;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_22;
             end if;
         when multiplication_with_reduction_22 => 
             next_state <= multiplication_with_reduction_22;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_23;
             end if;
         when multiplication_with_reduction_23 => 
             next_state <= multiplication_with_reduction_23;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_24;
+            if(ultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= multiplication_with_reduction_24;
+                else
+                    next_state <= multiplication_with_reduction_35;
+                end if;
             end if;
         when multiplication_with_reduction_24 => 
             next_state <= multiplication_with_reduction_24;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_25;
             end if;
         when multiplication_with_reduction_25 => 
             next_state <= multiplication_with_reduction_25;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_26;
             end if;
         when multiplication_with_reduction_26 => 
             next_state <= multiplication_with_reduction_26;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_27;
             end if;
         when multiplication_with_reduction_27 => 
             next_state <= multiplication_with_reduction_27;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_28;
             end if;
         when multiplication_with_reduction_28 => 
             next_state <= multiplication_with_reduction_28;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_29;
             end if;
         when multiplication_with_reduction_29 => 
             next_state <= multiplication_with_reduction_29;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_30;
             end if;
         when multiplication_with_reduction_30 => 
             next_state <= multiplication_with_reduction_30;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_31;
             end if;
         when multiplication_with_reduction_31 => 
             next_state <= multiplication_with_reduction_31;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_32;
             end if;
         when multiplication_with_reduction_32 => 
             next_state <= multiplication_with_reduction_32;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_33;
             end if;
         when multiplication_with_reduction_33 => 
             next_state <= multiplication_with_reduction_33;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
        when multiplication_with_reduction_35 => 
             next_state <= multiplication_with_reduction_35;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_36;
             end if;
         when multiplication_with_reduction_36 => 
             next_state <= multiplication_with_reduction_36;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_37;
             end if;
         when multiplication_with_reduction_37 => 
             next_state <= multiplication_with_reduction_37;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_38;
             end if;
         when multiplication_with_reduction_38 => 
             next_state <= multiplication_with_reduction_38;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_39;
             end if;
         when multiplication_with_reduction_39 => 
             next_state <= multiplication_with_reduction_39;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_40;
             end if;
         when multiplication_with_reduction_40 => 
             next_state <= multiplication_with_reduction_40;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_41;
             end if;
         when multiplication_with_reduction_41 => 
             next_state <= multiplication_with_reduction_41;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_42;
             end if;
         when multiplication_with_reduction_42 => 
             next_state <= multiplication_with_reduction_42;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_43;
             end if;
         when multiplication_with_reduction_43 => 
             next_state <= multiplication_with_reduction_43;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_44;
             end if;
         when multiplication_with_reduction_44 => 
             next_state <= multiplication_with_reduction_44;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_45;
             end if;
         when multiplication_with_reduction_45 => 
             next_state <= multiplication_with_reduction_45;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_46;
             end if;
         when multiplication_with_reduction_46 => 
             next_state <= multiplication_with_reduction_46;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_47;
             end if;
         when multiplication_with_reduction_47 => 
             next_state <= multiplication_with_reduction_47;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_48;
             end if;
         when multiplication_with_reduction_48 => 
             next_state <= multiplication_with_reduction_48;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_49;
             end if;
         when multiplication_with_reduction_49 => 
             next_state <= multiplication_with_reduction_49;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_50;
             end if;
         when multiplication_with_reduction_50 => 
             next_state <= multiplication_with_reduction_50;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_51;
             end if;
         when multiplication_with_reduction_51 => 
             next_state <= multiplication_with_reduction_51;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_52;
             end if;
         when multiplication_with_reduction_52 => 
             next_state <= multiplication_with_reduction_52;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_53;
             end if;
         when multiplication_with_reduction_53 => 
             next_state <= multiplication_with_reduction_53;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_54;
             end if;
         when multiplication_with_reduction_54 => 
             next_state <= multiplication_with_reduction_54;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_55;
             end if;
         when multiplication_with_reduction_55 => 
             next_state <= multiplication_with_reduction_55;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_56;
             end if;
         when multiplication_with_reduction_56 => 
             next_state <= multiplication_with_reduction_56;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_57;
             end if;
         when multiplication_with_reduction_57 => 
             next_state <= multiplication_with_reduction_57;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_58;
             end if;
         when multiplication_with_reduction_58 => 
             next_state <= multiplication_with_reduction_58;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_59;
             end if;
         when multiplication_with_reduction_59 => 
             next_state <= multiplication_with_reduction_59;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_60;
-            end if;
-        when multiplication_with_reduction_60 => 
-            next_state <= multiplication_with_reduction_60;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_61;
-            end if;
-        when multiplication_with_reduction_61 => 
-            next_state <= multiplication_with_reduction_61;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_62;
-            end if;
-        when multiplication_with_reduction_62 => 
-            next_state <= multiplication_with_reduction_62;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_with_reduction_special_prime_0 => 
             next_state <= multiplication_with_reduction_special_prime_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_1;
             end if;
         when multiplication_with_reduction_special_prime_1 => 
             next_state <= multiplication_with_reduction_special_prime_1;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_with_reduction_special_prime_3 => 
             next_state <= multiplication_with_reduction_special_prime_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "01") then
                     next_state <= multiplication_with_reduction_special_prime_4;
                 else
@@ -9904,256 +10037,241 @@ case (actual_state) is
             end if;
         when multiplication_with_reduction_special_prime_4 => 
             next_state <= multiplication_with_reduction_special_prime_4;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_5;
             end if;
         when multiplication_with_reduction_special_prime_5 => 
             next_state <= multiplication_with_reduction_special_prime_5;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_6;
             end if;
         when multiplication_with_reduction_special_prime_6 => 
             next_state <= multiplication_with_reduction_special_prime_6;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_7;
             end if;
         when multiplication_with_reduction_special_prime_7 => 
             next_state <= multiplication_with_reduction_special_prime_7;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_8;
             end if;
         when multiplication_with_reduction_special_prime_8 => 
             next_state <= multiplication_with_reduction_special_prime_8;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_with_reduction_special_prime_10 => 
             next_state <= multiplication_with_reduction_special_prime_10;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_11;
             end if;
         when multiplication_with_reduction_special_prime_11 => 
             next_state <= multiplication_with_reduction_special_prime_11;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_12;
             end if;
         when multiplication_with_reduction_special_prime_12 => 
             next_state <= multiplication_with_reduction_special_prime_12;
-            if(penultimate_operation = '1') then
-                if(operands_size = "10") then
-                    next_state <= multiplication_with_reduction_special_prime_13;
-                else
-                    next_state <= multiplication_with_reduction_special_prime_25;
-                end if;
+            if(ultimate_operation = '1') then
+                next_state <= multiplication_with_reduction_special_prime_13;
             end if;
         when multiplication_with_reduction_special_prime_13 => 
             next_state <= multiplication_with_reduction_special_prime_13;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_14;
             end if;
         when multiplication_with_reduction_special_prime_14 => 
             next_state <= multiplication_with_reduction_special_prime_14;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_15;
             end if;
         when multiplication_with_reduction_special_prime_15 => 
             next_state <= multiplication_with_reduction_special_prime_15;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_special_prime_16;
+            if(ultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= multiplication_with_reduction_special_prime_16;
+                else
+                    next_state <= multiplication_with_reduction_special_prime_25;
+                end if;
             end if;
         when multiplication_with_reduction_special_prime_16 => 
             next_state <= multiplication_with_reduction_special_prime_16;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_17;
             end if;
         when multiplication_with_reduction_special_prime_17 => 
             next_state <= multiplication_with_reduction_special_prime_17;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_18;
             end if;
         when multiplication_with_reduction_special_prime_18 => 
             next_state <= multiplication_with_reduction_special_prime_18;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_19;
             end if;
         when multiplication_with_reduction_special_prime_19 => 
             next_state <= multiplication_with_reduction_special_prime_19;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_20;
             end if;
         when multiplication_with_reduction_special_prime_20 => 
             next_state <= multiplication_with_reduction_special_prime_20;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_21;
             end if;
         when multiplication_with_reduction_special_prime_21 => 
             next_state <= multiplication_with_reduction_special_prime_21;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_22;
             end if;
         when multiplication_with_reduction_special_prime_22 => 
             next_state <= multiplication_with_reduction_special_prime_22;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_23;
             end if;
         when multiplication_with_reduction_special_prime_23 => 
             next_state <= multiplication_with_reduction_special_prime_23;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when multiplication_with_reduction_special_prime_25 => 
             next_state <= multiplication_with_reduction_special_prime_25;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_26;
             end if;
         when multiplication_with_reduction_special_prime_26 => 
             next_state <= multiplication_with_reduction_special_prime_26;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_27;
             end if;
         when multiplication_with_reduction_special_prime_27 => 
             next_state <= multiplication_with_reduction_special_prime_27;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_28;
             end if;
         when multiplication_with_reduction_special_prime_28 => 
             next_state <= multiplication_with_reduction_special_prime_28;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_29;
             end if;
         when multiplication_with_reduction_special_prime_29 => 
             next_state <= multiplication_with_reduction_special_prime_29;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_30;
             end if;
         when multiplication_with_reduction_special_prime_30 => 
             next_state <= multiplication_with_reduction_special_prime_30;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_31;
             end if;
         when multiplication_with_reduction_special_prime_31 => 
             next_state <= multiplication_with_reduction_special_prime_31;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_32;
             end if;
         when multiplication_with_reduction_special_prime_32 => 
             next_state <= multiplication_with_reduction_special_prime_32;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_33;
             end if;
         when multiplication_with_reduction_special_prime_33 => 
             next_state <= multiplication_with_reduction_special_prime_33;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_34;
             end if;
         when multiplication_with_reduction_special_prime_34 => 
             next_state <= multiplication_with_reduction_special_prime_34;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_35;
             end if;
         when multiplication_with_reduction_special_prime_35 => 
             next_state <= multiplication_with_reduction_special_prime_35;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_36;
             end if;
         when multiplication_with_reduction_special_prime_36 => 
             next_state <= multiplication_with_reduction_special_prime_36;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_37;
             end if;
         when multiplication_with_reduction_special_prime_37 => 
             next_state <= multiplication_with_reduction_special_prime_37;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_38;
             end if;
         when multiplication_with_reduction_special_prime_38 => 
             next_state <= multiplication_with_reduction_special_prime_38;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_39;
             end if;
         when multiplication_with_reduction_special_prime_39 => 
             next_state <= multiplication_with_reduction_special_prime_39;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_40;
             end if;
         when multiplication_with_reduction_special_prime_40 => 
             next_state <= multiplication_with_reduction_special_prime_40;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_41;
             end if;
         when multiplication_with_reduction_special_prime_41 => 
             next_state <= multiplication_with_reduction_special_prime_41;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_42;
             end if;
         when multiplication_with_reduction_special_prime_42 => 
             next_state <= multiplication_with_reduction_special_prime_42;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_43;
             end if;
         when multiplication_with_reduction_special_prime_43 => 
             next_state <= multiplication_with_reduction_special_prime_43;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_44;
             end if;
         when multiplication_with_reduction_special_prime_44 => 
             next_state <= multiplication_with_reduction_special_prime_44;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= multiplication_with_reduction_special_prime_45;
             end if;
         when multiplication_with_reduction_special_prime_45 => 
             next_state <= multiplication_with_reduction_special_prime_45;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_special_prime_46;
-            end if;
-        when multiplication_with_reduction_special_prime_46 => 
-            next_state <= multiplication_with_reduction_special_prime_46;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_special_prime_47;
-            end if;
-        when multiplication_with_reduction_special_prime_47 => 
-            next_state <= multiplication_with_reduction_special_prime_47;
-            if(penultimate_operation = '1') then
-                next_state <= multiplication_with_reduction_special_prime_48;
-            end if;
-        when multiplication_with_reduction_special_prime_48 => 
-            next_state <= multiplication_with_reduction_special_prime_48;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_0 => 
             next_state <= square_with_reduction_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_1;
             end if;
         when square_with_reduction_1 => 
             next_state <= square_with_reduction_1;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_2;
             end if;
         when square_with_reduction_2 => 
             next_state <= square_with_reduction_2;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_3;
             end if;
         when square_with_reduction_3 => 
             next_state <= square_with_reduction_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_5 => 
             next_state <= square_with_reduction_5;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_6;
             end if;
         when square_with_reduction_6 => 
             next_state <= square_with_reduction_6;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_7;
             end if;
         when square_with_reduction_7 => 
             next_state <= square_with_reduction_7;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "01") then
                     next_state <= square_with_reduction_8;
                 else
@@ -10162,241 +10280,226 @@ case (actual_state) is
             end if;
         when square_with_reduction_8 => 
             next_state <= square_with_reduction_8;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_9;
             end if;
         when square_with_reduction_9 => 
             next_state <= square_with_reduction_9;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_10;
             end if;
         when square_with_reduction_10 => 
             next_state <= square_with_reduction_10;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_11;
             end if;
         when square_with_reduction_11 => 
             next_state <= square_with_reduction_11;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_12;
             end if;
         when square_with_reduction_12 => 
             next_state <= square_with_reduction_12;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_13;
             end if;
         when square_with_reduction_13 => 
             next_state <= square_with_reduction_13;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_15 => 
             next_state <= square_with_reduction_15;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_16;
             end if;
         when square_with_reduction_16 => 
             next_state <= square_with_reduction_16;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_17;
             end if;
         when square_with_reduction_17 => 
             next_state <= square_with_reduction_17;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_18;
             end if;
         when square_with_reduction_18 => 
             next_state <= square_with_reduction_18;
-            if(penultimate_operation = '1') then
-                if(operands_size = "10") then
-                    next_state <= square_with_reduction_19;
-                else
-                    next_state <= square_with_reduction_31;
-                end if;
+            if(ultimate_operation = '1') then
+                next_state <= square_with_reduction_19;
             end if;
         when square_with_reduction_19 => 
             next_state <= square_with_reduction_19;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_20;
             end if;
         when square_with_reduction_20 => 
             next_state <= square_with_reduction_20;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_21;
             end if;
         when square_with_reduction_21 => 
             next_state <= square_with_reduction_21;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_22;
+            if(ultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= square_with_reduction_22;
+                else
+                    next_state <= square_with_reduction_31;
+                end if;
             end if;
         when square_with_reduction_22 => 
             next_state <= square_with_reduction_22;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_23;
             end if;
         when square_with_reduction_23 => 
             next_state <= square_with_reduction_23;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_24;
             end if;
         when square_with_reduction_24 => 
             next_state <= square_with_reduction_24;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_25;
             end if;
         when square_with_reduction_25 => 
             next_state <= square_with_reduction_25;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_26;
             end if;
         when square_with_reduction_26 => 
             next_state <= square_with_reduction_26;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_27;
             end if;
         when square_with_reduction_27 => 
             next_state <= square_with_reduction_27;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_28;
             end if;
         when square_with_reduction_28 => 
             next_state <= square_with_reduction_28;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_29;
             end if;
         when square_with_reduction_29 => 
             next_state <= square_with_reduction_29;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_31 => 
             next_state <= square_with_reduction_31;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_32;
             end if;
         when square_with_reduction_32 => 
             next_state <= square_with_reduction_32;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_33;
             end if;
         when square_with_reduction_33 => 
             next_state <= square_with_reduction_33;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_34;
             end if;
         when square_with_reduction_34 => 
             next_state <= square_with_reduction_34;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_35;
             end if;
         when square_with_reduction_35 => 
             next_state <= square_with_reduction_35;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_36;
             end if;
         when square_with_reduction_36 => 
             next_state <= square_with_reduction_36;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_37;
             end if;
         when square_with_reduction_37 => 
             next_state <= square_with_reduction_37;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_38;
             end if;
         when square_with_reduction_38 => 
             next_state <= square_with_reduction_38;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_39;
             end if;
         when square_with_reduction_39 => 
             next_state <= square_with_reduction_39;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_40;
             end if;
         when square_with_reduction_40 => 
             next_state <= square_with_reduction_40;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_41;
             end if;
         when square_with_reduction_41 => 
             next_state <= square_with_reduction_41;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_42;
             end if;
         when square_with_reduction_42 => 
             next_state <= square_with_reduction_42;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_43;
             end if;
         when square_with_reduction_43 => 
             next_state <= square_with_reduction_43;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_44;
             end if;
         when square_with_reduction_44 => 
             next_state <= square_with_reduction_44;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_45;
             end if;
         when square_with_reduction_45 => 
             next_state <= square_with_reduction_45;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_46;
             end if;
         when square_with_reduction_46 => 
             next_state <= square_with_reduction_46;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_47;
             end if;
         when square_with_reduction_47 => 
             next_state <= square_with_reduction_47;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_48;
             end if;
         when square_with_reduction_48 => 
             next_state <= square_with_reduction_48;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_49;
             end if;
         when square_with_reduction_49 => 
             next_state <= square_with_reduction_49;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_50;
             end if;
         when square_with_reduction_50 => 
             next_state <= square_with_reduction_50;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_51;
-            end if;
-        when square_with_reduction_51 => 
-            next_state <= square_with_reduction_51;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_52;
-            end if;
-        when square_with_reduction_52 => 
-            next_state <= square_with_reduction_52;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_53;
-            end if;
-        when square_with_reduction_53 => 
-            next_state <= square_with_reduction_53;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_special_prime_0 => 
             next_state <= square_with_reduction_special_prime_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_1;
             end if;
         when square_with_reduction_special_prime_1 => 
             next_state <= square_with_reduction_special_prime_1;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_special_prime_3 => 
             next_state <= square_with_reduction_special_prime_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "01") then
                     next_state <= square_with_reduction_special_prime_4;
                 else
@@ -10405,187 +10508,171 @@ case (actual_state) is
             end if;
         when square_with_reduction_special_prime_4 =>
             next_state <= square_with_reduction_special_prime_4;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_5;
             end if;
         when square_with_reduction_special_prime_5 => 
             next_state <= square_with_reduction_special_prime_5;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_6;
             end if;
         when square_with_reduction_special_prime_6 => 
             next_state <= square_with_reduction_special_prime_6;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_7;
             end if;
         when square_with_reduction_special_prime_7 => 
             next_state <= square_with_reduction_special_prime_7;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_special_prime_9 => 
             next_state <= square_with_reduction_special_prime_9;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_10;
             end if;
         when square_with_reduction_special_prime_10 => 
             next_state <= square_with_reduction_special_prime_10;
-            if(penultimate_operation = '1') then
-                if(operands_size = "10") then
-                    next_state <= square_with_reduction_special_prime_11;
-                else
-                    next_state <= square_with_reduction_special_prime_21;
-                end if;
+            if(ultimate_operation = '1') then
+                next_state <= square_with_reduction_special_prime_11;
             end if;
         when square_with_reduction_special_prime_11 => 
             next_state <= square_with_reduction_special_prime_11;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_12;
             end if;
         when square_with_reduction_special_prime_12 => 
             next_state <= square_with_reduction_special_prime_12;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_13;
             end if;
         when square_with_reduction_special_prime_13 => 
             next_state <= square_with_reduction_special_prime_13;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_special_prime_14;
+            if(ultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= square_with_reduction_special_prime_14;
+                else
+                    next_state <= square_with_reduction_special_prime_21;
+                end if;
             end if;
         when square_with_reduction_special_prime_14 => 
             next_state <= square_with_reduction_special_prime_14;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_15;
             end if;
         when square_with_reduction_special_prime_15 => 
             next_state <= square_with_reduction_special_prime_15;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_16;
             end if;
         when square_with_reduction_special_prime_16 => 
             next_state <= square_with_reduction_special_prime_16;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_17;
             end if;
         when square_with_reduction_special_prime_17 => 
             next_state <= square_with_reduction_special_prime_17;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_18;
             end if;
         when square_with_reduction_special_prime_18 => 
             next_state <= square_with_reduction_special_prime_18;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_19;
             end if;
         when square_with_reduction_special_prime_19 => 
             next_state <= square_with_reduction_special_prime_19;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
         when square_with_reduction_special_prime_21 => 
             next_state <= square_with_reduction_special_prime_21;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_22;
             end if;
         when square_with_reduction_special_prime_22 => 
             next_state <= square_with_reduction_special_prime_22;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_23;
             end if;
         when square_with_reduction_special_prime_23 => 
             next_state <= square_with_reduction_special_prime_23;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_24;
             end if;
         when square_with_reduction_special_prime_24 => 
             next_state <= square_with_reduction_special_prime_24;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_25;
             end if;
         when square_with_reduction_special_prime_25 => 
             next_state <= square_with_reduction_special_prime_25;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_26;
             end if;
         when square_with_reduction_special_prime_26 => 
             next_state <= square_with_reduction_special_prime_26;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_27;
             end if;
         when square_with_reduction_special_prime_27 => 
             next_state <= square_with_reduction_special_prime_27;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_28;
             end if;
         when square_with_reduction_special_prime_28 => 
             next_state <= square_with_reduction_special_prime_28;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_29;
             end if;
         when square_with_reduction_special_prime_29 => 
             next_state <= square_with_reduction_special_prime_29;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_30;
             end if;
         when square_with_reduction_special_prime_30 => 
             next_state <= square_with_reduction_special_prime_30;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_31;
             end if;
         when square_with_reduction_special_prime_31 => 
             next_state <= square_with_reduction_special_prime_31;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_32;
             end if;
         when square_with_reduction_special_prime_32 => 
             next_state <= square_with_reduction_special_prime_32;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_33;
             end if;
         when square_with_reduction_special_prime_33 => 
             next_state <= square_with_reduction_special_prime_33;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_34;
             end if;
         when square_with_reduction_special_prime_34 => 
             next_state <= square_with_reduction_special_prime_34;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_35;
             end if;
         when square_with_reduction_special_prime_35 => 
             next_state <= square_with_reduction_special_prime_35;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= square_with_reduction_special_prime_36;
             end if;
         when square_with_reduction_special_prime_36 => 
             next_state <= square_with_reduction_special_prime_36;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_special_prime_37;
-            end if;
-        when square_with_reduction_special_prime_37 => 
-            next_state <= square_with_reduction_special_prime_37;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_special_prime_38;
-            end if;
-        when square_with_reduction_special_prime_38 => 
-            next_state <= square_with_reduction_special_prime_38;
-            if(penultimate_operation = '1') then
-                next_state <= square_with_reduction_special_prime_39;
-            end if;
-        when square_with_reduction_special_prime_39 => 
-            next_state <= square_with_reduction_special_prime_39;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_8_stages;
             end if;
-            
         when addition_subtraction_direct_0 =>
             next_state <= addition_subtraction_direct_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when addition_subtraction_direct_2 =>
             next_state <= addition_subtraction_direct_2;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "01") then
                     next_state <= addition_subtraction_direct_3;
                 else
@@ -10594,12 +10681,12 @@ case (actual_state) is
             end if;
         when addition_subtraction_direct_3 =>
             next_state <= addition_subtraction_direct_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when addition_subtraction_direct_5 =>
             next_state <= addition_subtraction_direct_5;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 if(operands_size = "10") then
                     next_state <= addition_subtraction_direct_6;
                 else
@@ -10608,197 +10695,390 @@ case (actual_state) is
             end if;
         when addition_subtraction_direct_6 =>
             next_state <= addition_subtraction_direct_6;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when addition_subtraction_direct_8 =>
             next_state <= addition_subtraction_direct_8;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= addition_subtraction_direct_9;
             end if;
         when addition_subtraction_direct_9 =>
             next_state <= addition_subtraction_direct_9;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when iterative_modular_reduction_0 =>
             next_state <= iterative_modular_reduction_0;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_1;
             end if;    
         when iterative_modular_reduction_1 =>
             next_state <= iterative_modular_reduction_1;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_2;
             end if;
         when iterative_modular_reduction_2 =>
             next_state <= iterative_modular_reduction_2;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_3;
             end if;
         when iterative_modular_reduction_3 =>
             next_state <= iterative_modular_reduction_3;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when iterative_modular_reduction_5 =>
             next_state <= iterative_modular_reduction_5;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_6;
             end if;
         when iterative_modular_reduction_6 =>
             next_state <= iterative_modular_reduction_6;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_7;
             end if;
         when iterative_modular_reduction_7 =>
             next_state <= iterative_modular_reduction_7;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_8;
             end if;
         when iterative_modular_reduction_8 =>
             next_state <= iterative_modular_reduction_8;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_9;
             end if;
         when iterative_modular_reduction_9 =>
             next_state <= iterative_modular_reduction_9;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_10;
             end if;
         when iterative_modular_reduction_10 =>
             next_state <= iterative_modular_reduction_10;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_11;
             end if;
         when iterative_modular_reduction_11 =>
             next_state <= iterative_modular_reduction_11;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when iterative_modular_reduction_13 =>
             next_state <= iterative_modular_reduction_13;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_14;
             end if;
         when iterative_modular_reduction_14 =>
             next_state <= iterative_modular_reduction_14;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_15;
             end if;
         when iterative_modular_reduction_15 =>
             next_state <= iterative_modular_reduction_15;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_16;
             end if;
         when iterative_modular_reduction_16 =>
             next_state <= iterative_modular_reduction_16;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_17;
             end if;
         when iterative_modular_reduction_17 =>
             next_state <= iterative_modular_reduction_17;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_18;
             end if;
         when iterative_modular_reduction_18 =>
             next_state <= iterative_modular_reduction_18;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_19;
             end if;
         when iterative_modular_reduction_19 =>
             next_state <= iterative_modular_reduction_19;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_20;
             end if;
         when iterative_modular_reduction_20 =>
             next_state <= iterative_modular_reduction_20;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_21;
             end if;
         when iterative_modular_reduction_21 =>
             next_state <= iterative_modular_reduction_21;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_22;
             end if;
         when iterative_modular_reduction_22 =>
             next_state <= iterative_modular_reduction_22;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when iterative_modular_reduction_24 =>
             next_state <= iterative_modular_reduction_24;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_25;
             end if;
         when iterative_modular_reduction_25 =>
             next_state <= iterative_modular_reduction_25;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_26;
             end if;
         when iterative_modular_reduction_26 =>
             next_state <= iterative_modular_reduction_26;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_27;
             end if;
         when iterative_modular_reduction_27 =>
             next_state <= iterative_modular_reduction_27;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_28;
             end if;
         when iterative_modular_reduction_28 =>
             next_state <= iterative_modular_reduction_28;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_29;
             end if;
         when iterative_modular_reduction_29 =>
             next_state <= iterative_modular_reduction_29;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_30;
             end if;
         when iterative_modular_reduction_30 =>
             next_state <= iterative_modular_reduction_30;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_31;
             end if;
         when iterative_modular_reduction_31 =>
             next_state <= iterative_modular_reduction_31;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_32;
             end if;
         when iterative_modular_reduction_32 =>
             next_state <= iterative_modular_reduction_32;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_33;
             end if;
         when iterative_modular_reduction_33 =>
             next_state <= iterative_modular_reduction_33;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_34;
             end if;
         when iterative_modular_reduction_34 =>
             next_state <= iterative_modular_reduction_34;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_35;
             end if;
         when iterative_modular_reduction_35 =>
             next_state <= iterative_modular_reduction_35;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= iterative_modular_reduction_36;
             end if;
         when iterative_modular_reduction_36 =>
             next_state <= iterative_modular_reduction_36;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_0 =>
+            next_state <= addition_subtraction_with_reduction_0;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_1;
+            end if;
+        when addition_subtraction_with_reduction_1 =>
+            next_state <= addition_subtraction_with_reduction_1;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_2;
+            end if;
+        when addition_subtraction_with_reduction_2 =>
+            next_state <= addition_subtraction_with_reduction_2;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_3;
+            end if;
+        when addition_subtraction_with_reduction_3 =>
+            next_state <= addition_subtraction_with_reduction_3;
+            if(ultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_5 =>
+            next_state <= addition_subtraction_with_reduction_5;
+            if(ultimate_operation = '1') then
+                if(operands_size = "01") then
+                    next_state <= addition_subtraction_with_reduction_6;
+                else
+                    next_state <= addition_subtraction_with_reduction_14;
+                end if;
+            end if;
+        when addition_subtraction_with_reduction_6 =>
+            next_state <= addition_subtraction_with_reduction_6;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_7;
+            end if;
+        when addition_subtraction_with_reduction_7 =>
+            next_state <= addition_subtraction_with_reduction_7;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_8;
+            end if;
+        when addition_subtraction_with_reduction_8 =>
+            next_state <= addition_subtraction_with_reduction_8;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_9;
+            end if;
+        when addition_subtraction_with_reduction_9 =>
+            next_state <= addition_subtraction_with_reduction_9;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_10;
+            end if;
+        when addition_subtraction_with_reduction_10 =>
+            next_state <= addition_subtraction_with_reduction_10;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_11;
+            end if;
+        when addition_subtraction_with_reduction_11 =>
+            next_state <= addition_subtraction_with_reduction_11;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_12;
+            end if;
+        when addition_subtraction_with_reduction_12 =>
+            next_state <= addition_subtraction_with_reduction_12;
+            if(ultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_14 =>
+            next_state <= addition_subtraction_with_reduction_14;
+            if(ultimate_operation = '1') then
+                if(operands_size = "10") then
+                    next_state <= addition_subtraction_with_reduction_15;
+                else
+                    next_state <= addition_subtraction_with_reduction_26;
+                end if;
+            end if;
+        when addition_subtraction_with_reduction_15 =>
+            next_state <= addition_subtraction_with_reduction_15;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_16;
+            end if;
+        when addition_subtraction_with_reduction_16 =>
+            next_state <= addition_subtraction_with_reduction_16;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_17;
+            end if;
+        when addition_subtraction_with_reduction_17 =>
+            next_state <= addition_subtraction_with_reduction_17;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_18;
+            end if;
+        when addition_subtraction_with_reduction_18 =>
+            next_state <= addition_subtraction_with_reduction_18;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_19;
+            end if;
+        when addition_subtraction_with_reduction_19 =>
+            next_state <= addition_subtraction_with_reduction_19;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_20;
+            end if;
+        when addition_subtraction_with_reduction_20 =>
+            next_state <= addition_subtraction_with_reduction_20;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_21;
+            end if;
+        when addition_subtraction_with_reduction_21 =>
+            next_state <= addition_subtraction_with_reduction_21;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_22;
+            end if;
+        when addition_subtraction_with_reduction_22 =>
+            next_state <= addition_subtraction_with_reduction_22;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_23;
+            end if;
+        when addition_subtraction_with_reduction_23 =>
+            next_state <= addition_subtraction_with_reduction_23;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_24;
+            end if;
+        when addition_subtraction_with_reduction_24 =>
+            next_state <= addition_subtraction_with_reduction_24;
+            if(ultimate_operation = '1') then
+                next_state <= nop_4_stages;
+            end if;
+        when addition_subtraction_with_reduction_26 =>
+            next_state <= addition_subtraction_with_reduction_26;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_27;
+            end if;
+        when addition_subtraction_with_reduction_27 =>
+            next_state <= addition_subtraction_with_reduction_27;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_28;
+            end if;
+        when addition_subtraction_with_reduction_28 =>
+            next_state <= addition_subtraction_with_reduction_28;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_29;
+            end if;
+        when addition_subtraction_with_reduction_29 =>
+            next_state <= addition_subtraction_with_reduction_29;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_30;
+            end if;
+        when addition_subtraction_with_reduction_30 =>
+            next_state <= addition_subtraction_with_reduction_30;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_31;
+            end if;
+        when addition_subtraction_with_reduction_31 =>
+            next_state <= addition_subtraction_with_reduction_31;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_32;
+            end if;
+        when addition_subtraction_with_reduction_32 =>
+            next_state <= addition_subtraction_with_reduction_32;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_33;
+            end if;
+        when addition_subtraction_with_reduction_33 =>
+            next_state <= addition_subtraction_with_reduction_33;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_34;
+            end if;
+        when addition_subtraction_with_reduction_34 =>
+            next_state <= addition_subtraction_with_reduction_34;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_35;
+            end if;
+        when addition_subtraction_with_reduction_35 =>
+            next_state <= addition_subtraction_with_reduction_35;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_36;
+            end if;
+        when addition_subtraction_with_reduction_36 =>
+            next_state <= addition_subtraction_with_reduction_36;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_37;
+            end if;
+        when addition_subtraction_with_reduction_37 =>
+            next_state <= addition_subtraction_with_reduction_37;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_38;
+            end if;
+        when addition_subtraction_with_reduction_38 =>
+            next_state <= addition_subtraction_with_reduction_38;
+            if(ultimate_operation = '1') then
+                next_state <= addition_subtraction_with_reduction_39;
+            end if;
+        when addition_subtraction_with_reduction_39 =>
+            next_state <= addition_subtraction_with_reduction_39;
+            if(ultimate_operation = '1') then
                 next_state <= nop_4_stages;
             end if;
         when nop_4_stages =>
             next_state <= nop_4_stages;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= decode_instruction;
             end if;
         when nop_8_stages =>
             next_state <= nop_8_stages;
-            if(penultimate_operation = '1') then
+            if(ultimate_operation = '1') then
                 next_state <= decode_instruction;
             end if;
     end case;

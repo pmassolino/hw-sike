@@ -2,22 +2,23 @@ Variable positions
 prime           = 0
 prime_plus_one  = 1
 prime_line      = 2
-const_r         = 3   (modulo prime)
-const_r2        = 4   (modulo prime)
-const_1         = 5
-inv_4           = 6   (montgomery domain)
-sidh_xpa        = 7   (montgomery domain)
-sidh_xpai       = 8   (montgomery domain)
-sidh_xqa        = 9   (montgomery domain)
-sidh_xqai       = 10  (montgomery domain)
-sidh_xra        = 11  (montgomery domain)
-sidh_xrai       = 12  (montgomery domain)
-sidh_xpb        = 13  (montgomery domain)
-sidh_xpbi       = 14  (montgomery domain)
-sidh_xqb        = 15  (montgomery domain)
-sidh_xqbi       = 16  (montgomery domain)
-sidh_xrb        = 17  (montgomery domain)
-sidh_xrbi       = 18  (montgomery domain)
+prime2          = 3
+const_r         = 4   (modulo prime)
+const_r2        = 5   (modulo prime)
+const_1         = 6
+inv_4           = 7   (montgomery domain)
+sidh_xpa        = 8   (montgomery domain)
+sidh_xpai       = 9   (montgomery domain)
+sidh_xqa        = 10  (montgomery domain)
+sidh_xqai       = 11  (montgomery domain)
+sidh_xra        = 12  (montgomery domain)
+sidh_xrai       = 13  (montgomery domain)
+sidh_xpb        = 14  (montgomery domain)
+sidh_xpbi       = 15  (montgomery domain)
+sidh_xqb        = 16  (montgomery domain)
+sidh_xqbi       = 17  (montgomery domain)
+sidh_xrb        = 18  (montgomery domain)
+sidh_xrbi       = 19  (montgomery domain)
 
 Core constants
 m0    -> m19

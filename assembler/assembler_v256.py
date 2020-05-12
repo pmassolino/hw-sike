@@ -2362,7 +2362,79 @@ def instruction_mitred(command, internal_labels, final_pass=True):
     number_of_instructions += 1
     return final_machine_code, number_of_instructions
 
-instruction_opcodes = {'nop':instruction_nop,'jump':instruction_jumpeq,'jumpeq':instruction_jumpeq,'jumpl':instruction_jumpl,'jumpls':instruction_jumpl, 'jumpeql':instruction_jumpeql, 'jumpeqls':instruction_jumpeql,'push':instruction_push,'pop':instruction_pop,'pushf':instruction_pushf,'popf':instruction_popf,'pushm':instruction_pushm,'popm':instruction_popm,'copy':instruction_copy,'copyf':instruction_copyf,'copym':instruction_copym,'copya':instruction_copya,'lconstf':instruction_lconstf,'lconstm':instruction_lconstm,'call':instruction_call,'ret':instruction_ret,'keccak_init':instruction_keccak_init,'keccak_go':instruction_keccak_go,'badd':instruction_badd,'bsub':instruction_bsub,'bsmul':instruction_bsmul,'bsmuls':instruction_bsmul,'bshiftr':instruction_bshift,'bshiftl':instruction_bshift,'brotr':instruction_brot,'brotl':instruction_brot,'bland':instruction_bland,'blor':instruction_blor,'blxor':instruction_blxor,'blnot':instruction_blxor,'fin':instruction_fin,'mmuld':intruction_mmuld,'msqud':intruction_msqud,'mmulm':intruction_mmulm,'msqum':intruction_msqum,'madd_subd':instruction_madd_subd,'mitred':instruction_mitred}
+def instruction_madd_subr(command, internal_labels, final_pass=True):
+    error_during_assembly = False
+    number_of_instructions = 0
+    machine_code_processor = '01'
+    machine_code_intruction_type = '0000110'
+    machine_code_operand_o = ['00000000000000000' for i in range(4)]
+    machine_code_operand_b = ['0000000000000000000' for i in range(4)]
+    machine_code_operand_a = ['0000000000000000000' for i in range(4)]
+    all_operands = command[1:]
+    i = 0
+    j = 0
+    while((i < len(all_operands))):
+        if(all_operands[i] in internal_labels):
+            machine_code_operand_o[j] = "0" + ("{0:0"+str(16)+"b}").format(internal_labels[all_operands[i]])
+        elif(all_operands[i][0:3] == '*rd'):
+            machine_code_operand_o[j] = "1" + "00" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        elif(all_operands[i][0:3] == '*rm'):
+            machine_code_operand_o[j] = "1" + "10" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        elif(all_operands[i][0:3] == '*rl'):
+            machine_code_operand_o[j] = "1" + "11" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        else:
+            error_during_assembly = True
+        i += 1
+        if(all_operands[i] in internal_labels):
+            machine_code_operand_b[j] = "0" + "0" + "1" + ("{0:0"+str(16)+"b}").format(internal_labels[all_operands[i]])
+        elif(all_operands[i][0:3] == '*rd'):
+            machine_code_operand_b[j] = "0" + "1" + "1" + "00" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        elif(all_operands[i][0:3] == '*rm'):
+            machine_code_operand_b[j] = "0" + "1" + "1" + "10" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        elif(all_operands[i][0:3] == '*rl'):
+            machine_code_operand_b[j] = "0" + "1" + "1" + "11" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        else:
+            error_during_assembly = True
+        i += 1
+        if(all_operands[i][0] == '+'):
+            machine_code_operand_a_sign = "1"
+        elif(all_operands[i][0] == '-'):
+            machine_code_operand_a_sign = "0"
+        else:
+            error_during_assembly = True
+        i += 1
+        if(all_operands[i] in internal_labels):
+            machine_code_operand_a[j] = machine_code_operand_a_sign + "0" + "1" + ("{0:0"+str(16)+"b}").format(internal_labels[all_operands[i]])
+        elif(all_operands[i][0:3] == '*rd'):
+            machine_code_operand_a[j] = machine_code_operand_a_sign + "1" + "1" + "00" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        elif(all_operands[i][0:3] == '*rm'):
+            machine_code_operand_a[j] = machine_code_operand_a_sign + "1" + "1" + "10" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        elif(all_operands[i][0:3] == '*rl'):
+            machine_code_operand_a[j] = machine_code_operand_a_sign + "1" + "1" + "11" + ("{0:0"+str(14)+"b}").format(int(all_operands[i][3:]))
+        else:
+            error_during_assembly = True
+        i += 1
+        j += 1
+    if(error_during_assembly):
+        if(not final_pass):
+            return "", number_of_instructions
+        else:
+            print("Invalid instruction")
+            print(command)
+            return -1
+    final_machine_code = ''
+    for i in range(3):
+        machine_code = machine_code_processor + machine_code_intruction_type + machine_code_operand_o[i] + machine_code_operand_b[i] + machine_code_operand_a[i]
+        #machine_code = ("{0:0"+str(64-64)+"b}").format(0) + machine_code
+        final_machine_code = final_machine_code + machine_code + '\n'
+        number_of_instructions += 1
+    machine_code = machine_code_processor + machine_code_intruction_type + machine_code_operand_o[3] + machine_code_operand_b[3] + machine_code_operand_a[3]
+    #machine_code = ("{0:0"+str(64-64)+"b}").format(0) + machine_code
+    final_machine_code = final_machine_code + machine_code
+    number_of_instructions += 1
+    return final_machine_code, number_of_instructions
+
+instruction_opcodes = {'nop':instruction_nop,'jump':instruction_jumpeq,'jumpeq':instruction_jumpeq,'jumpl':instruction_jumpl,'jumpls':instruction_jumpl, 'jumpeql':instruction_jumpeql, 'jumpeqls':instruction_jumpeql,'push':instruction_push,'pop':instruction_pop,'pushf':instruction_pushf,'popf':instruction_popf,'pushm':instruction_pushm,'popm':instruction_popm,'copy':instruction_copy,'copyf':instruction_copyf,'copym':instruction_copym,'copya':instruction_copya,'lconstf':instruction_lconstf,'lconstm':instruction_lconstm,'call':instruction_call,'ret':instruction_ret,'keccak_init':instruction_keccak_init,'keccak_go':instruction_keccak_go,'badd':instruction_badd,'bsub':instruction_bsub,'bsmul':instruction_bsmul,'bsmuls':instruction_bsmul,'bshiftr':instruction_bshift,'bshiftl':instruction_bshift,'brotr':instruction_brot,'brotl':instruction_brot,'bland':instruction_bland,'blor':instruction_blor,'blxor':instruction_blxor,'blnot':instruction_blxor,'fin':instruction_fin,'mmuld':intruction_mmuld,'msqud':intruction_msqud,'mmulm':intruction_mmulm,'msqum':intruction_msqum,'madd_subd':instruction_madd_subd,'mitred':instruction_mitred,'madd_subr':instruction_madd_subr}
 
 def remove_coments(line):
     # Remove anything that is after the character ';' (.split(';')[0])
@@ -2534,9 +2606,10 @@ def fill_internal_labels(internal_labels):
     internal_labels['rprimeaddr'] = int("0x0E004", base=16)
     internal_labels['rprimeplusoneaddr'] = int("0x0E005", base=16)
     internal_labels['rprimelineaddr'] = int("0x0E006", base=16)
-    internal_labels['stackinitaddr'] = int("0x0E007", base=16)
-    internal_labels['flag'] = int("0x0E008", base=16)
-    internal_labels['scalarinitaddr'] = int("0x0E009", base=16)
+    internal_labels['r2primeaddr'] = int("0x0E007", base=16)
+    internal_labels['stackinitaddr'] = int("0x0E008", base=16)
+    internal_labels['flag'] = int("0x0E009", base=16)
+    internal_labels['scalarinitaddr'] = int("0x0E00A", base=16)
     # User defined labels
     # They are used so it is easier to write assembly programs on the device
     # Add version for full/local bus copy.

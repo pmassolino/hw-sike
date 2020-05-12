@@ -1,6 +1,6 @@
 proof.arithmetic(False)
-home_folder = "/home/pedro/"
-script_working_folder = home_folder + "hw-sidh/vhdl_project/sage/"
+if 'script_working_folder' not in globals() and 'script_working_folder' not in locals():
+    script_working_folder = "/home/pedro/hw-sidh/vhdl_project/sage/"
 load(script_working_folder+"base_tests_for_sidh_v2/all_sidh_functions.sage")
 load(script_working_folder+"base_tests_for_sidh_v2/sidh_constants.sage")
 
@@ -110,6 +110,8 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line_list = arithmetic_parameters[18]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r_mod_prime_constant = arithmetic_parameters[12]
     r_mod_prime_constant_list = arithmetic_parameters[13]
@@ -163,6 +165,7 @@ def print_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_si
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_plus_one_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime_line_list, maximum_number_of_words)
+    print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, prime2_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, r_mod_prime_constant_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, r2_constant_list, maximum_number_of_words)
     print_list_convert_format_VHDL_MAC_memory(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, extended_word_size_signed, constant_1, maximum_number_of_words)
@@ -299,6 +302,8 @@ def load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_siz
     prime_plus_one_list = arithmetic_parameters[6]
     prime_line = arithmetic_parameters[17]
     prime_line_zero = arithmetic_parameters[19]
+    prime2 = arithmetic_parameters[24]
+    prime2_list = arithmetic_parameters[25]
     r_constant = arithmetic_parameters[10]
     r_mod_prime_constant = arithmetic_parameters[12]
     r_mod_prime_constant_list = arithmetic_parameters[13]
@@ -344,6 +349,14 @@ def load_VHDL_shared_secret_alice_fast_test(VHDL_memory_file_name, base_word_siz
         print(loaded_prime_line)
         print("Input prime line 0")
         print(prime_line)
+    loaded_prime2 = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
+    if(loaded_prime2 != prime2):
+        print("Error in shared secret Alice fast computation : " + str(current_test))
+        print("Error loading the 2*prime")
+        print("Loaded 2*prime")
+        print(loaded_prime2)
+        print("Input 2*prime")
+        print(prime2)
     loaded_r_mod_prime = load_list_value_VHDL_MAC_memory_as_integer(VHDL_memory_file, base_word_size_signed, base_word_size_signed_number_words, maximum_number_of_words, False)
     if(loaded_r_mod_prime != r_mod_prime_constant):
         print("Error in shared secret Alice fast computation : " + str(current_test))
@@ -539,14 +552,14 @@ base_word_size = 16
 extended_word_size = 256
 accumulator_word_size = (extended_word_size - 1)*2+32
 number_of_tests = 10
-tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v256/"
+tests_working_folder = script_working_folder + "../hw_sidh_tests_v256/"
 
 #number_of_bits_added = 16
 #base_word_size = 16
 #extended_word_size = 128
 #accumulator_word_size = extended_word_size*2+32
 #number_of_tests = 10
-#tests_working_folder = home_folder + "hw-sidh/vhdl_project/hw_sidh_tests_v128/"
+#tests_working_folder = script_working_folder + "../hw_sidh_tests_v128/"
 
 VHDL_file_names = [tests_working_folder + "shared_secret_alice_fast_" + str(param[4]) + "_" + str(param[5]) + ".dat" for param in sidh_constants]
 
