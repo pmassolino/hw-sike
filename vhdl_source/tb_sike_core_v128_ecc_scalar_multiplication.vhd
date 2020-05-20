@@ -30,7 +30,6 @@ Generic(
     base_alu_rotation_level : integer := 4;
     maximum_number_of_tests : integer := 1;
     
-    
     test_prom_file : string := "../assembler/test_ecc_scalar_multiplication_v128.dat";
     
     test_program_start_ecc_scalar_multiplication : integer := 1;
@@ -580,7 +579,7 @@ begin
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
-        
+    
     for j in 0 to (operands_size-1) loop
         readline (ram_file, line_n);
         read (line_n, read_MAC_RAM_operand_values);
@@ -667,7 +666,7 @@ begin
     current_operation_addres := std_logic_vector(to_unsigned(base_ram_ecc_scalar_max_size_address + base_alu_ram_start_address, current_operation_addres'length));
     load_value_device_base_alu_internal_registers(temp_base_ram_constant, current_operation_addres);
     
-        readline (ram_file, line_n);
+    readline (ram_file, line_n);
     read (line_n, read_BASE_RAM_operand_values);
     temp_base_ram_constant <= read_BASE_RAM_operand_values;
     wait for PERIOD;

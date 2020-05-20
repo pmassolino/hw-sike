@@ -131,7 +131,7 @@ constant reg_2prime_address_address : integer                  := 16#0E007#;
 constant reg_initial_stack_address_address : integer           := 16#0E008#;
 constant reg_flag_address : integer                            := 16#0E009#;
 constant reg_scalar_address_address : integer                  := 16#0E00A#;
-                                                               
+
 constant mac_ram_prime_address : integer                       := 16#00000#;
 constant mac_ram_prime_plus_one_address : integer              := 16#00001#;
 constant mac_ram_prime_line_address : integer                  := 16#00002#;
@@ -637,7 +637,7 @@ begin
     current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
-        
+    
     for j in 0 to (operands_size-1) loop
         readline (ram_file, line_n);
         read (line_n, read_MAC_RAM_operand_values);
@@ -977,8 +977,8 @@ begin
         after_time := now;
         wait for tb_delay;
         if(i <= 1) then
-                report "Operands size = " & integer'image(operands_size) & " Operation time = " & integer'image(cycle_counts) & " cycles" severity note;
-            end if;
+            report "Operands size = " & integer'image(operands_size) & " Operation time = " & integer'image(cycle_counts) & " cycles" severity note;
+        end if;
         wait for PERIOD;
         for z in 0 to 5 loop
             current_operation_addres := std_logic_vector(to_unsigned((mac_ram_output_function_start_address+z)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));

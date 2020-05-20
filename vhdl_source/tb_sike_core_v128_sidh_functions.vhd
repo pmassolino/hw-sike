@@ -597,7 +597,7 @@ begin
         temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
     end loop;
     wait for PERIOD;
-    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_prime_line_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
     
@@ -607,7 +607,7 @@ begin
         temp_mac_ram_constant(j) <= read_MAC_RAM_operand_values;
     end loop;
     wait for PERIOD;
-    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_prime_line_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
+    current_operation_addres := std_logic_vector(to_unsigned((mac_ram_2prime_address)*(2**mac_max_operands_size)*(mac_multiplication_factor) + mac_ram_start_address, current_operation_addres'length));
     load_operand_mac_ram(temp_mac_ram_constant, current_operation_addres, operands_size);
     wait for PERIOD;
     
@@ -912,8 +912,6 @@ begin
         test_write_enable <= '0';
         wait for PERIOD;
         before_time := now;
-        wait until (test_flag = '1' and rising_edge(clk));
-        wait until (test_flag = '0' and rising_edge(clk));
         wait until (test_core_free = '1' and rising_edge(clk));
         after_time := now;
         wait for tb_delay;
