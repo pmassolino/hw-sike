@@ -8,7 +8,7 @@ The design was made in hardware/software co-design. The main CPU was made exclus
 
 More information in the paper:
 
-+ Pedro Maat C. Massolino, Patrick Longa, Joost Renes, and Lejla Batina. [A Compact and Scalable Hardware/Software Co-design of SIKE](https://eprint.iacr.org/2020/040). 2020.
++ Pedro Maat C. Massolino, Patrick Longa, Joost Renes, and Lejla Batina. [A Compact and Scalable Hardware/Software Co-design of SIKE](https://eprint.iacr.org/2020/040). IACR Transactions on Cryptographic Hardware and Embedded Systems, 2020(2), 245-271.
 
 All the code that was created for this design is in public domain.
 There are codes that have been used in this project, that have a different license, such as the ones in Xilinx project folders and the Keccak code.

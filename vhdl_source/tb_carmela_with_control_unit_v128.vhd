@@ -2631,6 +2631,8 @@ end test_addition_subtraction_with_reduction;
             --wait for PERIOD;
             --test_montgomery_squaring(test_memory_file_montgomery_squaring_test_486_301, param_486_301_number_of_words);
             --wait for PERIOD;
+            test_montgomery_squaring(test_memory_file_montgomery_squaring_test_1_word_max, 1);
+            wait for PERIOD;
             test_montgomery_squaring(test_memory_file_montgomery_squaring_test_2_words_max, 2);
             wait for PERIOD;
             test_montgomery_squaring(test_memory_file_montgomery_squaring_test_3_words_max, 3);
